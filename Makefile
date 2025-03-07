@@ -112,6 +112,7 @@ replicated: rep-field rep-ring rep-bin
 
 spdz2k: spdz2k-party.x ot-offline.x Check-Offline-Z2k.x galois-degree.x Fake-Offline.x
 mascot: mascot-party.x spdz2k mama-party.x
+ltos: ltos-mascot-party.x spdz2k mama-party.x
 
 ifeq ($(OS), Darwin)
 setup: mac-setup
@@ -264,6 +265,9 @@ malicious-rep-ring-party.x: Protocols/MalRepRingOptions.o
 sy-rep-ring-party.x: Protocols/MalRepRingOptions.o
 rep4-ring-party.x: GC/Rep4Secret.o GC/Rep4Prep.o
 no-party.x: Protocols/ShareInterface.o
+
+ltos-mascot-party.x: $(SPDZ)
+
 semi-ecdsa-party.x: $(OT) $(LIBSIMPLEOT) $(GC_SEMI)
 mascot-ecdsa-party.x: $(OT) $(LIBSIMPLEOT)
 rep4-ecdsa-party.x: GC/Rep4Prep.o
