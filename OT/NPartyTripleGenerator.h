@@ -194,6 +194,52 @@ public:
             Player* parentPlayer = 0);
 };
 
+
+template<class T>
+class SimpleLtosTripleGenerator : public NPartyTripleGenerator<T>
+{
+    typedef typename T::mac_key_type mac_key_type;
+    typedef typename T::MAC_Check MAC_Check;
+
+    virtual void sacrifice(typename T::MAC_Check&, PRNG&) { throw not_implemented(); }
+
+public:
+    vector< ShareTriple<T, 2> > uncheckedTriples;
+
+    SimpleLtosTripleGenerator(const OTTripleSetup& setup, const Names& names,
+            int thread_num, int nTriples, int nloops, MascotParams& machine,
+            mac_key_type mac_key,
+            Player* parentPlayer = 0);
+    virtual ~SimpleLtosTripleGenerator() {}
+
+    void generateTriples();
+};
+
+template<class T>
+class LtosTripleGenerator : public SimpleLtosTripleGenerator<T>
+{
+    typedef typename T::open_type open_type;
+    typedef typename T::mac_key_type mac_key_type;
+    typedef typename T::MAC_Check MAC_Check;
+
+    void generateBits();
+    void generateBitsGf2n();
+    template <int X, int L>
+    void generateBitsFromTriples(MAC_Check& MC, ofstream& outputFile, gfp_<X, L>);
+    template <class U>
+    void generateBitsFromTriples(MAC_Check& MC, ofstream& outputFile, U);
+
+    void sacrifice(typename T::MAC_Check& MC, PRNG& G);
+
+public:
+    vector<T> bits;
+
+    LtosTripleGenerator(const OTTripleSetup& setup, const Names& names,
+            int thread_num, int nTriples, int nloops, MascotParams& machine,
+            mac_key_type mac_key,
+            Player* parentPlayer = 0);
+};
+
 template<class T>
 class Spdz2kTripleGenerator : public NPartyTripleGenerator<T>
 {

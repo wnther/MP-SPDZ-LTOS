@@ -1,8 +1,9 @@
-#include "ShareInterface.h"
-#include "Protocols/Share.h"
 
 #ifndef PROTOCOLS_LTOSSHARE_H_
 #define PROTOCOLS_LTOSSHARE_H_
+#include "ShareInterface.h"
+#include "Protocols/Share.h"
+#include "OT/NPartyTripleGenerator.h"
 
 template<class T> class LtosShare;
 
@@ -23,7 +24,7 @@ public:
     typedef LtosShare input_check_type;
     typedef LtosShare input_type;
     typedef MascotMultiplier<LtosShare> Multiplier;
-    typedef MascotTripleGenerator<prep_type> TripleGenerator;
+    typedef LtosTripleGenerator<prep_type> TripleGenerator;
     typedef T sacri_type;
     typedef typename T::Square Rectangle;
     typedef Rectangle Square;

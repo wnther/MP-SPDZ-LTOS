@@ -36,6 +36,10 @@ tags
 ###############
 .vscode/**
 
+# IDEA #
+########
+.idea/
+
 # Temporary files #
 ###################
 *.bak
