@@ -1,4 +1,4 @@
-
+#define USING_EXPERIMENTAL_LTOS_SHUFFLING 1
 #include "Math/gfp.hpp"
 #include "GC/TinierSecret.h"
 #include "Processor/FieldMachine.h"

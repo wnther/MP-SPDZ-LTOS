@@ -2,7 +2,7 @@
  * SecureShuffle.h
  *
  */
-
+#ifndef USING_EXPERIMENTAL_LTOS_SHUFFLING
 #ifndef PROTOCOLS_SECURESHUFFLE_H_
 #define PROTOCOLS_SECURESHUFFLE_H_
 
@@ -102,3 +102,4 @@ public:
 };
 
 #endif /* PROTOCOLS_SECURESHUFFLE_H_ */
+#endif

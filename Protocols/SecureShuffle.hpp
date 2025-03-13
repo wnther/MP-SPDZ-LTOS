@@ -3,6 +3,7 @@
  *
  */
 
+#ifndef USING_EXPERIMENTAL_LTOS_SHUFFLING
 #ifndef PROTOCOLS_SECURESHUFFLE_HPP_
 #define PROTOCOLS_SECURESHUFFLE_HPP_
 
@@ -514,3 +515,4 @@ void SecureShuffle<T>::waksman_round_finish(vector<T> &toShuffle, size_t unit_si
 
 
 #endif /* PROTOCOLS_SECURESHUFFLE_HPP_ */
+#endif
