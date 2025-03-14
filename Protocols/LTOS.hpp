@@ -97,14 +97,18 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     // SecureShuffle works by making t players create and "secret-share" a permutation.
     // Then each permutation is applied in a pass. As long as one of these permutations was created by an honest party,
     // the resulting combined shuffle is hidden.
-    const auto n_passes = proc.protocol.get_relevant_players().size();
+    
+    //HERE const auto n_passes = proc.protocol.get_relevant_players().size();
 
     // Initialize the shuffles.
     vector is_exact(n_shuffles, false);
     vector<vector<T>> to_shuffle;
-    int max_depth = prep_multiple(a, sizes, sources, unit_sizes, to_shuffle, is_exact);
-
+    //HERE int max_depth = 
+    prep_multiple(a, sizes, sources, unit_sizes, to_shuffle, is_exact);
+    
     // Apply the shuffles.
+
+    /* HERE
     for (size_t pass = 0; pass < n_passes; pass++)
     {
         for (int depth = 0; depth < max_depth; depth++)
@@ -112,6 +116,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
         for (int depth = max_depth - 1; depth >= 0; depth--)
             parallel_waksman_round(pass, depth, false, to_shuffle, unit_sizes, reverse, shuffles);
     }
+    */
 
     // Write the shuffled results into memory.
     finalize_multiple(a, sizes, unit_sizes, destinations, is_exact, to_shuffle);
