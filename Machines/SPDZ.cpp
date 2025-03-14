@@ -3,7 +3,6 @@
 #include "Protocols/MascotPrep.hpp"
 #include "Processor/FieldMachine.hpp"
 #include "Math/gfp.hpp"
-#include "Protocols/LtosShare.h"
 
 template class FieldMachine<Share, Share, DishonestMajorityMachine>;
 template class FieldMachine<LtosShare, LtosShare, DishonestMajorityMachine>;

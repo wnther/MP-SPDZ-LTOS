@@ -2,7 +2,6 @@
  * SecureShuffle.h
  *
  */
-#ifndef USING_EXPERIMENTAL_LTOS_SHUFFLING
 #ifndef PROTOCOLS_SECURESHUFFLE_H_
 #define PROTOCOLS_SECURESHUFFLE_H_
 
@@ -69,7 +68,6 @@ private:
     void parallel_waksman_round(size_t pass, int depth, bool inwards, vector<vector<T>>& toShuffle, vector<size_t>& unit_sizes, vector<bool>& reverse, vector<shuffle_type>& shuffles);
     vector<array<int, 5>> waksman_round_init(vector<T>& toShuffle, size_t shuffle_unit_size, int depth, vector<vector<T>>& iter_waksman_config, bool inwards, bool reverse);
     void waksman_round_finish(vector<T>& toShuffle, size_t unit_size, vector<array<int, 5>> indices);
-
 public:
     map<long, long> stats;
 
@@ -102,4 +100,5 @@ public:
 };
 
 #endif /* PROTOCOLS_SECURESHUFFLE_H_ */
-#endif
+
+
