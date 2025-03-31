@@ -8,9 +8,28 @@
 
 #include "SecureShuffle.h"
 #include "Tools/Waksman.h"
+#include <iostream>
+#include <vector>
 
 #include <math.h>
 #include <algorithm>
+
+template <typename T>
+void print_vector(const std::vector<T>& vec, const std::string& name) {
+    std::cout << name << ": ";
+    for (const auto& v : vec) {
+        std::cout << v << " ";
+    }
+    std::cout << std::endl;
+}
+
+template <typename T>
+void print_stacked_vector(const StackedVector<T>& vec, const std::string& name) {
+    std::cout << name << ": ";
+    for (size_t i = 0; i < vec.size(); ++i)
+        std::cout << vec[i] << " ";
+    std::cout << std::endl;
+}
 
 template<class T>
 void ShuffleStore<T>::lock()
@@ -71,6 +90,14 @@ SecureShuffle<T>::SecureShuffle(StackedVector<T>& a, size_t n, int unit_size,
     vector<size_t> sources{input_base};
     vector<shuffle_type> shuffles{store.get(handle)};
     vector<bool> reverses{true};
+    
+    print_stacked_vector(a, "a");
+    print_vector(sizes, "sizes");
+    print_vector(unit_sizes, "unit_sizes");
+    print_vector(destinations, "destinations");
+    print_vector(sources, "sources");
+    print_vector(reverses, "reverses");
+
     this->apply_multiple(a, sizes, destinations, sources, unit_sizes, shuffles, reverses);
 }
 
@@ -107,7 +134,20 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     prep_multiple(a, sizes, sources, unit_sizes, to_shuffle, is_exact);
     
     // Apply the shuffles.
-    
+    // Rotate each subvector inside `a` (based on sizes) by 1 to the left
+    size_t offset = 0;
+    for (size_t i = 0; i < sizes.size(); ++i) {
+        size_t size = sizes[i];
+        if (size > 1) {
+            T first = a[offset];  // store first element
+            for (size_t j = 0; j < size - 1; ++j)
+                a[offset + j] = a[offset + j + 1];  // shift left
+            a[offset + size - 1] = first;  // place first at end
+        }
+        offset += size;
+    }
+    print_stacked_vector(a, "a");
+
     // HERE
     // for (size_t pass = 0; pass < n_passes; pass++)
     // {
@@ -125,6 +165,11 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
 template<class T>
 void SecureShuffle<T>::inverse_permutation(StackedVector<T> &stack, size_t n, size_t output_base,
                                            size_t input_base) {
+    (void) stack;
+    (void) n;
+    (void) output_base;
+    (void) input_base;
+    
     // This is not needed for us.
     throw runtime_error("no");
 }
@@ -250,102 +295,60 @@ vector<int> SecureShuffle<T>::generate_random_permutation(int n) {
 template<class T>
 int SecureShuffle<T>::generate(int n_shuffle, store_type& store)
 {
+    (void) n_shuffle;
+    
     int res = store.add();
-    auto& shuffle = store.get(res);
-
-    for (auto i: proc.protocol.get_relevant_players()) {
-        vector<int> perm;
-        if (proc.P.my_num() == i)
-            perm = generate_random_permutation(n_shuffle);
-        auto config = configure(i, &perm, n_shuffle);
-        shuffle.push_back(config);
-    }
+    //auto& shuffle = store.get(res);
 
     return res;
 }
 
 template<class T>
 vector<vector<T>> SecureShuffle<T>::configure(int config_player, vector<int> *perm, int n) {
-    auto &P = proc.P;
-    auto &input = proc.input;
-    input.reset_all(P);
-    int n_pow2 = 1 << int(ceil(log2(n)));
-    Waksman waksman(n_pow2);
+    (void) config_player;
+    (void) perm;
+    (void) n;
 
-    // The player specified by config_player configures the shared waksman network
-    // using its personal permutation
-    if (P.my_num() == config_player) {
-        auto config_bits = waksman.configure(*perm);
-        for (size_t i = 0; i < config_bits.size(); i++) {
-            auto &x = config_bits[i];
-            for (size_t j = 0; j < x.size(); j++)
-                if (waksman.matters(i, j) and not waksman.is_double(i, j))
-                    input.add_mine(int(x[j]));
-                else if (waksman.is_double(i, j))
-                    assert(x[j] == x[j - 1]);
-                else
-                    assert(x[j] == 0);
-        }
-        // The other player waits for its share of the configured waksman network
-    } else
-        for (size_t i = 0; i < waksman.n_bits(); i++)
-            input.add_other(config_player);
-
-    input.exchange();
-    vector<vector<T>> config;
-    typename T::Protocol checker(P);
-    checker.init(proc.DataF, proc.MC);
-    checker.init_dotprod();
-    auto one = T::constant(1, P.my_num(), proc.MC.get_alphai());
-    for (size_t i = 0; i < waksman.n_rounds(); i++)
-    {
-        config.push_back({});
-        for (int j = 0; j < n_pow2; j++)
-        {
-            if (waksman.matters(i, j) and not waksman.is_double(i, j))
-            {
-                config.back().push_back(input.finalize(config_player));
-                if (T::malicious)
-                    checker.prepare_dotprod(config.back().back(),
-                            one - config.back().back());
-            }
-            else if (waksman.is_double(i, j))
-                config.back().push_back(config.back().back());
-            else
-                config.back().push_back({});
-        }
-    }
-
-    if (T::malicious)
-    {
-        checker.next_dotprod();
-        checker.exchange();
-        assert(
-                typename T::clear(
-                        proc.MC.open(checker.finalize_dotprod(waksman.n_bits()),
-                                P)) == 0);
-        checker.check();
-    }
-
-    return config;
+    // This is not needed for us.
+    throw runtime_error("no");
 }
 
 template<class T>
 void SecureShuffle<T>::parallel_waksman_round(size_t pass, int depth, bool inwards, vector<vector<T>> &toShuffle,
     vector<size_t> &unit_sizes, vector<bool> &reverse, vector<shuffle_type> &shuffles)
 {
+    (void) pass;
+    (void) depth;
+    (void) inwards;
+    (void) toShuffle;
+    (void) unit_sizes;
+    (void) reverse;
+    (void) shuffles;
+
     // This is not needed for us.
     throw runtime_error("no");
 }
 
 template<class T>
 vector<array<int, 5>> SecureShuffle<T>::waksman_round_init(vector<T> &toShuffle, size_t shuffle_unit_size, int depth, vector<vector<T>> &iter_waksman_config, bool inwards, bool reverse) {
+    (void) toShuffle;
+    (void) shuffle_unit_size;
+    (void) depth;
+    (void) iter_waksman_config;
+    (void) inwards;
+    (void) reverse;
+    
     // This is not needed for us.
     throw runtime_error("no");
+
 }
 
 template<class T>
 void SecureShuffle<T>::waksman_round_finish(vector<T> &toShuffle, size_t unit_size, vector<array<int, 5>> indices) {
+    (void) toShuffle;
+    (void) unit_size;
+    (void) indices;
+    
     // This is not needed for us.
     throw runtime_error("no");
 }
