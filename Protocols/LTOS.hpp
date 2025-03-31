@@ -2,7 +2,7 @@
  * SecureShuffle.hpp
  *
  */
-#ifndef USING_EXPERIMENTAL_LTOS_SHUFFLING
+#ifdef USING_EXPERIMENTAL_LTOS_SHUFFLING
 #ifndef PROTOCOLS_SECURESHUFFLE_HPP_
 #define PROTOCOLS_SECURESHUFFLE_HPP_
 
@@ -90,13 +90,6 @@ SecureShuffle<T>::SecureShuffle(StackedVector<T>& a, size_t n, int unit_size,
     vector<size_t> sources{input_base};
     vector<shuffle_type> shuffles{store.get(handle)};
     vector<bool> reverses{true};
-    
-    print_stacked_vector(a, "a");
-    print_vector(sizes, "sizes");
-    print_vector(unit_sizes, "unit_sizes");
-    print_vector(destinations, "destinations");
-    print_vector(sources, "sources");
-    print_vector(reverses, "reverses");
 
     this->apply_multiple(a, sizes, destinations, sources, unit_sizes, shuffles, reverses);
 }
@@ -129,36 +122,36 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
 
     // Initialize the shuffles.
     vector is_exact(n_shuffles, false);
+    
     vector<vector<T>> to_shuffle;
     //HERE int max_depth = 
     prep_multiple(a, sizes, sources, unit_sizes, to_shuffle, is_exact);
+    print_vector(to_shuffle[0], "to_shuffle");
+    // auto tmp1 = to_shuffle[0][0];
+    // auto tmp2 = to_shuffle[0][1];
+    // auto tmp3 = to_shuffle [0][4];         
+    // auto tmp4 = to_shuffle [0][5];        
+    
+    // to_shuffle[0][0] = tmp3;
+    // to_shuffle[0][1] = tmp4;
+    // to_shuffle[0][4] = tmp1;
+    // to_shuffle[0][5] = tmp2;
     
     // Apply the shuffles.
-    // Rotate each subvector inside `a` (based on sizes) by 1 to the left
-    size_t offset = 0;
-    for (size_t i = 0; i < sizes.size(); ++i) {
-        size_t size = sizes[i];
-        if (size > 1) {
-            T first = a[offset];  // store first element
-            for (size_t j = 0; j < size - 1; ++j)
-                a[offset + j] = a[offset + j + 1];  // shift left
-            a[offset + size - 1] = first;  // place first at end
-        }
-        offset += size;
-    }
-    print_stacked_vector(a, "a");
-
-    // HERE
-    // for (size_t pass = 0; pass < n_passes; pass++)
-    // {
-    //     for (int depth = 0; depth < max_depth; depth++)
-    //         parallel_waksman_round(pass, depth, true, to_shuffle, unit_sizes, reverse, shuffles);
-    //     for (int depth = max_depth - 1; depth >= 0; depth--)
-    //         parallel_waksman_round(pass, depth, false, to_shuffle, unit_sizes, reverse, shuffles);
-    // }
+    std::cout << "Hello I am party number: " << proc.P.my_num() << std::endl;
+    std::cout << "There are " << proc.P.num_players() << " parties" << std::endl;
 
     // Write the shuffled results into memory.
     finalize_multiple(a, sizes, unit_sizes, destinations, is_exact, to_shuffle);
+    
+    auto tmp1 = a[0];
+    auto tmp2 = a[4];
+    a[0] = tmp2;
+    a[4] = tmp1;
+    
+    for (size_t i = 0; i < a.size(); i++) {
+        std::cout << a[i] << std::endl;
+    }
 }
 
 
