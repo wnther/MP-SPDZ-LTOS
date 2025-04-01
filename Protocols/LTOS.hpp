@@ -2,7 +2,7 @@
  * SecureShuffle.hpp
  *
  */
-#ifdef USING_EXPERIMENTAL_LTOS_SHUFFLING
+#ifndef USING_EXPERIMENTAL_LTOS_SHUFFLING
 #ifndef PROTOCOLS_SECURESHUFFLE_HPP_
 #define PROTOCOLS_SECURESHUFFLE_HPP_
 
@@ -126,16 +126,6 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     vector<vector<T>> to_shuffle;
     //HERE int max_depth = 
     prep_multiple(a, sizes, sources, unit_sizes, to_shuffle, is_exact);
-    print_vector(to_shuffle[0], "to_shuffle");
-    // auto tmp1 = to_shuffle[0][0];
-    // auto tmp2 = to_shuffle[0][1];
-    // auto tmp3 = to_shuffle [0][4];         
-    // auto tmp4 = to_shuffle [0][5];        
-    
-    // to_shuffle[0][0] = tmp3;
-    // to_shuffle[0][1] = tmp4;
-    // to_shuffle[0][4] = tmp1;
-    // to_shuffle[0][5] = tmp2;
     
     // Apply the shuffles.
     std::cout << "Hello I am party number: " << proc.P.my_num() << std::endl;
@@ -144,11 +134,48 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     // Write the shuffled results into memory.
     finalize_multiple(a, sizes, unit_sizes, destinations, is_exact, to_shuffle);
     
-    auto tmp1 = a[0];
-    auto tmp2 = a[4];
-    a[0] = tmp2;
-    a[4] = tmp1;
+    // if (proc.P.my_num() == 0) {
+    //     std::cout << "Hello there! " << 0 << std::endl;
+    //     auto tmp1 = a[0];
+    //     auto tmp2 = a[4];
+    //     a[0] = tmp2;
+    //     a[4] = tmp1;
+    // }
+    // if (proc.P.my_num() == 1) {
+    //     std::cout << "Hello there! " << 1 << std::endl;
+    //     auto tmp1 = a[0];
+    //     auto tmp2 = a[4];
+    //     a[0] = tmp2;
+    //     a[4] = tmp1;
+    // }
     
+    std::cout << "canary 1" << std::endl;
+    auto &P = proc.P;
+    auto &input = proc.input;
+    
+    std::cout << "canary 2" << std::endl;
+    vector<T> alice(P.num_players());
+    vector<T> bob(P.num_players());
+    
+    std::cout << "canary 3" << std::endl;
+    input.reset_all(P);
+    std::cout << "canary 4" << std::endl;
+    for (int i = 0; i < P.num_players(); i++)
+    input.add_from_all(i);
+    std::cout << "canary 5" << std::endl;
+    input.exchange();
+    std::cout << "canary 6" << std::endl;
+    for (int i = 0; i < P.num_players(); i++)
+    {
+        alice[i] = input.finalize(0);
+        bob[i] = input.finalize(1);
+    }
+    
+    a[4] = alice[0];
+
+    print_vector(alice, "alice");
+    print_vector(bob, "bob");
+
     for (size_t i = 0; i < a.size(); i++) {
         std::cout << a[i] << std::endl;
     }
@@ -168,7 +195,7 @@ void SecureShuffle<T>::inverse_permutation(StackedVector<T> &stack, size_t n, si
 }
 
 template<class T>
-int SecureShuffle<T>::prep_multiple(StackedVector<T> &a, vector<size_t> &sizes,
+int SecureShuffle<T>::prep_multiple(StackedVector<T> &a, vector<size_t> &sizes, 
     vector<size_t> &sources, vector<size_t> &unit_sizes, vector<vector<T>> &to_shuffle, vector<bool> &is_exact) {
     int max_depth = 0;
     const size_t n_shuffles = sizes.size();
