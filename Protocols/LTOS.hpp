@@ -14,16 +14,6 @@
 #include <math.h>
 #include <algorithm>
 
-/*
-
-    Temporary
-    Hardcoded permutations
-    Perm1 = 3 1 2 5 4
-    Perm2 = 2 5 4 3 1
-    Perm3 = 1 5 2 3 4
-    Composite = 3 5 4 1 2
-*/
-
 
 /*
     Printing to party specific file
@@ -39,6 +29,7 @@ ofstream get_party_stream(SubProcessor<T>& proc) {
 template <typename T>
 void clearprint_for_party(SubProcessor<T>& proc) {
     ofstream filestream = get_party_stream(proc);
+    string party_num = to_string(proc.P.my_num());
     filestream << "Party " << party_num << ":" << std::endl;
 }
 
@@ -65,6 +56,56 @@ void println_for_party(SubProcessor<T>& proc, const StackedVector<T>& vec) {
         filestream << vec[i] << " ";
     filestream << std::endl;
 }
+
+/*
+
+    Temporary hardcoded Preprocessing
+
+*/
+
+
+/*
+
+    Temporary
+    Hardcoded permutations
+    Perm1 = 3 1 2 5 4
+    Perm2 = 2 5 4 3 1
+    Perm3 = 1 5 2 3 4
+    Composite = 3 5 4 1 2
+*/
+
+template <typename T>
+T generate_random_share() {
+    SeededPRNG G;
+    typename T::part_type x;
+
+    std::cout << G.get_doubleword() << std::endl;
+
+    // x.assign(G.get_doubleword());
+
+
+    T share;
+    share.set_share(0);
+    return share;
+}
+
+template <typename T>
+void send_preprocessing(SubProcessor<T>& proc) {
+    vector<T> x(5);
+    vector<T> y(5);
+    vector<T> z(5);
+    for (int i = 0; i < 5; i++) {
+        x[i] = generate_random_share<T>();
+        y[i] = generate_random_share<T>();
+    }
+    //Applied permutation to get Z
+    println_for_party(proc, "Sending Preprocessing");
+    println_for_party(proc, "x");
+    println_for_party(proc, x);
+    println_for_party(proc, "y");
+    println_for_party(proc, y);
+}
+
 
 /*
     Main Methods
@@ -200,6 +241,8 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
         a[0].pack(os[0]);
         P.send_to(0, os[0]);
     }
+
+    send_preprocessing(proc);
 
 }
 
