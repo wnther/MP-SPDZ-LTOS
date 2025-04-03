@@ -2,7 +2,7 @@
  * SecureShuffle.hpp
  *
  */
-#ifndef USING_EXPERIMENTAL_LTOS_SHUFFLING
+#ifdef USING_EXPERIMENTAL_LTOS_SHUFFLING
 #ifndef PROTOCOLS_SECURESHUFFLE_HPP_
 #define PROTOCOLS_SECURESHUFFLE_HPP_
 
@@ -14,22 +14,62 @@
 #include <math.h>
 #include <algorithm>
 
+/*
+
+    Temporary
+    Hardcoded permutations
+    Perm1 = 3 1 2 5 4
+    Perm2 = 2 5 4 3 1
+    Perm3 = 1 5 2 3 4
+    Composite = 3 5 4 1 2
+*/
+
+
+/*
+    Printing to party specific file
+*/
+
 template <typename T>
-void print_vector(const std::vector<T>& vec, const std::string& name) {
-    std::cout << name << ": ";
-    for (const auto& v : vec) {
-        std::cout << v << " ";
-    }
-    std::cout << std::endl;
+ofstream get_party_stream(SubProcessor<T>& proc) {
+    string party_num = to_string(proc.P.my_num());
+    ofstream filestream("party" + party_num + ".out", std::ios::app);
+    return filestream;
 }
 
 template <typename T>
-void print_stacked_vector(const StackedVector<T>& vec, const std::string& name) {
-    std::cout << name << ": ";
-    for (size_t i = 0; i < vec.size(); ++i)
-        std::cout << vec[i] << " ";
-    std::cout << std::endl;
+void clearprint_for_party(SubProcessor<T>& proc) {
+    ofstream filestream = get_party_stream(proc);
+    filestream << "Party " << party_num << ":" << std::endl;
 }
+
+
+template <typename T>
+void println_for_party(SubProcessor<T>& proc, const std::string& message) {
+    ofstream filestream = get_party_stream(proc);
+    filestream << message << std::endl;
+}
+
+template <typename T>
+void println_for_party(SubProcessor<T>& proc, const std::vector<T>& vec) {
+    ofstream filestream = get_party_stream(proc);
+    for (const auto& v : vec) {
+        filestream << v << " ";
+    }
+    filestream << std::endl;
+}
+
+template <typename T>
+void println_for_party(SubProcessor<T>& proc, const StackedVector<T>& vec) {
+    ofstream filestream = get_party_stream(proc);
+    for (size_t i = 0; i < vec.size(); ++i)
+        filestream << vec[i] << " ";
+    filestream << std::endl;
+}
+
+/*
+    Main Methods
+*/
+
 
 template<class T>
 void ShuffleStore<T>::lock()
@@ -114,71 +154,53 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     assert(shuffles.size() == n_shuffles);
     assert(reverse.size() == n_shuffles);
 
-    // SecureShuffle works by making t players create and "secret-share" a permutation.
-    // Then each permutation is applied in a pass. As long as one of these permutations was created by an honest party,
-    // the resulting combined shuffle is hidden.
     
-    //HERE const auto n_passes = proc.protocol.get_relevant_players().size();
-
     // Initialize the shuffles.
     vector is_exact(n_shuffles, false);
     
     vector<vector<T>> to_shuffle;
-    //HERE int max_depth = 
     prep_multiple(a, sizes, sources, unit_sizes, to_shuffle, is_exact);
-    
-    // Apply the shuffles.
-    std::cout << "Hello I am party number: " << proc.P.my_num() << std::endl;
-    std::cout << "There are " << proc.P.num_players() << " parties" << std::endl;
+    clearprint_for_party(proc);
+    println_for_party(proc, "Hello");
 
     // Write the shuffled results into memory.
     finalize_multiple(a, sizes, unit_sizes, destinations, is_exact, to_shuffle);
     
-    // if (proc.P.my_num() == 0) {
-    //     std::cout << "Hello there! " << 0 << std::endl;
-    //     auto tmp1 = a[0];
-    //     auto tmp2 = a[4];
-    //     a[0] = tmp2;
-    //     a[4] = tmp1;
-    // }
-    // if (proc.P.my_num() == 1) {
-    //     std::cout << "Hello there! " << 1 << std::endl;
-    //     auto tmp1 = a[0];
-    //     auto tmp2 = a[4];
-    //     a[0] = tmp2;
-    //     a[4] = tmp1;
-    // }
-    
-    std::cout << "canary 1" << std::endl;
     auto &P = proc.P;
-    auto &input = proc.input;
+    //auto &input = proc.input;
     
-    std::cout << "canary 2" << std::endl;
     vector<T> alice(P.num_players());
     vector<T> bob(P.num_players());
     
-    std::cout << "canary 3" << std::endl;
-    input.reset_all(P);
-    std::cout << "canary 4" << std::endl;
-    for (int i = 0; i < P.num_players(); i++)
-    input.add_from_all(i);
-    std::cout << "canary 5" << std::endl;
-    input.exchange();
-    std::cout << "canary 6" << std::endl;
-    for (int i = 0; i < P.num_players(); i++)
-    {
-        alice[i] = input.finalize(0);
-        bob[i] = input.finalize(1);
-    }
+    // input.reset_all(P);
+    // for (int i = 0; i < P.num_players(); i++)
+    // input.add_from_all(i);
+    // input.exchange();
+    // for (int i = 0; i < P.num_players(); i++)
+    // {
+    //     alice[i] = input.finalize(0);
+    //     bob[i] = input.finalize(1);
+    // }
     
-    a[4] = alice[0];
+    // a[4] = alice[0];
 
-    print_vector(alice, "alice");
-    print_vector(bob, "bob");
-
-    for (size_t i = 0; i < a.size(); i++) {
-        std::cout << a[i] << std::endl;
+    vector<octetStream> os(P.num_players());
+    
+    if (P.my_num() == 0)
+    {
+        P.receive_player(1, os[0]);
+        alice[0].unpack(os[0]);
+        ofstream st = get_party_stream(proc);
+        st << "Alice a: " << alice[0] << std::endl;
     }
+    else
+    {
+        ofstream st = get_party_stream(proc);
+        st << "Bob a: " << a[0] << std::endl;
+        a[0].pack(os[0]);
+        P.send_to(0, os[0]);
+    }
+
 }
 
 
