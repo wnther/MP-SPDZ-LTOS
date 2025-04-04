@@ -28,8 +28,8 @@ ofstream get_party_stream(SubProcessor<T>& proc) {
 
 template <typename T>
 void clearprint_for_party(SubProcessor<T>& proc) {
-    ofstream filestream = get_party_stream(proc);
     string party_num = to_string(proc.P.my_num());
+    ofstream filestream("party" + party_num + ".out");
     filestream << "Party " << party_num << ":" << std::endl;
 }
 
@@ -59,7 +59,9 @@ void println_for_party(SubProcessor<T>& proc, const StackedVector<T>& vec) {
 
 /*
 
-    Temporary hardcoded Preprocessing
+    Temporary Insecure Preprocessing
+    This works by having p1 generate two x,y randomly and calculating z based on its permutation and sending the data to p2
+    The permutations are also hardcoded
 
 */
 
@@ -74,31 +76,42 @@ void println_for_party(SubProcessor<T>& proc, const StackedVector<T>& vec) {
     Composite = 3 5 4 1 2
 */
 
-template <typename T>
-T generate_random_share() {
-    SeededPRNG G;
-    typename T::part_type x;
+// void generate_random_share_temp() {
+//     SeededPRNG G;
 
-    std::cout << G.get_doubleword() << std::endl;
-
-    // x.assign(G.get_doubleword());
-
-
-    T share;
-    share.set_share(0);
-    return share;
-}
+//     std::cout << G.get<gfp_<0,2>>() << std::endl;
+// }
 
 template <typename T>
 void send_preprocessing(SubProcessor<T>& proc) {
-    vector<T> x(5);
-    vector<T> y(5);
-    vector<T> z(5);
-    for (int i = 0; i < 5; i++) {
-        x[i] = generate_random_share<T>();
-        y[i] = generate_random_share<T>();
+    SeededPRNG G;
+    auto random = G.get<typename T::open_type>();
+
+    auto &P = proc.P;
+    auto &input = proc.input;
+    
+    vector<T> x(P.num_players());
+    vector<T> y(P.num_players());
+
+    input.reset_all(P);
+    for (int i = 0; i < P.num_players(); i++)
+    input.add_from_all(random);
+    input.exchange();
+    for (int i = 0; i < P.num_players(); i++)
+    {
+        x[i] = input.finalize(0);
+        y[i] = input.finalize(1);
     }
-    //Applied permutation to get Z
+//     vector<T> x(5);
+//     vector<T> y(5);
+//     vector<T> z(5);
+//     for (int i = 0; i < 5; i++) {
+//         //y[i] = 
+//         generate_random_share_temp();
+//         //x[i] = 
+//         generate_random_share_temp();
+//     }
+//     //Applied permutation to get Z
     println_for_party(proc, "Sending Preprocessing");
     println_for_party(proc, "x");
     println_for_party(proc, x);
@@ -243,7 +256,6 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     }
 
     send_preprocessing(proc);
-
 }
 
 
