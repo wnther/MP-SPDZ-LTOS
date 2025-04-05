@@ -2,7 +2,7 @@
  * SecureShuffle.hpp
  *
  */
-#ifdef USING_EXPERIMENTAL_LTOS_SHUFFLING
+#ifndef USING_EXPERIMENTAL_LTOS_SHUFFLING
 #ifndef PROTOCOLS_SECURESHUFFLE_HPP_
 #define PROTOCOLS_SECURESHUFFLE_HPP_
 
@@ -65,31 +65,80 @@ void println_for_party(SubProcessor<T>& proc, const StackedVector<T>& vec) {
 
 */
 
+template<class T>
+using ShuffleVec = vector<vector<vector<T>>>;
 
-/*
-
-    Temporary
-    Hardcoded permutations
-    Perm1 = 3 1 2 5 4
-    Perm2 = 2 5 4 3 1
-    Perm3 = 1 5 2 3 4
-    Composite = 3 5 4 1 2
-*/
-
-// void generate_random_share_temp() {
-//     SeededPRNG G;
-
-//     std::cout << G.get<gfp_<0,2>>() << std::endl;
-// }
+template<class T>
+struct ShufflePrep {
+    ShuffleVec<T> x_0;
+    ShuffleVec<T> x_1;
+    ShuffleVec<T> y_0;
+    ShuffleVec<T> y_1;
+    ShuffleVec<T> z_0;
+    ShuffleVec<T> z_1;
+};
 
 template <typename T>
-void send_preprocessing(SubProcessor<T>& proc) {
+ShufflePrep<T> send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
+    
+    /*
+        Temporary
+        Hardcoded permutations
+        Perm1 = 3 1 2 5 4
+        Perm2 = 2 5 4 3 1
+        Perm3 = 1 5 2 3 4
+        Composite = 3 5 4 1 2
+    */
+    map<int, map<int, int>> perm_map = {
+        {0, {{1, 3}, {2, 1}, {3, 2}, {4, 5}, {5, 4}}},
+        {1, {{1, 2}, {2, 5}, {3, 4}, {4, 3}, {5, 1}}},
+        {2, {{1, 1}, {2, 5}, {3, 2}, {4, 3}, {5, 4}}},
+    };
     SeededPRNG G;
-    auto random = G.get<typename T::open_type>();
 
     auto &P = proc.P;
+    auto &n = P.num_players();
     auto &input = proc.input;
+    auto &me = P.my_num();
     
+    ShufflePrep<T> shuffle_prep = {
+        ShuffleVec<T>(n, n, input_size),
+        ShuffleVec<T>(n, n, input_size),
+        ShuffleVec<T>(n, n, input_size),
+        ShuffleVec<T>(n, n, input_size),
+        ShuffleVec<T>(n, n, input_size),
+        ShuffleVec<T>(n, n, input_size),
+    }
+
+    // We need to generate random vectors of size input_size for x,y for each other party
+
+    for (int j = 0; j < n; j++) {
+        if (j == me) {
+            continue; // No need to generate x y z pair with self
+        }
+        vector<T> x_0(input_size);
+        vector<T> y_0(input_size);
+        vector<T> z_0(input_size);
+        vector<T> x_1(input_size);
+        vector<T> y_1(input_size);
+        vector<T> z_1(input_size);
+        for (int i = 0; i < input_size; i++) {
+            x_0[i] = G.get<typename T::open_type>();
+            x_1[i] = G.get<typename T::open_type>();
+            y_0[i] = G.get<typename T::open_type>();
+            y_1[i] = G.get<typename T::open_type>();
+        }
+        // Generate z based on the permutation
+        
+        for (int i = 0; i < input_size; i++) {
+            z_0[i] = x_0[perm_map.at(me).at(i)] - y_0[i];
+            z_1[i] = x_1[perm_map.at(me).at(i)] - y_1[i];
+        }
+    }
+    
+    
+    
+    auto random = G.get<typename T::open_type>();
     vector<T> x(P.num_players());
     vector<T> y(P.num_players());
 
