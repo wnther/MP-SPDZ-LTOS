@@ -2,7 +2,7 @@
  * SecureShuffle.hpp
  *
  */
-#ifndef USING_EXPERIMENTAL_LTOS_SHUFFLING
+#ifdef USING_EXPERIMENTAL_LTOS_SHUFFLING
 #ifndef PROTOCOLS_SECURESHUFFLE_HPP_
 #define PROTOCOLS_SECURESHUFFLE_HPP_
 
@@ -69,13 +69,16 @@ template<class T>
 using ShuffleVec = vector<vector<vector<T>>>;
 
 template<class T>
+using open_t = typename T::open_type;
+
+template<class T>
 struct ShufflePrep {
-    ShuffleVec<T> x_0;
-    ShuffleVec<T> x_1;
-    ShuffleVec<T> y_0;
-    ShuffleVec<T> y_1;
-    ShuffleVec<T> z_0;
-    ShuffleVec<T> z_1;
+    ShuffleVec<open_t<T>> x_0;
+    ShuffleVec<open_t<T>> x_1;
+    ShuffleVec<open_t<T>> y_0;
+    ShuffleVec<open_t<T>> y_1;
+    ShuffleVec<open_t<T>> z_0;
+    ShuffleVec<open_t<T>> z_1;
 };
 
 template <typename T>
@@ -97,18 +100,23 @@ ShufflePrep<T> send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
     SeededPRNG G;
 
     auto &P = proc.P;
-    auto &n = P.num_players();
+    auto n = P.num_players();
     auto &input = proc.input;
-    auto &me = P.my_num();
+    auto me = P.my_num();
+    
+    
+    auto allocate_shuffle_vec = [&](size_t n, size_t input_size) {
+        return ShuffleVec<open_t<T>>(n, vector<vector<open_t<T>>>(n, vector<open_t<T>>(input_size)));
+    };
     
     ShufflePrep<T> shuffle_prep = {
-        ShuffleVec<T>(n, n, input_size),
-        ShuffleVec<T>(n, n, input_size),
-        ShuffleVec<T>(n, n, input_size),
-        ShuffleVec<T>(n, n, input_size),
-        ShuffleVec<T>(n, n, input_size),
-        ShuffleVec<T>(n, n, input_size),
-    }
+        allocate_shuffle_vec(n, input_size),
+        allocate_shuffle_vec(n, input_size),
+        allocate_shuffle_vec(n, input_size),
+        allocate_shuffle_vec(n, input_size),
+        allocate_shuffle_vec(n, input_size),
+        allocate_shuffle_vec(n, input_size),
+    };
 
     // We need to generate random vectors of size input_size for x,y for each other party
 
@@ -116,21 +124,21 @@ ShufflePrep<T> send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
         if (j == me) {
             continue; // No need to generate x y z pair with self
         }
-        vector<T> x_0(input_size);
-        vector<T> y_0(input_size);
-        vector<T> z_0(input_size);
-        vector<T> x_1(input_size);
-        vector<T> y_1(input_size);
-        vector<T> z_1(input_size);
-        for (int i = 0; i < input_size; i++) {
-            x_0[i] = G.get<typename T::open_type>();
-            x_1[i] = G.get<typename T::open_type>();
-            y_0[i] = G.get<typename T::open_type>();
-            y_1[i] = G.get<typename T::open_type>();
+        vector<open_t<T>> x_0(input_size);
+        vector<open_t<T>> y_0(input_size);
+        vector<open_t<T>> z_0(input_size);
+        vector<open_t<T>> x_1(input_size);
+        vector<open_t<T>> y_1(input_size);
+        vector<open_t<T>> z_1(input_size);
+        for (size_t i = 0; i < input_size; i++) {
+            x_0[i] = G.get<open_t<T>>();
+            x_1[i] = G.get<open_t<T>>();
+            y_0[i] = G.get<open_t<T>>();
+            y_1[i] = G.get<open_t<T>>();
         }
         // Generate z based on the permutation
         
-        for (int i = 0; i < input_size; i++) {
+        for (size_t i = 0; i < input_size; i++) {
             z_0[i] = x_0[perm_map.at(me).at(i)] - y_0[i];
             z_1[i] = x_1[perm_map.at(me).at(i)] - y_1[i];
         }
@@ -138,7 +146,7 @@ ShufflePrep<T> send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
     
     
     
-    auto random = G.get<typename T::open_type>();
+    auto random = G.get<open_t<T>>();
     vector<T> x(P.num_players());
     vector<T> y(P.num_players());
 
@@ -166,6 +174,8 @@ ShufflePrep<T> send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
     println_for_party(proc, x);
     println_for_party(proc, "y");
     println_for_party(proc, y);
+
+    return shuffle_prep;
 }
 
 
@@ -304,7 +314,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
         P.send_to(0, os[0]);
     }
 
-    send_preprocessing(proc);
+    send_preprocessing(proc, 5);
 }
 
 
