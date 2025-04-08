@@ -309,6 +309,14 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
 
             println_for_party(proc, a);
 
+            cout << typeid(x_0).name() << endl;
+            cout << typeid(x_1).name() << endl;
+            cout << typeid(x_0[0]).name() << endl;
+            cout << typeid(x_1[0]).name() << endl;
+
+            cout << x_0[0].type_string() << endl;
+            cout << x_1[0].type_string() << endl;
+
             cout << typeid(T).name() << endl;
             cout << typeid(typename T::open_type).name() << endl;
             cout << typeid(a[0]).name() << endl;
