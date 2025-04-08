@@ -301,22 +301,33 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
 
         }
         else {
-            vector<T> w_0(input_size);
-            vector<T> w_1(input_size);
+            vector<typename T::open_type> w_0(input_size);
+            vector<typename T::open_type> w_1(input_size);
             
             auto x_0 = shuffle_matrix[i][P.my_num()].x_0;
             auto x_1 = shuffle_matrix[i][P.my_num()].x_1;
-            for (size_t q = 0; q < input_size; q++) {
-                // cout << "a[q].get_share().get(): " << typeid(a[q].get_share().get()).name() << endl;
-                // cout << "x_0[q]: " << typeid(x_0[q]).name() << endl;
-                // cout << "a[q].get_mac().get(): " << typeid(a[q].get_mac().get()).name()<< endl;
-                // cout << "x_1[q]: " << typeid(x_1[q]).name() << endl;
-                // cout << "a[q].get_mac(): " << typeid(a[q].get_mac()).name() << endl;
-                // cout << "a[q].get_share(): " << typeid(a[q].get_share()).name() << endl;
+
+            println_for_party(proc, a);
+
+            cout << typeid(T).name() << endl;
+            cout << typeid(typename T::open_type).name() << endl;
+            cout << typeid(a[0]).name() << endl;
+            cout << typeid(a[0].get_share()).name() << endl;
+            cout << typeid(a[0].get_mac()).name() << endl;
+            cout << a[0].get_share().type_string() << endl;
+            cout << a[0].get_mac().type_string() << endl;
+
+            // for (size_t q = 0; q < input_size; q++) {
+            //     cout << "a[q].get_share().get(): " << a[q].get_share() << endl;
+            //     // cout << "x_0[q]: " << typeid(x_0[q]).name() << endl;
+            //     // cout << "a[q].get_mac().get(): " << typeid(a[q].get_mac().get()).name()<< endl;
+            //     // cout << "x_1[q]: " << typeid(x_1[q]).name() << endl;
+            //     // cout << "a[q].get_mac(): " << typeid(a[q].get_mac()).name() << endl;
+            //     // cout << "a[q].get_share(): " << typeid(a[q].get_share()).name() << endl;
                 
-                // w_0[q] = a[q].get_share() - x_0[q]; 
-                // w_1[q] = a[q].get_mac().get() - x_1[q]; 
-            }
+            //     // w_0[q] = a[q].get_share() - x_0[q]; 
+            //     // w_1[q] = a[q].get_mac().get() - x_1[q]; 
+            // }
             
             // P.send_to(i, send[i])
         }
