@@ -103,9 +103,9 @@ void send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
     SeededPRNG G;
 
     auto &P = proc.P;
-    auto n = P.num_players();
+    size_t n = P.num_players();
     //auto &input = proc.input;
-    auto me = P.my_num();
+    size_t me = P.my_num();
     
     
     // auto allocate_shuffle_vec = [&](size_t n, size_t input_size) {
@@ -118,7 +118,7 @@ void send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
 
     ShuffleVec<T> shuffle_matrix(n, vector<ShufflePrep<T>>(n));
 
-    for (int j = 0; j < n; j++) {
+    for (size_t j = 0; j < n; j++) {
         if (j == me) {
             continue; // No need to generate x y z pair with self
         }
@@ -147,26 +147,55 @@ void send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
 
     }
     
-    if (me == 0) {
-        get_party_stream(proc) << shuffle_matrix[me][1].x_0[0] << " " << shuffle_matrix[me][1].x_0[1] << " "  << shuffle_matrix[me][1].x_0[2] << " "  << shuffle_matrix[me][1].x_0[3] << " "  << shuffle_matrix[me][1].x_0[4];
-    } 
-    else {
-        get_party_stream(proc) << shuffle_matrix[me][0].x_0[0] << " " << shuffle_matrix[me][0].x_0[1] << " "  << shuffle_matrix[me][0].x_0[2] << " "  << shuffle_matrix[me][0].x_0[3] << " "  << shuffle_matrix[me][0].x_0[4];
+    for (size_t i = 0; i < n; i++) {
+        ShufflePrep<T> shuffle_prep = {
+            vector<open_t<T>>(input_size),
+            vector<open_t<T>>(input_size),
+            vector<open_t<T>>(input_size),
+            vector<open_t<T>>(input_size),
+            vector<open_t<T>>(input_size),
+            vector<open_t<T>>(input_size),
+        };
+        shuffle_matrix[i][me] = shuffle_prep;
     }
-    //println_for_party<open_t<T>>(proc, shuffle_matrix[me][1].x_0);
-    // auto random = G.get<open_t<T>>();
-    // vector<T> x(P.num_players());
-    // vector<T> y(P.num_players());
 
-    // input.reset_all(P);
-    // for (int i = 0; i < P.num_players(); i++)
-    // input.add_from_all(random);
-    // input.exchange();
-    // for (int i = 0; i < P.num_players(); i++)
-    // {
-    //     x[i] = input.finalize(0);
-    //     y[i] = input.finalize(1);
+    // if (me == 0) {
+    //     get_party_stream(proc) << shuffle_matrix[me][1].x_0[0] << " " << shuffle_matrix[me][1].x_0[1] << " "  << shuffle_matrix[me][1].x_0[2] << " "  << shuffle_matrix[me][1].x_0[3] << " "  << shuffle_matrix[me][1].x_0[4];
+    // } 
+    // else {
+    //     get_party_stream(proc) << shuffle_matrix[me][0].x_0[0] << " " << shuffle_matrix[me][0].x_0[1] << " "  << shuffle_matrix[me][0].x_0[2] << " "  << shuffle_matrix[me][0].x_0[3] << " "  << shuffle_matrix[me][0].x_0[4];
     // }
+    
+
+    // send vectors x0 x1 y0 y1 (each size input_size (5))
+
+
+    vector<octetStream> send(n);
+    vector<octetStream> receive(n);
+
+    for (size_t j = 0; j < n; j++) {
+        if (j == me) continue; 
+
+        for (size_t k = 0; k < input_size; k++) {
+            shuffle_matrix[me][j].x_0[k].pack(send[j]);
+            shuffle_matrix[me][j].x_1[k].pack(send[j]);
+            shuffle_matrix[me][j].y_0[k].pack(send[j]);
+            shuffle_matrix[me][j].y_1[k].pack(send[j]);
+        }
+        P.send_to(j, send[j]);
+    }
+    
+    for (size_t i = 0; i < n; i++) {
+        if (i == me) continue; 
+
+        P.receive_player(i, receive[i]);
+        for (size_t k = 0; k < input_size; k++) {
+            shuffle_matrix[i][me].x_0[k].unpack(receive[i]);
+            shuffle_matrix[i][me].x_1[k].unpack(receive[i]);
+            shuffle_matrix[i][me].y_0[k].unpack(receive[i]);
+            shuffle_matrix[i][me].y_1[k].unpack(receive[i]);
+        }
+    }
 }
 
 
@@ -270,11 +299,11 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     // Write the shuffled results into memory.
     finalize_multiple(a, sizes, unit_sizes, destinations, is_exact, to_shuffle);
     
-    auto &P = proc.P;
+    // auto &P = proc.P;
     //auto &input = proc.input;
     
-    vector<T> alice(P.num_players());
-    vector<T> bob(P.num_players());
+    // vector<T> alice(P.num_players());
+    // vector<T> bob(P.num_players());
     
     // input.reset_all(P);
     // for (int i = 0; i < P.num_players(); i++)
@@ -288,22 +317,22 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     
     // a[4] = alice[0];
 
-    vector<octetStream> os(P.num_players());
+    // vector<octetStream> os(P.num_players());
     
-    if (P.my_num() == 0)
-    {
-        P.receive_player(1, os[0]);
-        alice[0].unpack(os[0]);
-        ofstream st = get_party_stream(proc);
-        st << "Alice a: " << alice[0] << std::endl;
-    }
-    else
-    {
-        ofstream st = get_party_stream(proc);
-        st << "Bob a: " << a[0] << std::endl;
-        a[0].pack(os[0]);
-        P.send_to(0, os[0]);
-    }
+    // if (P.my_num() == 0)
+    // {
+    //     P.receive_player(1, os[0]);
+    //     alice[0].unpack(os[0]);
+    //     ofstream st = get_party_stream(proc);
+    //     st << "Alice a: " << alice[0] << std::endl;
+    // }
+    // else
+    // {
+    //     ofstream st = get_party_stream(proc);
+    //     st << "Bob a: " << a[0] << std::endl;
+    //     a[0].pack(os[0]);
+    //     P.send_to(0, os[0]);
+    // }
 
     send_preprocessing(proc, 5);
 }
