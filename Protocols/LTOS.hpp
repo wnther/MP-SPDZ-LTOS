@@ -314,101 +314,25 @@ void SecureShuffle<T>::inverse_permutation(StackedVector<T> &stack, size_t n, si
 template<class T>
 int SecureShuffle<T>::prep_multiple(StackedVector<T> &a, vector<size_t> &sizes, 
     vector<size_t> &sources, vector<size_t> &unit_sizes, vector<vector<T>> &to_shuffle, vector<bool> &is_exact) {
-    int max_depth = 0;
-    const size_t n_shuffles = sizes.size();
-
-    for (size_t currentShuffle = 0; currentShuffle < n_shuffles; currentShuffle++) {
-        const size_t input_base = sources[currentShuffle];
-        const size_t n = sizes[currentShuffle];
-        const size_t unit_size = unit_sizes[currentShuffle];
-
-        assert(n % unit_size == 0);
-
-        const size_t n_shuffle = n / unit_size;
-        const size_t n_shuffle_pow2 = (1u << int(ceil(log2(n_shuffle))));
-        const bool exact = (n_shuffle_pow2 == n_shuffle) or not T::malicious;
-
-        vector<T> tmp;
-        if (exact)
-        {
-            tmp.resize(n_shuffle_pow2 * unit_size);
-            for (size_t i = 0; i < n; i++)
-                tmp[i] = a[input_base + i];
-        }
-        else
-        {
-            // Pad n_shuffle to n_shuffle_pow2. To reduce this back to n_shuffle after-the-fact, a flag bit is
-            // added to every real entry.
-            const size_t shuffle_unit_size = unit_size + 1;
-            tmp.resize(shuffle_unit_size * n_shuffle_pow2);
-            for (size_t i = 0; i < n_shuffle; i++)
-            {
-                for (size_t j = 0; j < unit_size; j++)
-                    tmp[i * shuffle_unit_size + j] = a[input_base + i * unit_size + j];
-                tmp[(i + 1) * shuffle_unit_size - 1] = T::constant(1, proc.P.my_num(), proc.MC.get_alphai());
-            }
-            for (size_t i = n_shuffle * shuffle_unit_size; i < tmp.size(); i++)
-                tmp[i] = T::constant(0, proc.P.my_num(), proc.MC.get_alphai());
-            unit_sizes[currentShuffle] = shuffle_unit_size;
-        }
-
-        to_shuffle.push_back(tmp);
-        is_exact[currentShuffle] = exact;
-
-        const int shuffle_depth = tmp.size() / unit_size;
-        if (shuffle_depth > max_depth)
-            max_depth = shuffle_depth;
-    }
-
-    return max_depth;
+        (void) a;
+        (void) sizes;
+        (void) sources;
+        (void) unit_sizes;
+        (void) to_shuffle;
+        (void) is_exact;
+    
+        return 0;
 }
 
 template<class T>
 void SecureShuffle<T>::finalize_multiple(StackedVector<T> &a, vector<size_t> &sizes, vector<size_t> &unit_sizes,
     vector<size_t> &destinations, vector<bool> &isExact, vector<vector<T>> &to_shuffle) {
-    const size_t n_shuffles = sizes.size();
-    for (size_t currentShuffle = 0; currentShuffle < n_shuffles; currentShuffle++) {
-        const size_t n = sizes[currentShuffle];
-        const size_t shuffled_unit_size = unit_sizes[currentShuffle];
-        const size_t output_base = destinations[currentShuffle];
-
-        const vector<T>& shuffledData = to_shuffle[currentShuffle];
-
-        if (isExact[currentShuffle])
-            for (size_t i = 0; i < n; i++)
-                a[output_base + i] = shuffledData[i];
-        else
-        {
-            const size_t original_unit_size = shuffled_unit_size - 1;
-            const size_t n_shuffle = n / original_unit_size;
-            const size_t n_shuffle_pow2 = shuffledData.size() / shuffled_unit_size;
-
-            // Reveal the "real element" flags.
-            auto& MC = proc.MC;
-            MC.init_open(proc.P);
-            for (size_t i = 0; i < n_shuffle_pow2; i++) {
-                MC.prepare_open(shuffledData.at((i + 1) * shuffled_unit_size - 1));
-            }
-            MC.exchange(proc.P);
-
-            // Filter out the real elements.
-            size_t i_shuffle = 0;
-            for (size_t i = 0; i < n_shuffle_pow2; i++)
-            {
-                auto bit = MC.finalize_open();
-                if (bit == 1)
-                {
-                    // only output real elements
-                    for (size_t j = 0; j < original_unit_size; j++)
-                        a.at(output_base + i_shuffle * original_unit_size + j) =
-                                shuffledData.at(i * shuffled_unit_size + j);
-                    i_shuffle++;
-                }
-            }
-            if (i_shuffle != n_shuffle)
-                throw runtime_error("incorrect shuffle");
-        }
-    }
+        (void) a;
+        (void) sizes;
+        (void) unit_sizes;
+        (void) destinations;
+        (void) isExact;
+        (void) to_shuffle;
 }
 
 template<class T>
