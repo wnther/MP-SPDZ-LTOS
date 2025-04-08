@@ -10,6 +10,7 @@
 #include "Tools/Waksman.h"
 #include <iostream>
 #include <vector>
+using namespace std;
 
 #include <math.h>
 #include <algorithm>
@@ -65,24 +66,26 @@ void println_for_party(SubProcessor<T>& proc, const StackedVector<T>& vec) {
 
 */
 
-template<class T>
-using ShuffleVec = vector<vector<vector<T>>>;
 
 template<class T>
 using open_t = typename T::open_type;
 
 template<class T>
 struct ShufflePrep {
-    ShuffleVec<open_t<T>> x_0;
-    ShuffleVec<open_t<T>> x_1;
-    ShuffleVec<open_t<T>> y_0;
-    ShuffleVec<open_t<T>> y_1;
-    ShuffleVec<open_t<T>> z_0;
-    ShuffleVec<open_t<T>> z_1;
+    vector<open_t<T>> x_0;
+    vector<open_t<T>> x_1;
+    vector<open_t<T>> y_0;
+    vector<open_t<T>> y_1;
+    vector<open_t<T>> z_0;
+    vector<open_t<T>> z_1;
 };
 
+template<class T>
+using ShuffleVec = vector<vector<ShufflePrep<T>>>;
+
+
 template <typename T>
-ShufflePrep<T> send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
+void send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
     
     /*
         Temporary
@@ -101,81 +104,69 @@ ShufflePrep<T> send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
 
     auto &P = proc.P;
     auto n = P.num_players();
-    auto &input = proc.input;
+    //auto &input = proc.input;
     auto me = P.my_num();
     
     
-    auto allocate_shuffle_vec = [&](size_t n, size_t input_size) {
-        return ShuffleVec<open_t<T>>(n, vector<vector<open_t<T>>>(n, vector<open_t<T>>(input_size)));
-    };
+    // auto allocate_shuffle_vec = [&](size_t n, size_t input_size) {
+    //     return ShuffleVec<open_t<T>>(n, vector<vector<open_t<T>>>(n, vector<open_t<T>>(input_size)));
+    // };
     
-    ShufflePrep<T> shuffle_prep = {
-        allocate_shuffle_vec(n, input_size),
-        allocate_shuffle_vec(n, input_size),
-        allocate_shuffle_vec(n, input_size),
-        allocate_shuffle_vec(n, input_size),
-        allocate_shuffle_vec(n, input_size),
-        allocate_shuffle_vec(n, input_size),
-    };
-
+    
     // We need to generate random vectors of size input_size for x,y for each other party
+    
+
+    ShuffleVec<T> shuffle_matrix(n, vector<ShufflePrep<T>>(n));
 
     for (int j = 0; j < n; j++) {
         if (j == me) {
             continue; // No need to generate x y z pair with self
         }
-        vector<open_t<T>> x_0(input_size);
-        vector<open_t<T>> y_0(input_size);
-        vector<open_t<T>> z_0(input_size);
-        vector<open_t<T>> x_1(input_size);
-        vector<open_t<T>> y_1(input_size);
-        vector<open_t<T>> z_1(input_size);
+        ShufflePrep<T> shuffle_prep = {
+            vector<open_t<T>>(input_size),
+            vector<open_t<T>>(input_size),
+            vector<open_t<T>>(input_size),
+            vector<open_t<T>>(input_size),
+            vector<open_t<T>>(input_size),
+            vector<open_t<T>>(input_size),
+        };
         for (size_t i = 0; i < input_size; i++) {
-            x_0[i] = G.get<open_t<T>>();
-            x_1[i] = G.get<open_t<T>>();
-            y_0[i] = G.get<open_t<T>>();
-            y_1[i] = G.get<open_t<T>>();
+            shuffle_prep.x_0[i] = G.get<open_t<T>>();
+            shuffle_prep.x_1[i] = G.get<open_t<T>>();
+            shuffle_prep.y_0[i] = G.get<open_t<T>>();
+            shuffle_prep.y_1[i] = G.get<open_t<T>>();
         }
-        // Generate z based on the permutation
         
+        // Generate z based on the permutation
         for (size_t i = 0; i < input_size; i++) {
-            z_0[i] = x_0[perm_map.at(me).at(i+1)] - y_0[i];
-            z_1[i] = x_1[perm_map.at(me).at(i+1)] - y_1[i];
+            shuffle_prep.z_0[i] = shuffle_prep.x_0[perm_map.at(me).at(i+1)] - shuffle_prep.y_0[i];
+            shuffle_prep.z_1[i] = shuffle_prep.x_1[perm_map.at(me).at(i+1)] - shuffle_prep.y_1[i];
         }
+
+        shuffle_matrix[me][j] = shuffle_prep;
+
     }
     
-    
-    
-    auto random = G.get<open_t<T>>();
-    vector<T> x(P.num_players());
-    vector<T> y(P.num_players());
-
-    input.reset_all(P);
-    for (int i = 0; i < P.num_players(); i++)
-    input.add_from_all(random);
-    input.exchange();
-    for (int i = 0; i < P.num_players(); i++)
-    {
-        x[i] = input.finalize(0);
-        y[i] = input.finalize(1);
+    if (me == 0) {
+        get_party_stream(proc) << shuffle_matrix[me][1].x_0[0] << " " << shuffle_matrix[me][1].x_0[1] << " "  << shuffle_matrix[me][1].x_0[2] << " "  << shuffle_matrix[me][1].x_0[3] << " "  << shuffle_matrix[me][1].x_0[4];
+    } 
+    else {
+        get_party_stream(proc) << shuffle_matrix[me][0].x_0[0] << " " << shuffle_matrix[me][0].x_0[1] << " "  << shuffle_matrix[me][0].x_0[2] << " "  << shuffle_matrix[me][0].x_0[3] << " "  << shuffle_matrix[me][0].x_0[4];
     }
-//     vector<T> x(5);
-//     vector<T> y(5);
-//     vector<T> z(5);
-//     for (int i = 0; i < 5; i++) {
-//         //y[i] = 
-//         generate_random_share_temp();
-//         //x[i] = 
-//         generate_random_share_temp();
-//     }
-//     //Applied permutation to get Z
-    println_for_party(proc, "Sending Preprocessing");
-    println_for_party(proc, "x");
-    println_for_party(proc, x);
-    println_for_party(proc, "y");
-    println_for_party(proc, y);
+    //println_for_party<open_t<T>>(proc, shuffle_matrix[me][1].x_0);
+    // auto random = G.get<open_t<T>>();
+    // vector<T> x(P.num_players());
+    // vector<T> y(P.num_players());
 
-    return shuffle_prep;
+    // input.reset_all(P);
+    // for (int i = 0; i < P.num_players(); i++)
+    // input.add_from_all(random);
+    // input.exchange();
+    // for (int i = 0; i < P.num_players(); i++)
+    // {
+    //     x[i] = input.finalize(0);
+    //     y[i] = input.finalize(1);
+    // }
 }
 
 
