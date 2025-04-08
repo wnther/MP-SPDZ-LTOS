@@ -85,7 +85,7 @@ using ShuffleVec = vector<vector<ShufflePrep<T>>>;
 
 
 template <typename T>
-ShuffleVec<T> send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
+ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size) {
     
     /*
         Temporary
@@ -284,11 +284,70 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     assert(unit_sizes.size() == n_shuffles);
     assert(shuffles.size() == n_shuffles);
     assert(reverse.size() == n_shuffles);
- 
+    
+
+    auto input_size = sizes[0];
+
     clearprint_for_party(proc);
     println_for_party(proc, "--------------------");
     
-    ShuffleVec<T> shuffle_matrix = send_preprocessing(proc, 5);
+    // Preprocessing (Offline)
+    ShuffleVec<T> shuffle_matrix = conduct_preprocessing(proc, input_size);
+
+    // Main part of the protocol (Online)
+    auto &P = proc.P;
+    for (int i = 0; i < P.num_players(); i++) {
+        if (i == P.my_num()) {
+
+        }
+        else {
+            vector<T> w_0(input_size);
+            vector<T> w_1(input_size);
+            
+            auto x_0 = shuffle_matrix[i][P.my_num()].x_0;
+            auto x_1 = shuffle_matrix[i][P.my_num()].x_1;
+            for (size_t q = 0; q < input_size; q++) {
+                // cout << "a[q].get_share().get(): " << typeid(a[q].get_share().get()).name() << endl;
+                // cout << "x_0[q]: " << typeid(x_0[q]).name() << endl;
+                // cout << "a[q].get_mac().get(): " << typeid(a[q].get_mac().get()).name()<< endl;
+                // cout << "x_1[q]: " << typeid(x_1[q]).name() << endl;
+                // cout << "a[q].get_mac(): " << typeid(a[q].get_mac()).name() << endl;
+                // cout << "a[q].get_share(): " << typeid(a[q].get_share()).name() << endl;
+                
+                // w_0[q] = a[q].get_share() - x_0[q]; 
+                // w_1[q] = a[q].get_mac().get() - x_1[q]; 
+            }
+            
+            // P.send_to(i, send[i])
+        }
+    }
+
+
+
+
+    // for (size_t j = 0; j < n; j++) {
+    //     if (j == me) continue; 
+
+    //     for (size_t k = 0; k < input_size; k++) {
+    //         shuffle_matrix[me][j].x_0[k].pack(send[j]);
+    //         shuffle_matrix[me][j].x_1[k].pack(send[j]);
+    //         shuffle_matrix[me][j].y_0[k].pack(send[j]);
+    //         shuffle_matrix[me][j].y_1[k].pack(send[j]);
+    //     }
+    //     P.send_to(j, send[j]);
+    // }
+    
+    // for (size_t i = 0; i < n; i++) {
+    //     if (i == me) continue; 
+
+    //     P.receive_player(i, receive[i]);
+    //     for (size_t k = 0; k < input_size; k++) {
+    //         shuffle_matrix[i][me].x_0[k].unpack(receive[i]);
+    //         shuffle_matrix[i][me].x_1[k].unpack(receive[i]);
+    //         shuffle_matrix[i][me].y_0[k].unpack(receive[i]);
+    //         shuffle_matrix[i][me].y_1[k].unpack(receive[i]);
+    //     }
+    // }
 }
 
 
