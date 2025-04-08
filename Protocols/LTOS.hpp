@@ -139,8 +139,8 @@ ShufflePrep<T> send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
         // Generate z based on the permutation
         
         for (size_t i = 0; i < input_size; i++) {
-            z_0[i] = x_0[perm_map.at(me).at(i)] - y_0[i];
-            z_1[i] = x_1[perm_map.at(me).at(i)] - y_1[i];
+            z_0[i] = x_0[perm_map.at(me).at(i+1)] - y_0[i];
+            z_1[i] = x_1[perm_map.at(me).at(i+1)] - y_1[i];
         }
     }
     
