@@ -284,12 +284,6 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     assert(unit_sizes.size() == n_shuffles);
     assert(shuffles.size() == n_shuffles);
     assert(reverse.size() == n_shuffles);
-
-    
-    // Initialize the shuffles.
-    vector is_exact(n_shuffles, false);
-    
-    vector<vector<T>> to_shuffle;
  
     clearprint_for_party(proc);
     println_for_party(proc, "Hello");
