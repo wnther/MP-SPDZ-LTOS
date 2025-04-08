@@ -85,7 +85,7 @@ using ShuffleVec = vector<vector<ShufflePrep<T>>>;
 
 
 template <typename T>
-void send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
+ShuffleVec<T> send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
     
     /*
         Temporary
@@ -159,13 +159,7 @@ void send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
         shuffle_matrix[i][me] = shuffle_prep;
     }
 
-    // if (me == 0) {
-    //     get_party_stream(proc) << shuffle_matrix[me][1].x_0[0] << " " << shuffle_matrix[me][1].x_0[1] << " "  << shuffle_matrix[me][1].x_0[2] << " "  << shuffle_matrix[me][1].x_0[3] << " "  << shuffle_matrix[me][1].x_0[4];
-    // } 
-    // else {
-    //     get_party_stream(proc) << shuffle_matrix[me][0].x_0[0] << " " << shuffle_matrix[me][0].x_0[1] << " "  << shuffle_matrix[me][0].x_0[2] << " "  << shuffle_matrix[me][0].x_0[3] << " "  << shuffle_matrix[me][0].x_0[4];
-    // }
-    
+
 
     // send vectors x0 x1 y0 y1 (each size input_size (5))
 
@@ -196,6 +190,8 @@ void send_preprocessing(SubProcessor<T>& proc, size_t input_size) {
             shuffle_matrix[i][me].y_1[k].unpack(receive[i]);
         }
     }
+
+    return shuffle_matrix;
 }
 
 
@@ -299,42 +295,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     // Write the shuffled results into memory.
     finalize_multiple(a, sizes, unit_sizes, destinations, is_exact, to_shuffle);
     
-    // auto &P = proc.P;
-    //auto &input = proc.input;
-    
-    // vector<T> alice(P.num_players());
-    // vector<T> bob(P.num_players());
-    
-    // input.reset_all(P);
-    // for (int i = 0; i < P.num_players(); i++)
-    // input.add_from_all(i);
-    // input.exchange();
-    // for (int i = 0; i < P.num_players(); i++)
-    // {
-    //     alice[i] = input.finalize(0);
-    //     bob[i] = input.finalize(1);
-    // }
-    
-    // a[4] = alice[0];
-
-    // vector<octetStream> os(P.num_players());
-    
-    // if (P.my_num() == 0)
-    // {
-    //     P.receive_player(1, os[0]);
-    //     alice[0].unpack(os[0]);
-    //     ofstream st = get_party_stream(proc);
-    //     st << "Alice a: " << alice[0] << std::endl;
-    // }
-    // else
-    // {
-    //     ofstream st = get_party_stream(proc);
-    //     st << "Bob a: " << a[0] << std::endl;
-    //     a[0].pack(os[0]);
-    //     P.send_to(0, os[0]);
-    // }
-
-    send_preprocessing(proc, 5);
+    ShuffleVec<T> shuffle_matrix = send_preprocessing(proc, 5);
 }
 
 
