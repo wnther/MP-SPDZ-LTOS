@@ -286,9 +286,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     assert(reverse.size() == n_shuffles);
  
     clearprint_for_party(proc);
-    println_for_party(proc, "Hello");
-
-
+    println_for_party(proc, "--------------------");
     
     ShuffleVec<T> shuffle_matrix = send_preprocessing(proc, 5);
 }
