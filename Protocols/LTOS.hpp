@@ -84,8 +84,11 @@ template<class T>
 using ShuffleVec = vector<vector<ShufflePrep<T>>>;
 
 
-template <typename T>
-ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size) {
+template<class T>
+using PermutationMap = map<int, map<int, int>>;
+
+template<class T>
+PermutationMap<T> generate_permutation_map() {
     
     /*
         Temporary
@@ -100,6 +103,13 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size) {
         {1, {{1, 2}, {2, 5}, {3, 4}, {4, 3}, {5, 1}}},
         {2, {{1, 1}, {2, 5}, {3, 2}, {4, 3}, {5, 4}}},
     };
+
+    return perm_map;
+}
+
+template <typename T>
+ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, PermutationMap<T>& perm_map) {
+    
     SeededPRNG G;
 
     auto &P = proc.P;
@@ -291,8 +301,10 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     clearprint_for_party(proc);
     println_for_party(proc, "--------------------");
     
+    PermutationMap<T> perm_map = generate_permutation_map<T>();
+
     // Preprocessing (Offline)
-    ShuffleVec<T> shuffle_matrix = conduct_preprocessing(proc, input_size);
+    ShuffleVec<T> shuffle_matrix = conduct_preprocessing(proc, input_size, perm_map);
 
     // Main part of the protocol (Online)
     auto &P = proc.P;
@@ -302,6 +314,47 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
 
     for (size_t i = 0; i < n; i++) {
         if (i == me) {
+
+            vector<vector<T>> rs(n, vector<T>(input_size));
+
+            //Calculate r,s (Step ii in the paper)
+            vector<octetStream> receive(n);
+            for (size_t j = 0; j < n; j++) {
+                if (j == me) continue; 
+                P.receive_player(j, receive[j]);
+            }
+
+            
+            for (size_t j = 0; j < n; j++) {
+                if (j == me) continue;
+                vector<T> temp_input_vec(input_size);
+                vector<T> temp_output_vec(input_size);
+                for (size_t q = 0; q < input_size; q++) {
+                    temp_input_vec[q].unpack(receive[j]);
+                }
+                for (size_t q = 0; q < input_size; q++) {
+                    SemiShare<open_t<T>> temp_share(shuffle_matrix[me][j].z_0[q]);
+                    SemiShare<open_t<T>> temp_mac(shuffle_matrix[me][j].z_1[q]);
+                    T z_ltos_share(temp_share, temp_mac);
+                    temp_output_vec[q] = temp_input_vec[perm_map.at(me).at(q+1)] + z_ltos_share;
+                }
+                rs[j] = temp_output_vec;
+            }
+
+            // Calculate own r,s (Step b in the paper)
+            rs[me] = vector<T>(input_size);
+            for (size_t q = 0; q < input_size; q++) {
+                rs[me][q] = a[perm_map.at(me).at(q+1)];
+            }
+            
+            // Define shares for next round (Step c in the paper)
+
+            for (size_t q = 0; q < input_size; q++) {
+                a[q] = rs[0][q];
+                for (size_t j = 1; j < n; j++) {
+                    a[q] += rs[j][q];
+                }
+            }
 
         }
         else {
@@ -318,7 +371,6 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
 
                 w[q] = a[q] - new_ltos_share;
             }
-
             
             octetStream send;
             for (size_t q = 0; q < input_size; q++) {
