@@ -301,8 +301,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
 
         }
         else {
-            vector<SemiShare<open_t<T>>> w_0(input_size);
-            vector<SemiShare<open_t<T>>> w_1(input_size);
+            vector<T> w(input_size);
             
             auto x_0 = shuffle_matrix[i][P.my_num()].x_0;
             auto x_1 = shuffle_matrix[i][P.my_num()].x_1;
@@ -310,29 +309,12 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
                 SemiShare<open_t<T>> temp_share(x_0[q]);
                 SemiShare<open_t<T>> temp_mac(x_1[q]);
                 
-                cout << "temp_share: " << temp_share << endl;
-                cout << "temp_mac: " << temp_mac << endl;
-                cout << "x_0: " << x_0[q] << endl;
-                cout << "x_1: " << x_1[q] << endl;
-                cout << "a[q]: " << a[q] << endl;
-
                 T new_ltos_share(x_0[q], x_1[q]);
-                cout << "new_ltos_share: " << new_ltos_share << endl;
 
-                T new_ltos_share2(x_0[q], x_1[q]);
-                cout << "new_ltos_share2: " << new_ltos_share2 << endl;
-
-                auto new_ltos_share3 = a[q] - new_ltos_share2;
-                cout << "new_ltos_share3: " << new_ltos_share3 << endl;
-
-                // cout << "w_0: " << w_0[q] << endl;
-                // cout << "w_1: " << w_1[q] << endl;
-
-                // w_0[q] = a[q].get_share() - temp_share; 
-                // w_1[q] = a[q].get_mac() - temp_mac; 
+                w[q] = a[q] - new_ltos_share;
             }
-            
-            // P.send_to(i, send[i])
+
+            P.send_to(i, send[i])
         }
     }
 
