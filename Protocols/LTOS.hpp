@@ -286,7 +286,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     assert(reverse.size() == n_shuffles);
     
 
-    auto input_size = sizes[0];
+    size_t input_size = sizes[0];
 
     clearprint_for_party(proc);
     println_for_party(proc, "--------------------");
@@ -296,11 +296,16 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
 
     // Main part of the protocol (Online)
     auto &P = proc.P;
-    for (int i = 0; i < P.num_players(); i++) {
-        if (i == P.my_num()) {
+    size_t n = P.num_players();
+    //auto &input = proc.input;
+    size_t me = P.my_num();
+
+    for (size_t i = 0; i < n; i++) {
+        if (i == me) {
 
         }
         else {
+            //Calculate and send w (Step i in the paper)
             vector<T> w(input_size);
             
             auto x_0 = shuffle_matrix[i][P.my_num()].x_0;
@@ -314,7 +319,24 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
                 w[q] = a[q] - new_ltos_share;
             }
 
-            P.send_to(i, send[i])
+            
+            octetStream send;
+            for (size_t q = 0; q < input_size; q++) {
+                w[q].pack(send);
+            }
+            P.send_to(i, send);
+
+            //Define shares for next round (Step iii in the paper)
+            auto y_0 = shuffle_matrix[i][P.my_num()].y_0;
+            auto y_1 = shuffle_matrix[i][P.my_num()].y_1;
+            for (size_t q = 0; q < input_size; q++) {           
+                SemiShare<open_t<T>> temp_share(y_0[q]);
+                SemiShare<open_t<T>> temp_mac(y_1[q]);
+                
+                T new_ltos_share(y_0[q], y_1[q]);
+
+                a[q] = new_ltos_share;
+            }
         }
     }
 
