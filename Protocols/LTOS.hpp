@@ -310,13 +310,26 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
                 SemiShare<open_t<T>> temp_share(x_0[q]);
                 SemiShare<open_t<T>> temp_mac(x_1[q]);
                 
-                //cout << temp_share << endl;
-                //cout << x_1[q] << endl;
-                //cout << temp_mac << endl;
-                cout << typeid(x_1[q]).name() << endl;
+                cout << "temp_share: " << temp_share << endl;
+                cout << "temp_mac: " << temp_mac << endl;
+                cout << "x_0: " << x_0[q] << endl;
+                cout << "x_1: " << x_1[q] << endl;
+                cout << "a[q]: " << a[q] << endl;
 
-                w_0[q] = a[q].get_share() - temp_share; 
-                //w_1[q] = a[q].get_mac() - temp_mac; 
+                T new_ltos_share(x_0[q], x_1[q]);
+                cout << "new_ltos_share: " << new_ltos_share << endl;
+
+                T new_ltos_share2(x_0[q], x_1[q]);
+                cout << "new_ltos_share2: " << new_ltos_share2 << endl;
+
+                auto new_ltos_share3 = a[q] - new_ltos_share2;
+                cout << "new_ltos_share3: " << new_ltos_share3 << endl;
+
+                // cout << "w_0: " << w_0[q] << endl;
+                // cout << "w_1: " << w_1[q] << endl;
+
+                // w_0[q] = a[q].get_share() - temp_share; 
+                // w_1[q] = a[q].get_mac() - temp_mac; 
             }
             
             // P.send_to(i, send[i])
