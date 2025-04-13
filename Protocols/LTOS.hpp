@@ -147,12 +147,22 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, Pe
             shuffle_prep.y_1[i] = G.get<open_t<T>>();
         }
         
+        // auto st = get_party_stream(proc);
+        // st << "prime: " << shuffle_prep.x_0[0].pr() << "\n";
         // Generate z based on the permutation
         for (size_t i = 0; i < input_size; i++) {
-            shuffle_prep.z_0[i] = shuffle_prep.x_0[perm_map.at(me).at(i+1)] - shuffle_prep.y_0[i];
-            shuffle_prep.z_1[i] = shuffle_prep.x_1[perm_map.at(me).at(i+1)] - shuffle_prep.y_1[i];
+            // st << "index for party " << me << " with " << j << perm_map.at(me).at(i+1) << "\n";
+            shuffle_prep.z_0[i] = shuffle_prep.x_0[perm_map.at(me).at(i+1) - 1] - shuffle_prep.y_0[i];
+            shuffle_prep.z_1[i] = shuffle_prep.x_1[perm_map.at(me).at(i+1) - 1] - shuffle_prep.y_1[i];
         }
 
+        // st << "Party " << me << " generated x,y,z for party " << j << "\n";
+        // for (size_t i = 0; i < input_size; i++) {
+        //     st << "x_0, y_0, z_0: " << shuffle_prep.x_0[i] << ", " << shuffle_prep.y_0[i] << ", "<< shuffle_prep.z_0[i] << "\n";
+        // }
+        // for (size_t i = 0; i < input_size; i++) {
+        //     st << "x_1, y_1, z_1: " << shuffle_prep.x_1[i] << ", " << shuffle_prep.y_1[i] << ", "<< shuffle_prep.z_1[i] << "\n";
+        // }
         shuffle_matrix[me][j] = shuffle_prep;
 
     }
@@ -298,8 +308,10 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
 
     size_t input_size = sizes[0];
 
-    clearprint_for_party(proc);
-    println_for_party(proc, "--------------------");
+    // clearprint_for_party(proc);
+    // println_for_party(proc, "--------------------");
+    // auto prime = T::open_type::pr();
+    // get_party_stream(proc) << "Prime: " << prime << endl;
     
     PermutationMap<T> perm_map = generate_permutation_map<T>();
 
@@ -336,7 +348,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
                     SemiShare<open_t<T>> temp_share(shuffle_matrix[me][j].z_0[q]);
                     SemiShare<open_t<T>> temp_mac(shuffle_matrix[me][j].z_1[q]);
                     T z_ltos_share(temp_share, temp_mac);
-                    temp_output_vec[q] = temp_input_vec[perm_map.at(me).at(q+1)] + z_ltos_share;
+                    temp_output_vec[q] = temp_input_vec[perm_map.at(me).at(q+1) - 1] + z_ltos_share;
                 }
                 rs[j] = temp_output_vec;
             }
@@ -344,7 +356,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
             // Calculate own r,s (Step b in the paper)
             rs[me] = vector<T>(input_size);
             for (size_t q = 0; q < input_size; q++) {
-                rs[me][q] = a[perm_map.at(me).at(q+1)];
+                rs[me][q] = a[perm_map.at(me).at(q+1) - 1];
             }
             
             // Define shares for next round (Step c in the paper)
