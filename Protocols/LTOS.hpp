@@ -6,10 +6,15 @@
 #ifndef PROTOCOLS_SECURESHUFFLE_HPP_
 #define PROTOCOLS_SECURESHUFFLE_HPP_
 
+#include "Tools/CheckVector.h"
 #include "SecureShuffle.h"
 #include "Tools/Waksman.h"
 #include <iostream>
 #include <vector>
+#include <random>
+#include <chrono>
+#include <map>
+
 using namespace std;
 
 #include <math.h>
@@ -85,24 +90,21 @@ using ShuffleVec = vector<vector<ShufflePrep<T>>>;
 
 
 template<class T>
-using PermutationMap = map<int, map<int, int>>;
+using PermutationMap = map<int, int>;
+
 
 template<class T>
-PermutationMap<T> generate_permutation_map() {
-    
-    /*
-        Temporary
-        Hardcoded permutations
-        Perm1 = 3 1 2 5 4
-        Perm2 = 2 5 4 3 1
-        Perm3 = 1 5 2 3 4
-        Composite = 3 5 4 1 2
-    */
-    map<int, map<int, int>> perm_map = {
-        {0, {{1, 3}, {2, 1}, {3, 2}, {4, 5}, {5, 4}}},
-        {1, {{1, 2}, {2, 5}, {3, 4}, {4, 3}, {5, 1}}},
-        {2, {{1, 1}, {2, 5}, {3, 2}, {4, 3}, {5, 4}}},
-    };
+PermutationMap<T> generate_random_permutation_map(SubProcessor<T>& proc, int vector_length) {
+    vector<int> original(vector_length);
+    iota(original.begin(), original.end(), 0);
+
+    unsigned seed = chrono::system_clock::now().time_since_epoch().count() + proc.P.my_num();
+    shuffle(original.begin(), original.end(), default_random_engine(seed));
+
+    map<int, int> perm_map;
+    for (int i = 0; i < vector_length; ++i) {
+        perm_map[i] = original[i];
+    }
 
     return perm_map;
 }
@@ -152,9 +154,16 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, Pe
         // Generate z based on the permutation
         for (size_t i = 0; i < input_size; i++) {
             // st << "index for party " << me << " with " << j << perm_map.at(me).at(i+1) << "\n";
-            shuffle_prep.z_0[i] = shuffle_prep.x_0[perm_map.at(me).at(i+1) - 1] - shuffle_prep.y_0[i];
-            shuffle_prep.z_1[i] = shuffle_prep.x_1[perm_map.at(me).at(i+1) - 1] - shuffle_prep.y_1[i];
+            shuffle_prep.z_0[i] = shuffle_prep.x_0[perm_map.at(i)] - shuffle_prep.y_0[i];
+            shuffle_prep.z_1[i] = shuffle_prep.x_1[perm_map.at(i)] - shuffle_prep.y_1[i];
         }
+
+        // auto st = get_party_stream(proc);
+        // auto rand_map = generate_random_permutation_map(proc, input_size);
+
+        // for (auto& [k, v] : rand_map) {
+        //     st << k << " -> " << v << "\n";
+        // }
 
         // st << "Party " << me << " generated x,y,z for party " << j << "\n";
         // for (size_t i = 0; i < input_size; i++) {
@@ -313,7 +322,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     // auto prime = T::open_type::pr();
     // get_party_stream(proc) << "Prime: " << prime << endl;
     
-    PermutationMap<T> perm_map = generate_permutation_map<T>();
+    PermutationMap<T> perm_map = generate_random_permutation_map(proc, input_size);
 
     // Preprocessing (Offline)
     ShuffleVec<T> shuffle_matrix = conduct_preprocessing(proc, input_size, perm_map);
@@ -348,7 +357,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
                     SemiShare<open_t<T>> temp_share(shuffle_matrix[me][j].z_0[q]);
                     SemiShare<open_t<T>> temp_mac(shuffle_matrix[me][j].z_1[q]);
                     T z_ltos_share(temp_share, temp_mac);
-                    temp_output_vec[q] = temp_input_vec[perm_map.at(me).at(q+1) - 1] + z_ltos_share;
+                    temp_output_vec[q] = temp_input_vec[perm_map.at(q)] + z_ltos_share;
                 }
                 rs[j] = temp_output_vec;
             }
@@ -356,7 +365,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
             // Calculate own r,s (Step b in the paper)
             rs[me] = vector<T>(input_size);
             for (size_t q = 0; q < input_size; q++) {
-                rs[me][q] = a[perm_map.at(me).at(q+1) - 1];
+                rs[me][q] = a[perm_map.at(q)];
             }
             
             // Define shares for next round (Step c in the paper)
