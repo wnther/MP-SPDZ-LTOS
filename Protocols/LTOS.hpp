@@ -63,15 +63,6 @@ void println_for_party(SubProcessor<T>& proc, const StackedVector<T>& vec) {
     filestream << std::endl;
 }
 
-/*
-
-    Temporary Insecure Preprocessing
-    This works by having p1 generate two x,y randomly and calculating z based on its permutation and sending the data to p2
-    The permutations are also hardcoded
-
-*/
-
-
 template<class T>
 using open_t = typename T::open_type;
 
@@ -88,47 +79,26 @@ struct ShufflePrep {
 template<class T>
 using ShuffleVec = vector<vector<ShufflePrep<T>>>;
 
-// template<class T>
-// PermutationMap<T> generate_random_permutation_map(SubProcessor<T>& proc, int vector_length) {
-//     vector<int> original(vector_length);
-//     iota(original.begin(), original.end(), 0);
+/*
 
-//     unsigned seed = chrono::system_clock::now().time_since_epoch().count() + proc.P.my_num();
-//     shuffle(original.begin(), original.end(), default_random_engine(seed));
+    (Possibly) Temporary Insecure Preprocessing
+    This works by having p1 generate two x,y randomly and calculating z based on its permutation and sending the data to p2
+    The permutations are also hardcoded
 
-//     map<int, int> perm_map;
-//     for (int i = 0; i < vector_length; ++i) {
-//         perm_map[i] = original[i];
-//     }
-
-//     return perm_map;
-// }
-
+*/
 template <typename T>
 ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, vector<int> perm_map) {
-    
     SeededPRNG G;
-
     auto &P = proc.P;
     size_t n = P.num_players();
-    //auto &input = proc.input;
     size_t me = P.my_num();
     
-    
-    // auto allocate_shuffle_vec = [&](size_t n, size_t input_size) {
-    //     return ShuffleVec<open_t<T>>(n, vector<vector<open_t<T>>>(n, vector<open_t<T>>(input_size)));
-    // };
-    
-    
     // We need to generate random vectors of size input_size for x,y for each other party
-    
-
     ShuffleVec<T> shuffle_matrix(n, vector<ShufflePrep<T>>(n));
 
     for (size_t j = 0; j < n; j++) {
-        if (j == me) {
-            continue; // No need to generate x y z pair with self
-        }
+        if (j == me) continue; // No need to generate x y z pair with self
+
         ShufflePrep<T> shuffle_prep = {
             vector<open_t<T>>(input_size),
             vector<open_t<T>>(input_size),
@@ -137,38 +107,21 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, ve
             vector<open_t<T>>(input_size),
             vector<open_t<T>>(input_size),
         };
+
         for (size_t i = 0; i < input_size; i++) {
             shuffle_prep.x_0[i] = G.get<open_t<T>>();
             shuffle_prep.x_1[i] = G.get<open_t<T>>();
             shuffle_prep.y_0[i] = G.get<open_t<T>>();
             shuffle_prep.y_1[i] = G.get<open_t<T>>();
         }
-        
-        // auto st = get_party_stream(proc);
-        // st << "prime: " << shuffle_prep.x_0[0].pr() << "\n";
+
         // Generate z based on the permutation
         for (size_t i = 0; i < input_size; i++) {
-            // st << "index for party " << me << " with " << j << perm_map.at(me).at(i+1) << "\n";
             shuffle_prep.z_0[i] = shuffle_prep.x_0[perm_map.at(i)] - shuffle_prep.y_0[i];
             shuffle_prep.z_1[i] = shuffle_prep.x_1[perm_map.at(i)] - shuffle_prep.y_1[i];
         }
 
-        // auto st = get_party_stream(proc);
-        // auto rand_map = generate_random_permutation_map(proc, input_size);
-
-        // for (auto& [k, v] : rand_map) {
-        //     st << k << " -> " << v << "\n";
-        // }
-
-        // st << "Party " << me << " generated x,y,z for party " << j << "\n";
-        // for (size_t i = 0; i < input_size; i++) {
-        //     st << "x_0, y_0, z_0: " << shuffle_prep.x_0[i] << ", " << shuffle_prep.y_0[i] << ", "<< shuffle_prep.z_0[i] << "\n";
-        // }
-        // for (size_t i = 0; i < input_size; i++) {
-        //     st << "x_1, y_1, z_1: " << shuffle_prep.x_1[i] << ", " << shuffle_prep.y_1[i] << ", "<< shuffle_prep.z_1[i] << "\n";
-        // }
         shuffle_matrix[me][j] = shuffle_prep;
-
     }
     
     for (size_t i = 0; i < n; i++) {
@@ -183,11 +136,7 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, ve
         shuffle_matrix[i][me] = shuffle_prep;
     }
 
-
-
-    // send vectors x0 x1 y0 y1 (each size input_size (5))
-
-
+    // send vectors x0 x1 y0 y1 (each size input_size)
     vector<octetStream> send(n);
     vector<octetStream> receive(n);
 
@@ -200,6 +149,7 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, ve
             shuffle_matrix[me][j].y_0[k].pack(send[j]);
             shuffle_matrix[me][j].y_1[k].pack(send[j]);
         }
+
         P.send_to(j, send[j]);
     }
     
@@ -222,8 +172,6 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, ve
 /*
     Main Methods
 */
-
-
 template<class T>
 void ShuffleStore<T>::lock()
 {
@@ -309,28 +257,19 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     assert(shuffles.size() == n_shuffles);
     assert(reverse.size() == n_shuffles);
     
-
     size_t input_size = sizes[0];
-
-    // clearprint_for_party(proc);
-    // println_for_party(proc, "--------------------");
-    // auto prime = T::open_type::pr();
-    // get_party_stream(proc) << "Prime: " << prime << endl;
     
-    vector<int> perm_map = generate_random_permutation(input_size);
-
     // Preprocessing (Offline)
+    vector<int> perm_map = generate_random_permutation(input_size);
     ShuffleVec<T> shuffle_matrix = conduct_preprocessing(proc, input_size, perm_map);
 
     // Main part of the protocol (Online)
     auto &P = proc.P;
     size_t n = P.num_players();
-    //auto &input = proc.input;
     size_t me = P.my_num();
 
     for (size_t i = 0; i < n; i++) {
         if (i == me) {
-
             vector<vector<T>> rs(n, vector<T>(input_size));
 
             //Calculate r,s (Step ii in the paper)
@@ -340,20 +279,22 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
                 P.receive_player(j, receive[j]);
             }
 
-            
             for (size_t j = 0; j < n; j++) {
                 if (j == me) continue;
                 vector<T> temp_input_vec(input_size);
                 vector<T> temp_output_vec(input_size);
+
                 for (size_t q = 0; q < input_size; q++) {
                     temp_input_vec[q].unpack(receive[j]);
                 }
+
                 for (size_t q = 0; q < input_size; q++) {
                     SemiShare<open_t<T>> temp_share(shuffle_matrix[me][j].z_0[q]);
                     SemiShare<open_t<T>> temp_mac(shuffle_matrix[me][j].z_1[q]);
                     T z_ltos_share(temp_share, temp_mac);
                     temp_output_vec[q] = temp_input_vec[perm_map.at(q)] + z_ltos_share;
                 }
+
                 rs[j] = temp_output_vec;
             }
 
@@ -364,14 +305,12 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
             }
             
             // Define shares for next round (Step c in the paper)
-
             for (size_t q = 0; q < input_size; q++) {
                 a[q] = rs[0][q];
                 for (size_t j = 1; j < n; j++) {
                     a[q] += rs[j][q];
                 }
             }
-
         }
         else {
             //Calculate and send w (Step i in the paper)
@@ -384,7 +323,6 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
                 SemiShare<open_t<T>> temp_mac(x_1[q]);
                 
                 T new_ltos_share(x_0[q], x_1[q]);
-
                 w[q] = a[q] - new_ltos_share;
             }
             
@@ -402,7 +340,6 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
                 SemiShare<open_t<T>> temp_mac(y_1[q]);
                 
                 T new_ltos_share(y_0[q], y_1[q]);
-
                 a[q] = new_ltos_share;
             }
         }
@@ -417,11 +354,6 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
 
 template<class T>
 bool verify_permutation(StackedVector<T> &a, SubProcessor<T>& proc, size_t input_size) {
-
-    (void) a;
-    (void) input_size;
-    (void) proc;
-
     auto &P = proc.P;
     size_t me = P.my_num();
     auto &MC = proc.MC;
@@ -434,7 +366,6 @@ bool verify_permutation(StackedVector<T> &a, SubProcessor<T>& proc, size_t input
     MC.prepare_open(r);
     MC.exchange(P);
     open_t<T> r_open = MC.finalize_open();
-
     
     T r_open_const = T::constant(r_open, me, MC.get_alphai());
 
@@ -444,11 +375,13 @@ bool verify_permutation(StackedVector<T> &a, SubProcessor<T>& proc, size_t input
     for (size_t i = 0; i < input_size; i++) {
         first_prod_elements[i] = r_open_const - a[i];
     }
+
     //We assume that the second half of a is equal to the input
     vector<T> second_prod_elements(input_size);
     for (size_t i = 0; i < input_size; i++) {
         second_prod_elements[i] = r_open_const - a[i+input_size];
     }
+
     T first_prod = product(first_prod_elements, proc);
     T second_prod = product(second_prod_elements, proc);
     T products = first_prod - second_prod;
@@ -461,7 +394,6 @@ bool verify_permutation(StackedVector<T> &a, SubProcessor<T>& proc, size_t input
     open_t<T> result_open = MC.finalize_open();
     
     MC.Check(P);
-
     bool isZero = (typename T::clear(result_open) == 0);
 
     return isZero;
@@ -473,19 +405,25 @@ T product(vector<T> &vec, SubProcessor<T>& proc) {
     if (n < 2) {
         return vec[0];
     }
+
     auto &protocol = proc.protocol;
     protocol.init_mul();
+
     for (size_t i = 0; i < n / 2; i++) {
         protocol.prepare_mul(vec[2*i], vec[2*i+1]);
     }
+
     protocol.exchange();
     for (size_t i = 0; i < n / 2; i++) {
         vec[i] = protocol.finalize_mul();
     }
+
     if (n % 2 == 1) {
         vec[n / 2] = vec[n - 1];
     }
+
     vec.resize((n + 1) / 2);
+
     return product(vec, proc);
 }
 
@@ -502,6 +440,25 @@ void SecureShuffle<T>::inverse_permutation(StackedVector<T> &stack, size_t n, si
     throw runtime_error("no");
 }
 
+template<class T>
+vector<int> SecureShuffle<T>::generate_random_permutation(int n) { 
+    vector<int> perm;
+    int n_pow2 = 1 << int(ceil(log2(n)));
+    int shuffle_size = n;
+    for (int j = 0; j < n_pow2; j++)
+        perm.push_back(j);
+    SeededPRNG G;
+    for (int i = 0; i < shuffle_size; i++) {
+        int j = G.get_uint(shuffle_size - i);
+        swap(perm[i], perm[i + j]);
+    }
+
+    return perm;
+}
+
+/*
+    Functions below not in use.
+*/
 template<class T>
 int SecureShuffle<T>::prep_multiple(StackedVector<T> &a, vector<size_t> &sizes, 
     vector<size_t> &sources, vector<size_t> &unit_sizes, vector<vector<T>> &to_shuffle, vector<bool> &is_exact) {
@@ -524,24 +481,6 @@ void SecureShuffle<T>::finalize_multiple(StackedVector<T> &a, vector<size_t> &si
         (void) destinations;
         (void) isExact;
         (void) to_shuffle;
-}
-
-template<class T>
-vector<int> SecureShuffle<T>::generate_random_permutation(int n) {
-    // TODO: This is Prep.Shuffles job
-    
-    vector<int> perm;
-    int n_pow2 = 1 << int(ceil(log2(n)));
-    int shuffle_size = n;
-    for (int j = 0; j < n_pow2; j++)
-        perm.push_back(j);
-    SeededPRNG G;
-    for (int i = 0; i < shuffle_size; i++) {
-        int j = G.get_uint(shuffle_size - i);
-        swap(perm[i], perm[i + j]);
-    }
-
-    return perm;
 }
 
 template<class T>
