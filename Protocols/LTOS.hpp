@@ -438,7 +438,6 @@ bool verify_permutation(StackedVector<T> &a, SubProcessor<T>& proc, size_t input
     
     T r_open_const = T::constant(r_open, me, MC.get_alphai());
 
-    cout << "r_open: " << r_open << endl;
     MC.Check(P);
 
     vector<T> first_prod_elements(input_size);
@@ -461,23 +460,16 @@ bool verify_permutation(StackedVector<T> &a, SubProcessor<T>& proc, size_t input
     MC.exchange(P);
     open_t<T> result_open = MC.finalize_open();
     
-    cout << "result_open: " << result_open << endl;
-
     MC.Check(P);
 
-    // Check if the result is zero
+    bool isZero = (typename T::clear(result_open) == 0);
 
-    // result_open.get_share().is_zero();
-
-    // T isZero = (result_open);
-
-    return true;
+    return isZero;
 }
 
 template<class T>
 T product(vector<T> &vec, SubProcessor<T>& proc) {
     auto n = vec.size();
-    cout << "Product: " << n << endl;
     if (n < 2) {
         return vec[0];
     }
