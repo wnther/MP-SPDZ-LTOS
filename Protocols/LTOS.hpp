@@ -88,29 +88,24 @@ struct ShufflePrep {
 template<class T>
 using ShuffleVec = vector<vector<ShufflePrep<T>>>;
 
+// template<class T>
+// PermutationMap<T> generate_random_permutation_map(SubProcessor<T>& proc, int vector_length) {
+//     vector<int> original(vector_length);
+//     iota(original.begin(), original.end(), 0);
 
-template<class T>
-using PermutationMap = map<int, int>;
+//     unsigned seed = chrono::system_clock::now().time_since_epoch().count() + proc.P.my_num();
+//     shuffle(original.begin(), original.end(), default_random_engine(seed));
 
+//     map<int, int> perm_map;
+//     for (int i = 0; i < vector_length; ++i) {
+//         perm_map[i] = original[i];
+//     }
 
-template<class T>
-PermutationMap<T> generate_random_permutation_map(SubProcessor<T>& proc, int vector_length) {
-    vector<int> original(vector_length);
-    iota(original.begin(), original.end(), 0);
-
-    unsigned seed = chrono::system_clock::now().time_since_epoch().count() + proc.P.my_num();
-    shuffle(original.begin(), original.end(), default_random_engine(seed));
-
-    map<int, int> perm_map;
-    for (int i = 0; i < vector_length; ++i) {
-        perm_map[i] = original[i];
-    }
-
-    return perm_map;
-}
+//     return perm_map;
+// }
 
 template <typename T>
-ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, PermutationMap<T>& perm_map) {
+ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, vector<int> perm_map) {
     
     SeededPRNG G;
 
@@ -322,7 +317,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     // auto prime = T::open_type::pr();
     // get_party_stream(proc) << "Prime: " << prime << endl;
     
-    PermutationMap<T> perm_map = generate_random_permutation_map(proc, input_size);
+    vector<int> perm_map = generate_random_permutation(input_size);
 
     // Preprocessing (Offline)
     ShuffleVec<T> shuffle_matrix = conduct_preprocessing(proc, input_size, perm_map);
@@ -413,32 +408,37 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
         }
     }
 
+    if (!verify_permutation(a, proc, input_size)) {
+        throw runtime_error("Permutation verification failed");
+    }
+}
 
 
 
-    // for (size_t j = 0; j < n; j++) {
-    //     if (j == me) continue; 
+template<class T>
+bool verify_permutation(StackedVector<T> &a, SubProcessor<T>& proc, size_t input_size) {
 
-    //     for (size_t k = 0; k < input_size; k++) {
-    //         shuffle_matrix[me][j].x_0[k].pack(send[j]);
-    //         shuffle_matrix[me][j].x_1[k].pack(send[j]);
-    //         shuffle_matrix[me][j].y_0[k].pack(send[j]);
-    //         shuffle_matrix[me][j].y_1[k].pack(send[j]);
-    //     }
-    //     P.send_to(j, send[j]);
-    // }
-    
-    // for (size_t i = 0; i < n; i++) {
-    //     if (i == me) continue; 
+    (void) a;
+    (void) input_size;
+    (void) proc;
 
-    //     P.receive_player(i, receive[i]);
-    //     for (size_t k = 0; k < input_size; k++) {
-    //         shuffle_matrix[i][me].x_0[k].unpack(receive[i]);
-    //         shuffle_matrix[i][me].x_1[k].unpack(receive[i]);
-    //         shuffle_matrix[i][me].y_0[k].unpack(receive[i]);
-    //         shuffle_matrix[i][me].y_1[k].unpack(receive[i]);
-    //     }
-    // }
+    // auto &P = proc.P;
+    // size_t n = P.num_players();
+    // size_t me = P.my_num();
+    // auto MC = proc.MC;
+    auto &prep = proc.DataF;
+
+    T r = prep.get_random(); //There is also a method called get random for open, but we could not find any documentation as to the difference
+    // T r_prime = prep.get_random();
+
+    // MC.init_open(P);
+    // MC.prepare_open(r);
+    // MC.exchange(P);
+    // auto r_open = MC.finalize_open();
+
+    cout << "result: " << r << endl;
+    // MC.Check(P);
+    return true;
 }
 
 
