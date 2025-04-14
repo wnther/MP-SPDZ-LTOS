@@ -431,13 +431,13 @@ bool verify_permutation(StackedVector<T> &a, SubProcessor<T>& proc, size_t input
     T r = prep.get_random(); //There is also a method called get random for open, but we could not find any documentation as to the difference
     // T r_prime = prep.get_random();
 
-    // MC.init_open(P);
-    // MC.prepare_open(r);
-    // MC.exchange(P);
-    // auto r_open = MC.finalize_open();
+    MC.init_open(P);
+    MC.prepare_open(r);
+    MC.exchange(P);
+    auto r_open = MC.finalize_open();
 
-    cout << "result: " << r << endl;
-    // MC.Check(P);
+    cout << "result: " << r_open << endl;
+    MC.Check(P);
     return true;
 }
 
