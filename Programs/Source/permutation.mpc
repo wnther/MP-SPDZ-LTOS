@@ -1,8 +1,8 @@
-a = sint.Array(8)
+a = sint.Array(2**10)
 a.input_from(0)
 
 print_ln('got %s from player 0', a.reveal())
 
 a.secure_shuffle()
 
-print_ln('array after permutation: %s', a.reveal())
+# print_ln('array after permutation: %s', a.reveal())
