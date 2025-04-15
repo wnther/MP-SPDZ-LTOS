@@ -12,6 +12,51 @@
 #include <math.h>
 #include <algorithm>
 
+
+/*
+    Printing to party specific file
+*/
+
+template <typename T>
+ofstream get_party_stream(SubProcessor<T>& proc) {
+    string party_num = to_string(proc.P.my_num());
+    ofstream filestream("party" + party_num + ".out", std::ios::app);
+    return filestream;
+}
+
+template <typename T>
+void clearprint_for_party(SubProcessor<T>& proc) {
+    string party_num = to_string(proc.P.my_num());
+    ofstream filestream("party" + party_num + ".out");
+    filestream << "Party " << party_num << ":" << std::endl;
+}
+
+
+template <typename T>
+void println_for_party(SubProcessor<T>& proc, const std::string& message) {
+    ofstream filestream = get_party_stream(proc);
+    filestream << message << std::endl;
+}
+
+template <typename T>
+void println_for_party(SubProcessor<T>& proc, const std::vector<T>& vec) {
+    ofstream filestream = get_party_stream(proc);
+    for (const auto& v : vec) {
+        filestream << v << " ";
+    }
+    filestream << std::endl;
+}
+
+template <typename T>
+void println_for_party(SubProcessor<T>& proc, const StackedVector<T>& vec) {
+    ofstream filestream = get_party_stream(proc);
+    for (size_t i = 0; i < vec.size(); ++i)
+        filestream << vec[i] << " ";
+    filestream << std::endl;
+}
+
+//DELETE ABOVE
+
 template<class T>
 void ShuffleStore<T>::lock()
 {
@@ -87,6 +132,11 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T>& a, vector<size_t>& sizes
 template<class T>
 void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes, vector<size_t> &destinations,
     vector<size_t> &sources, vector<size_t> &unit_sizes, vector<shuffle_type> &shuffles, vector<bool> &reverse) {
+    
+    //Debug print
+    clearprint_for_party(proc);
+    println_for_party(proc, a);
+
     const auto n_shuffles = sizes.size();
     assert(sources.size() == n_shuffles);
     assert(destinations.size() == n_shuffles);
@@ -115,6 +165,11 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
 
     // Write the shuffled results into memory.
     finalize_multiple(a, sizes, unit_sizes, destinations, is_exact, to_shuffle);
+
+    size_t input_size = sizes[0];
+    if (!verify_permutation(a, proc, input_size)) {
+        throw runtime_error("Permutation verification failed");
+    }
 }
 
 
@@ -212,7 +267,89 @@ void SecureShuffle<T>::inverse_permutation(StackedVector<T> &stack, size_t n, si
 
     // Store perm_bob at stack[output_base]
     finalize_multiple(stack, sizes, unit_sizes, destinations, is_exact, to_shuffle);
+
 }
+
+
+template<class T>
+using open_t = typename T::open_type;
+
+template<class T>
+bool verify_permutation(StackedVector<T> &a, SubProcessor<T>& proc, size_t input_size) {
+    auto &P = proc.P;
+    size_t me = P.my_num();
+    auto &MC = proc.MC;
+    auto &prep = proc.DataF;
+
+    T r = prep.get_random(); //There is also a method called get random for open, but we could not find any documentation as to the difference
+    T r_prime = prep.get_random();
+
+    MC.init_open(P);
+    MC.prepare_open(r);
+    MC.exchange(P);
+    open_t<T> r_open = MC.finalize_open();
+    
+    T r_open_const = T::constant(r_open, me, MC.get_alphai());
+
+    MC.Check(P);
+
+    vector<T> first_prod_elements(input_size);
+    for (size_t i = 0; i < input_size; i++) {
+        first_prod_elements[i] = r_open_const - a[i];
+    }
+
+    //We assume that the second half of a is equal to the input
+    vector<T> second_prod_elements(input_size);
+    for (size_t i = 0; i < input_size; i++) {
+        second_prod_elements[i] = r_open_const - a[i+input_size];
+    }
+
+    T first_prod = product(first_prod_elements, proc);
+    T second_prod = product(second_prod_elements, proc);
+    T products = first_prod - second_prod;
+    vector<T> products2{r_prime, products};
+    T result = product(products2, proc);
+
+    MC.init_open(P);
+    MC.prepare_open(result);
+    MC.exchange(P);
+    open_t<T> result_open = MC.finalize_open();
+    
+    MC.Check(P);
+    bool isZero = (typename T::clear(result_open) == 0);
+
+    return isZero;
+}
+
+
+template<class T>
+T product(vector<T> &vec, SubProcessor<T>& proc) {
+    auto n = vec.size();
+    if (n < 2) {
+        return vec[0];
+    }
+
+    auto &protocol = proc.protocol;
+    protocol.init_mul();
+
+    for (size_t i = 0; i < n / 2; i++) {
+        protocol.prepare_mul(vec[2*i], vec[2*i+1]);
+    }
+
+    protocol.exchange();
+    for (size_t i = 0; i < n / 2; i++) {
+        vec[i] = protocol.finalize_mul();
+    }
+
+    if (n % 2 == 1) {
+        vec[n / 2] = vec[n - 1];
+    }
+
+    vec.resize((n + 1) / 2);
+
+    return product(vec, proc);
+}
+
 
 template<class T>
 int SecureShuffle<T>::prep_multiple(StackedVector<T> &a, vector<size_t> &sizes,
