@@ -55,7 +55,6 @@ void println_for_party(SubProcessor<T>& proc, const StackedVector<T>& vec) {
     filestream << std::endl;
 }
 
-//DELETE ABOVE
 
 template<class T>
 void ShuffleStore<T>::lock()
@@ -132,10 +131,6 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T>& a, vector<size_t>& sizes
 template<class T>
 void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes, vector<size_t> &destinations,
     vector<size_t> &sources, vector<size_t> &unit_sizes, vector<shuffle_type> &shuffles, vector<bool> &reverse) {
-    
-    //Debug print
-    clearprint_for_party(proc);
-    println_for_party(proc, a);
 
     const auto n_shuffles = sizes.size();
     assert(sources.size() == n_shuffles);
@@ -153,6 +148,11 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     vector is_exact(n_shuffles, false);
     vector<vector<T>> to_shuffle;
     int max_depth = prep_multiple(a, sizes, sources, unit_sizes, to_shuffle, is_exact);
+
+    
+    //Debug print
+    clearprint_for_party(proc);
+    println_for_party(proc, to_shuffle[0]);
 
     // Apply the shuffles.
     for (size_t pass = 0; pass < n_passes; pass++)
