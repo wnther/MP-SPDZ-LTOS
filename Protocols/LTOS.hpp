@@ -249,17 +249,15 @@ template<class T>
 void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes, vector<size_t> &destinations,
     vector<size_t> &sources, vector<size_t> &unit_sizes, vector<shuffle_type> &shuffles, vector<bool> &reverse) {
 
-    //Debug print
-    clearprint_for_party(proc);
-    println_for_party(proc, a);
-    
     const auto n_shuffles = sizes.size();
     assert(sources.size() == n_shuffles);
     assert(destinations.size() == n_shuffles);
     assert(unit_sizes.size() == n_shuffles);
     assert(shuffles.size() == n_shuffles);
     assert(reverse.size() == n_shuffles);
-    
+
+    auto source_offset = sources[0];
+
     size_t input_size = sizes[0];
     
     // Preprocessing (Offline)
@@ -270,6 +268,14 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     auto &P = proc.P;
     size_t n = P.num_players();
     size_t me = P.my_num();
+
+    vector<T> to_shuffle = vector<T>(input_size);
+    vector<T> old = vector<T>(input_size);
+    for (size_t i = 0; i < input_size; i++) {
+        to_shuffle[i] = a[source_offset + i];
+        old[i] = a[source_offset + i];
+    }
+
 
     for (size_t i = 0; i < n; i++) {
         if (i == me) {
@@ -304,14 +310,14 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
             // Calculate own r,s (Step b in the paper)
             rs[me] = vector<T>(input_size);
             for (size_t q = 0; q < input_size; q++) {
-                rs[me][q] = a[perm_map.at(q)];
+                rs[me][q] = to_shuffle[perm_map.at(q)];
             }
             
             // Define shares for next round (Step c in the paper)
             for (size_t q = 0; q < input_size; q++) {
-                a[q] = rs[0][q];
+                to_shuffle[q] = rs[0][q];
                 for (size_t j = 1; j < n; j++) {
-                    a[q] += rs[j][q];
+                    to_shuffle[q] += rs[j][q];
                 }
             }
         }
@@ -326,7 +332,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
                 SemiShare<open_t<T>> temp_mac(x_1[q]);
                 
                 T new_ltos_share(x_0[q], x_1[q]);
-                w[q] = a[q] - new_ltos_share;
+                w[q] = to_shuffle[q] - new_ltos_share;
             }
             
             octetStream send;
@@ -343,20 +349,30 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
                 SemiShare<open_t<T>> temp_mac(y_1[q]);
                 
                 T new_ltos_share(y_0[q], y_1[q]);
-                a[q] = new_ltos_share;
+                to_shuffle[q] = new_ltos_share;
             }
         }
     }
 
-    if (!verify_permutation(a, proc, input_size)) {
+    if (!verify_permutation(to_shuffle, old, proc, input_size)) {
         throw runtime_error("Permutation verification failed");
+    }
+
+    for (size_t i = 0; i < n_shuffles; i++) {
+        size_t destination = destinations[i];
+        //size_t unit_size = unit_sizes[i];
+        size_t size = sizes[i];
+
+        for (size_t j = 0; j < size; j++) {
+            a[destination + j] = to_shuffle[j];
+        }
     }
 }
 
 
 
 template<class T>
-bool verify_permutation(StackedVector<T> &a, SubProcessor<T>& proc, size_t input_size) {
+bool verify_permutation(vector<T> &to_check, vector<T> &a, SubProcessor<T>& proc, size_t input_size) {
     auto &P = proc.P;
     size_t me = P.my_num();
     auto &MC = proc.MC;
@@ -376,13 +392,13 @@ bool verify_permutation(StackedVector<T> &a, SubProcessor<T>& proc, size_t input
 
     vector<T> first_prod_elements(input_size);
     for (size_t i = 0; i < input_size; i++) {
-        first_prod_elements[i] = r_open_const - a[i];
+        first_prod_elements[i] = r_open_const - to_check[i];
     }
 
-    //We assume that the second half of a is equal to the input
+    //using that a is not modified yet
     vector<T> second_prod_elements(input_size);
     for (size_t i = 0; i < input_size; i++) {
-        second_prod_elements[i] = r_open_const - a[i+input_size];
+        second_prod_elements[i] = r_open_const - a[i];
     }
 
     T first_prod = product(first_prod_elements, proc);
