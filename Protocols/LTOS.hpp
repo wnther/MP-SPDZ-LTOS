@@ -2,6 +2,8 @@
  * SecureShuffle.hpp
  *
  */
+
+ 
 #ifdef USING_EXPERIMENTAL_LTOS_SHUFFLING
 #ifndef PROTOCOLS_SECURESHUFFLE_HPP_
 #define PROTOCOLS_SECURESHUFFLE_HPP_
@@ -20,6 +22,20 @@ using namespace std;
 #include <math.h>
 #include <algorithm>
 
+/*
+    For Experimentation
+*/
+
+static inline unsigned int mylog2 (unsigned int val) {
+    if (val == 0) return UINT_MAX;
+    if (val == 1) return 0;
+    unsigned int ret = 0;
+    while (val > 1) {
+        val >>= 1;
+        ret++;
+    }
+    return ret;
+}
 
 /*
     Printing to party specific file
@@ -277,6 +293,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     }
 
 
+    auto start = chrono::high_resolution_clock::now();
     for (size_t i = 0; i < n; i++) {
         if (i == me) {
             vector<vector<T>> rs(n, vector<T>(input_size));
@@ -357,6 +374,9 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     if (!verify_permutation(to_shuffle, old, proc, input_size)) {
         throw runtime_error("Permutation verification failed");
     }
+    auto end = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+    println_for_party(proc, "LTOS: n =" + to_string(n) + " m=2^" + to_string(mylog2(input_size)) + ": " + to_string(duration.count()) + " microseconds");
 
     for (size_t i = 0; i < n_shuffles; i++) {
         size_t destination = destinations[i];
