@@ -150,7 +150,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
 
     auto end = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
-    println_for_party(proc, "Waksman based: n =" + to_string(proc.P.num_players()) + " m=2^" + to_string(mylog2(sizes[0])) + ": " + to_string(duration.count()) + " microseconds");
+    println_for_party(proc, "Waksman based: n=" + to_string(proc.P.num_players()) + " m=2^" + to_string(mylog2(sizes[0])) + ": " + to_string(duration.count()) + " microseconds");
 
     // Write the shuffled results into memory.
     finalize_multiple(a, sizes, unit_sizes, destinations, is_exact, to_shuffle);
