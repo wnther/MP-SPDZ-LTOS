@@ -61,14 +61,14 @@ for ((m=2;m<=$2;m++)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m "$m"
     
     echo "running "$1" with n="$3" and m="$m""
-    if [ $m <= 8 ]; then
-        run_script 10 2 $1 $4
-    elif [ $m <= 10 ]; then
-        run_script 5 2 $1 $4
-    elif [ $m <= 12 ]; then
-        run_script 3 2 $1 $4
+    if [ $m -le 8 ]; then
+      run_script 10 2 $1 $4
+    elif [ $m -le 10 ]; then
+      run_script 5 2 $1 $4
+    elif [ $m -le 12 ]; then
+      run_script 3 2 $1 $4
     else
-        run_script 1 2 $1 $4
+      run_script 1 2 $1 $4
     fi
 done
 
