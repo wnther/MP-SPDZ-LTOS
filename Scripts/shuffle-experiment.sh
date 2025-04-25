@@ -60,7 +60,7 @@ run_script() {
 for ((m=2;m<=$2;m++)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m "$m"
     
-    echo "running "$1" with n="$3" and m="$m""
+    echo "running "$1" with n=2 and m="$m""
     if [ $m -le 8 ]; then
       run_script 10 2 $1 $4
     elif [ $m -le 10 ]; then
@@ -77,7 +77,7 @@ echo "-" >> party0.out
 for ((n=2;n<=$3;n++)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
     
-    echo "running "$1" with n="$3" and m=12"
+    echo "running "$1" with n="$n" and m=12"
     run_script 1 $n $1 $4
 done
 
