@@ -376,7 +376,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     }
     auto end = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
-    println_for_party(proc, "LTOS: n=" + to_string(n) + " m=2^" + to_string(mylog2(input_size)) + ": " + to_string(duration.count()) + " microseconds");
+    println_for_party(proc, "LTOS: n=" + to_string(n) + " m=2^" + to_string(mylog2(input_size)) + ": " + to_string(duration.count()));
 
     for (size_t i = 0; i < n_shuffles; i++) {
         size_t destination = destinations[i];
