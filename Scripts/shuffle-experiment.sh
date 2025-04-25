@@ -46,7 +46,6 @@ run_script() {
   # $2 = number of parties
   # $3 = mascot or ltos
   # $4 = fake offline
-  echo "running "$3"$ with n="$2""
   for ((i=0;i<$1;i++)); do
     if [ "$4" = "F" ]; then
       Scripts/"$3".sh permutation2 -N $2 -F
@@ -61,7 +60,16 @@ run_script() {
 for ((m=2;m<=$2;m++)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m "$m"
     
-    run_script 1 2 $1 $4
+    echo "running "$1" with n="$3" and m="$m""
+    if [ $m <= 8 ]; then
+        run_script 10 2 $1 $4
+    elif [ $m <= 10 ]; then
+        run_script 5 2 $1 $4
+    elif [ $m <= 12 ]; then
+        run_script 3 2 $1 $4
+    else
+        run_script 1 2 $1 $4
+    fi
 done
 
 echo "-" >> party0.out 
@@ -69,6 +77,7 @@ echo "-" >> party0.out
 for ((n=2;n<=$3;n++)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
     
+    echo "running "$1" with n="$3" and m=12"
     run_script 1 $n $1 $4
 done
 
