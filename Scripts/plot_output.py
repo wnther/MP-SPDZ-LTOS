@@ -87,7 +87,7 @@ for i in range(8):
     fig.update_layout(
         title=titles[i],
         xaxis_title='log(m)' if i % 2 == 0 else 'n',
-        yaxis_title='time',
+        yaxis_title='time (ms)',
         margin=dict(l=40, r=20, t=40, b=40),
         yaxis_range=[0, 1.1*max(y_vals)],
     )
@@ -134,7 +134,7 @@ for i in range(4):
     fig.update_layout(
         title=titles[i],
         xaxis_title='log(m)' if i % 2 == 0 else 'n',
-        yaxis_title='time',
+        yaxis_title='time (ms)',
         margin=dict(l=40, r=20, t=40, b=40),
         yaxis_range=[0, 1.1*max(max(ltos_y_vals), max(waksman_y_vals))],
     )
@@ -161,12 +161,13 @@ fig.add_trace(go.Scatter(
 fig.update_layout(
     title=title,
     xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
-    yaxis_title='time / (m * log(m))',
+    yaxis_title='time (ms) / (m * log(m))',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
 )
+fig.write_image(f"plots/waksman_real_m_divided_by_m*log(m).pdf")
 
-fig.write_image(f"plots/waksman_real_m_divided.pdf")
+
 
 title = "Waksman based with fake offline phase, time divided by m"
 to_plot = 6
@@ -182,12 +183,13 @@ fig.add_trace(go.Scatter(
 fig.update_layout(
     title=title,
     xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
-    yaxis_title='time / m',
+    yaxis_title='time (ms) / m',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
 )
+fig.write_image(f"plots/waksman_fake_m_divided_by_m.pdf")
 
-fig.write_image(f"plots/waksman_fake_m_divided.pdf")
+
 
 title = "Waksman based with real offline phase, time divided by n"
 to_plot = 5
@@ -202,13 +204,13 @@ fig.add_trace(go.Scatter(
 ))
 fig.update_layout(
     title=title,
-    xaxis_title='n' if to_plot % 2 == 0 else 'n',
-    yaxis_title='time / n',
+    xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
+    yaxis_title='time (ms) / n',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
 )
+fig.write_image(f"plots/waksman_real_n_divided_by_n.pdf")
 
-fig.write_image(f"plots/waksman_real_n_divided.pdf")
 
 
 title = "Waksman based with fake offline phase, time divided by n"
@@ -224,10 +226,75 @@ fig.add_trace(go.Scatter(
 ))
 fig.update_layout(
     title=title,
-    xaxis_title='n' if to_plot % 2 == 0 else 'n',
-    yaxis_title='time / n',
+    xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
+    yaxis_title='time (ms) / n',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
 )
+fig.write_image(f"plots/ltos_real_m_divided_by_n.pdf")
 
-fig.write_image(f"plots/waksman_fake_n_divided.pdf")
+
+
+title = "Ltos with real offline phase, time divided by log(m)"
+to_plot = 0
+fig = go.Figure()
+x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
+y_vals = [(t[2] / t[1]) for t in lists[to_plot]]
+fig.add_trace(go.Scatter(
+    x=x_vals,
+    y=y_vals,
+    mode='lines+markers',
+    name="divided by expected time"
+))
+fig.update_layout(
+    title=title,
+    xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
+    yaxis_title='time (ms) / log(m)',
+    margin=dict(l=40, r=20, t=40, b=40),
+    yaxis_range=[0, 1.1*max(y_vals)],
+)
+fig.write_image(f"plots/ltos_real_m_divided_by_log(m).pdf")
+
+
+
+title = "Ltos with real offline phase, time divided by m"
+to_plot = 0
+fig = go.Figure()
+x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
+y_vals = [(t[2] / 2**t[1]) for t in lists[to_plot]]
+fig.add_trace(go.Scatter(
+    x=x_vals,
+    y=y_vals,
+    mode='lines+markers',
+    name="divided by expected time"
+))
+fig.update_layout(
+    title=title,
+    xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
+    yaxis_title='time (ms) / m',
+    margin=dict(l=40, r=20, t=40, b=40),
+    yaxis_range=[0, 1.1*max(y_vals)],
+)
+fig.write_image(f"plots/ltos_real_m_divided_by_m.pdf")
+
+
+
+title = "Ltos with real offline phase, time divided by n"
+to_plot = 1
+fig = go.Figure()
+x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
+y_vals = [(t[2] / t[0]) for t in lists[to_plot]]
+fig.add_trace(go.Scatter(
+    x=x_vals,
+    y=y_vals,
+    mode='lines+markers',
+    name="divided by expected time"
+))
+fig.update_layout(
+    title=title,
+    xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
+    yaxis_title='time (ms) / n',
+    margin=dict(l=40, r=20, t=40, b=40),
+    yaxis_range=[0, 1.1*max(y_vals)],
+)
+fig.write_image(f"plots/ltos_real_n_divided_by_n.pdf")
