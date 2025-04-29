@@ -38,7 +38,7 @@ fi
 if [ "$4" = "F" ]; then
   make Fake-Offline.x mascot-party.x . > /dev/null
   Scripts/setup-online.sh "$3" > /dev/null
-  ./Fake-Offline.x "$3" > /dev/null
+  ./Fake-Offline.x "$3" > /dev/null # Might need to to do all integers up to N, instead of just N
 fi
 
 run_script() {

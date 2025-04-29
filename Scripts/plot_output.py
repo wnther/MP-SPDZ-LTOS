@@ -90,6 +90,8 @@ for i in range(8):
         yaxis_title='time (ms)',
         margin=dict(l=40, r=20, t=40, b=40),
         yaxis_range=[0, 1.1*max(y_vals)],
+        xaxis_ticklabelstep=1,
+    xaxis_tickvals=x_vals,
     )
 
     fig.write_image(f"plots/{file_names[i]}.pdf")
@@ -137,6 +139,8 @@ for i in range(4):
         yaxis_title='time (ms)',
         margin=dict(l=40, r=20, t=40, b=40),
         yaxis_range=[0, 1.1*max(max(ltos_y_vals), max(waksman_y_vals))],
+        xaxis_ticklabelstep=1,
+    xaxis_tickvals=x_vals,
     )
     
     fig.write_image(f"plots/{file_names[i]}.pdf")
@@ -164,6 +168,8 @@ fig.update_layout(
     yaxis_title='time (ms) / (m * log(m))',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
+    xaxis_ticklabelstep=1,
+    xaxis_tickvals=x_vals,
 )
 fig.write_image(f"plots/waksman_real_m_divided_by_m*log(m).pdf")
 
@@ -186,6 +192,8 @@ fig.update_layout(
     yaxis_title='time (ms) / m',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
+    xaxis_ticklabelstep=1,
+    xaxis_tickvals=x_vals,
 )
 fig.write_image(f"plots/waksman_fake_m_divided_by_m.pdf")
 
@@ -208,6 +216,8 @@ fig.update_layout(
     yaxis_title='time (ms) / n',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
+    xaxis_ticklabelstep=1,
+    xaxis_tickvals=x_vals,
 )
 fig.write_image(f"plots/waksman_real_n_divided_by_n.pdf")
 
@@ -230,6 +240,8 @@ fig.update_layout(
     yaxis_title='time (ms) / n',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
+    xaxis_ticklabelstep=1,
+    xaxis_tickvals=x_vals,
 )
 fig.write_image(f"plots/ltos_real_n_divided_by_n.pdf")
 
@@ -252,6 +264,8 @@ fig.update_layout(
     yaxis_title='time (ms) / log(m)',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
+    xaxis_ticklabelstep=1,
+    xaxis_tickvals=x_vals,
 )
 fig.write_image(f"plots/ltos_real_m_divided_by_log(m).pdf")
 
@@ -274,6 +288,8 @@ fig.update_layout(
     yaxis_title='time (ms) / m',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
+    xaxis_ticklabelstep=1,
+    xaxis_tickvals=x_vals,
 )
 fig.write_image(f"plots/ltos_real_m_divided_by_m.pdf")
 
@@ -296,6 +312,8 @@ fig.update_layout(
     yaxis_title='time (ms) / log(m)',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
+    xaxis_ticklabelstep=1,
+    xaxis_tickvals=x_vals,
 )
 fig.write_image(f"plots/ltos_fake_m_divided_by_log(m).pdf")
 
@@ -318,6 +336,8 @@ fig.update_layout(
     yaxis_title='time (ms) / m',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
+    xaxis_ticklabelstep=1,
+    xaxis_tickvals=x_vals,
 )
 fig.write_image(f"plots/ltos_fake_m_divided_by_m.pdf")
 
@@ -340,6 +360,8 @@ fig.update_layout(
     yaxis_title='time (ms) / n',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
+    xaxis_ticklabelstep=1,
+    xaxis_tickvals=x_vals,
 )
 fig.write_image(f"plots/ltos_real_n_divided_by_n.pdf")
 
@@ -362,5 +384,7 @@ fig.update_layout(
     yaxis_title='time (ms) / n',
     margin=dict(l=40, r=20, t=40, b=40),
     yaxis_range=[0, 1.1*max(y_vals)],
+    xaxis_ticklabelstep=1,
+    xaxis_tickvals=x_vals,
 )
 fig.write_image(f"plots/ltos_fake_n_divided_by_n.pdf")

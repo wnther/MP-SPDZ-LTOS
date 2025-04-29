@@ -112,9 +112,7 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, ve
     // We need to generate random vectors of size input_size for x,y for each other party
     ShuffleVec<T> shuffle_matrix(n, vector<ShufflePrep<T>>(n));
 
-    println_for_party(proc, "prepcanary1");
     for (size_t j = 0; j < n; j++) {
-        println_for_party(proc, "preploopcanary" + to_string(j));
         if (j == me) continue; // No need to generate x y z pair with self
 
         ShufflePrep<T> shuffle_prep = {
@@ -158,15 +156,11 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, ve
     size_t batch_size = 65536;
     size_t num_batches = (input_size + batch_size - 1) / batch_size;
 
-    println_for_party(proc, "prepcanary2");
-
     for (size_t current_batch = 0; current_batch < num_batches; current_batch++) {
-        println_for_party(proc, "Batch" + to_string(current_batch) + "can1");
         vector<octetStream> send(n);
         vector<octetStream> receive(n);
         size_t start = current_batch * batch_size;
         size_t end = min(start + batch_size, input_size);
-        println_for_party(proc, "Batch" + to_string(current_batch) + "can2");
 
         for (size_t j = 0; j < n; j++) {
             if (j == me) continue; 
@@ -181,7 +175,6 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, ve
             P.send_to(j, send[j]);
         }
         
-        println_for_party(proc, "Batch" + to_string(current_batch) + "can3");
         
         for (size_t i = 0; i < n; i++) {
             if (i == me) continue; 
@@ -195,7 +188,6 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, ve
             }
         }
         
-        println_for_party(proc, "Batch" + to_string(current_batch) + "can4");
         
     
     }
@@ -296,11 +288,8 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     size_t input_size = sizes[0];
     
     // Preprocessing (Offline)
-    println_for_party(proc, "canary1");
     vector<int> perm_map = generate_random_permutation(input_size);
-    println_for_party(proc, "canary2");
     ShuffleVec<T> shuffle_matrix = conduct_preprocessing(proc, input_size, perm_map);
-    println_for_party(proc, "canary3");
     // Main part of the protocol (Online)
     auto &P = proc.P;
     size_t n = P.num_players();
@@ -312,11 +301,9 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
         to_shuffle[i] = a[source_offset + i];
         old[i] = a[source_offset + i];
     }
-    println_for_party(proc, "canary4");
 
     auto start = chrono::high_resolution_clock::now();
     for (size_t i = 0; i < n; i++) {
-        println_for_party(proc, "loopCanary" + to_string(i));
         if (i == me) {
             vector<vector<T>> rs(n, vector<T>(input_size));
 
@@ -393,14 +380,11 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
         }
     }
 
-    println_for_party(proc, "canary5");
 
     auto end1 = chrono::high_resolution_clock::now();
     if (!verify_permutation(to_shuffle, old, proc, input_size)) {
-        println_for_party(proc, "canaryFailure");
         throw runtime_error("Permutation verification failed");
     }
-    println_for_party(proc, "canarySuccess");
     auto end2 = chrono::high_resolution_clock::now();
     auto duration1 = chrono::duration_cast<chrono::microseconds>(end1 - start);
     auto duration2 = chrono::duration_cast<chrono::microseconds>(end2 - start);
@@ -449,12 +433,17 @@ bool verify_permutation(vector<T> &to_check, vector<T> &a, SubProcessor<T>& proc
     for (size_t i = 0; i < input_size; i++) {
         second_prod_elements[i] = r_open_const - a[i];
     }
-
-    T first_prod = product(first_prod_elements, proc);
-    T second_prod = product(second_prod_elements, proc);
+    vector<vector<T>> to_compute = {first_prod_elements, second_prod_elements};
+    vector<T> products_before_split = products(to_compute, proc);
+    T first_prod = products_before_split[0];
+    T second_prod = products_before_split[1];
     T products = first_prod - second_prod;
-    vector<T> products2{r_prime, products};
-    T result = product(products2, proc);
+    
+    auto &protocol = proc.protocol;
+    protocol.init_mul();
+    protocol.prepare_mul(r_prime, products);
+    protocol.exchange();
+    T result = protocol.finalize_mul();
 
     MC.init_open(P);
     MC.prepare_open(result);
@@ -467,32 +456,46 @@ bool verify_permutation(vector<T> &to_check, vector<T> &a, SubProcessor<T>& proc
     return isZero;
 }
 
+//ASSUMES THAT ALL VECTORS ARE THE SAME SIZE
 template<class T>
-T product(vector<T> &vec, SubProcessor<T>& proc) {
-    auto n = vec.size();
+vector<T> products(vector<vector<T>> &vecs, SubProcessor<T>& proc) {
+    auto n = vecs[0].size();
     if (n < 2) {
-        return vec[0];
+        vector<T> result(vecs.size());
+        for (size_t i = 0; i < vecs.size(); i++) {
+            result[i] = vecs[i][0];
+        }
+        return result;
     }
 
     auto &protocol = proc.protocol;
     protocol.init_mul();
 
-    for (size_t i = 0; i < n / 2; i++) {
-        protocol.prepare_mul(vec[2*i], vec[2*i+1]);
+    for (size_t p = 0; p < vecs.size(); p++) {
+        for (size_t i = 0; i < n / 2; i++) {
+            protocol.prepare_mul(vecs[p][2*i], vecs[p][2*i+1]);
+        }
     }
 
     protocol.exchange();
-    for (size_t i = 0; i < n / 2; i++) {
-        vec[i] = protocol.finalize_mul();
+    
+    for (size_t p = 0; p < vecs.size(); p++) {
+        for (size_t i = 0; i < n / 2; i++) {
+            vecs[p][i] = protocol.finalize_mul();
+        }
     }
 
     if (n % 2 == 1) {
-        vec[n / 2] = vec[n - 1];
+        for (size_t p = 0; p < vecs.size(); p++) {
+            vecs[p][n / 2] = vecs[p][n - 1];
+        }
     }
 
-    vec.resize((n + 1) / 2);
+    for (size_t p = 0; p < vecs.size(); p++) {
+        vecs[p].resize((n + 1) / 2);
+    }
 
-    return product(vec, proc);
+    return products(vecs, proc);
 }
 
 
