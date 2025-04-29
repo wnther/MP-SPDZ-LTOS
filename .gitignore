@@ -8,6 +8,7 @@ logs/*
 Language-Definition/main.pdf
 keys/*
 plots/
+party0.out:Zone.Identifier
 
 # Personal CONFIG file #
 ##############################
