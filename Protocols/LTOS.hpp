@@ -112,7 +112,9 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, ve
     // We need to generate random vectors of size input_size for x,y for each other party
     ShuffleVec<T> shuffle_matrix(n, vector<ShufflePrep<T>>(n));
 
+    println_for_party(proc, "prepcanary1");
     for (size_t j = 0; j < n; j++) {
+        println_for_party(proc, "preploopcanary" + to_string(j));
         if (j == me) continue; // No need to generate x y z pair with self
 
         ShufflePrep<T> shuffle_prep = {
@@ -153,34 +155,51 @@ ShuffleVec<T> conduct_preprocessing(SubProcessor<T>& proc, size_t input_size, ve
     }
 
     // send vectors x0 x1 y0 y1 (each size input_size)
-    vector<octetStream> send(n);
-    vector<octetStream> receive(n);
+    size_t batch_size = 65536;
+    size_t num_batches = (input_size + batch_size - 1) / batch_size;
 
-    for (size_t j = 0; j < n; j++) {
-        if (j == me) continue; 
+    println_for_party(proc, "prepcanary2");
 
-        for (size_t k = 0; k < input_size; k++) {
-            shuffle_matrix[me][j].x_0[k].pack(send[j]);
-            shuffle_matrix[me][j].x_1[k].pack(send[j]);
-            shuffle_matrix[me][j].y_0[k].pack(send[j]);
-            shuffle_matrix[me][j].y_1[k].pack(send[j]);
+    for (size_t current_batch = 0; current_batch < num_batches; current_batch++) {
+        println_for_party(proc, "Batch" + to_string(current_batch) + "can1");
+        vector<octetStream> send(n);
+        vector<octetStream> receive(n);
+        size_t start = current_batch * batch_size;
+        size_t end = min(start + batch_size, input_size);
+        println_for_party(proc, "Batch" + to_string(current_batch) + "can2");
+
+        for (size_t j = 0; j < n; j++) {
+            if (j == me) continue; 
+    
+            for (size_t k = start; k < end; k++) {
+                shuffle_matrix[me][j].x_0[k].pack(send[j]);
+                shuffle_matrix[me][j].x_1[k].pack(send[j]);
+                shuffle_matrix[me][j].y_0[k].pack(send[j]);
+                shuffle_matrix[me][j].y_1[k].pack(send[j]);
+            }
+    
+            P.send_to(j, send[j]);
         }
-
-        P.send_to(j, send[j]);
+        
+        println_for_party(proc, "Batch" + to_string(current_batch) + "can3");
+        
+        for (size_t i = 0; i < n; i++) {
+            if (i == me) continue; 
+    
+            P.receive_player(i, receive[i]);
+            for (size_t k = start; k < end; k++) {
+                shuffle_matrix[i][me].x_0[k].unpack(receive[i]);
+                shuffle_matrix[i][me].x_1[k].unpack(receive[i]);
+                shuffle_matrix[i][me].y_0[k].unpack(receive[i]);
+                shuffle_matrix[i][me].y_1[k].unpack(receive[i]);
+            }
+        }
+        
+        println_for_party(proc, "Batch" + to_string(current_batch) + "can4");
+        
+    
     }
     
-    for (size_t i = 0; i < n; i++) {
-        if (i == me) continue; 
-
-        P.receive_player(i, receive[i]);
-        for (size_t k = 0; k < input_size; k++) {
-            shuffle_matrix[i][me].x_0[k].unpack(receive[i]);
-            shuffle_matrix[i][me].x_1[k].unpack(receive[i]);
-            shuffle_matrix[i][me].y_0[k].unpack(receive[i]);
-            shuffle_matrix[i][me].y_1[k].unpack(receive[i]);
-        }
-    }
-
     return shuffle_matrix;
 }
 
@@ -277,9 +296,11 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     size_t input_size = sizes[0];
     
     // Preprocessing (Offline)
+    println_for_party(proc, "canary1");
     vector<int> perm_map = generate_random_permutation(input_size);
+    println_for_party(proc, "canary2");
     ShuffleVec<T> shuffle_matrix = conduct_preprocessing(proc, input_size, perm_map);
-
+    println_for_party(proc, "canary3");
     // Main part of the protocol (Online)
     auto &P = proc.P;
     size_t n = P.num_players();
@@ -291,10 +312,11 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
         to_shuffle[i] = a[source_offset + i];
         old[i] = a[source_offset + i];
     }
-
+    println_for_party(proc, "canary4");
 
     auto start = chrono::high_resolution_clock::now();
     for (size_t i = 0; i < n; i++) {
+        println_for_party(proc, "loopCanary" + to_string(i));
         if (i == me) {
             vector<vector<T>> rs(n, vector<T>(input_size));
 
@@ -371,12 +393,19 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
         }
     }
 
+    println_for_party(proc, "canary5");
+
+    auto end1 = chrono::high_resolution_clock::now();
     if (!verify_permutation(to_shuffle, old, proc, input_size)) {
+        println_for_party(proc, "canaryFailure");
         throw runtime_error("Permutation verification failed");
     }
-    auto end = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
-    println_for_party(proc, "LTOS: n=" + to_string(n) + " m=2^" + to_string(mylog2(input_size)) + ": " + to_string(duration.count()));
+    println_for_party(proc, "canarySuccess");
+    auto end2 = chrono::high_resolution_clock::now();
+    auto duration1 = chrono::duration_cast<chrono::microseconds>(end1 - start);
+    auto duration2 = chrono::duration_cast<chrono::microseconds>(end2 - start);
+    println_for_party(proc, "LTOS_without_verification: n=" + to_string(n) + " m=2^" + to_string(mylog2(input_size)) + ": " + to_string(duration1.count()));
+    println_for_party(proc, "LTOS_with_verification: n=" + to_string(n) + " m=2^" + to_string(mylog2(input_size)) + ": " + to_string(duration2.count()));
 
     for (size_t i = 0; i < n_shuffles; i++) {
         size_t destination = destinations[i];
