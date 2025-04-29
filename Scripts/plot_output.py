@@ -1,7 +1,9 @@
 import time
 import plotly.graph_objects as go
 import re
+import os
 
+os.system("mkdir -p plots")
 pattern = r"(\w+): n=(\d+)\s+m=2\^(\d+):\s+(\d+)"
 file = open("party0.out", "r")
 lines = file.readlines()
@@ -66,6 +68,7 @@ for i in range(8):
         margin=dict(l=40, r=20, t=40, b=40),
     )
 
-    fig.write_image("fake_plot.pdf")
+    fig.write_image("plots/temp_fake_plot.pdf")
+    os.remove("plots/temp_fake_plot.pdf")
     time.sleep(1)
     fig.write_image(f"plots/my_plot{i}.pdf")
