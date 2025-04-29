@@ -1,4 +1,4 @@
-a = sint.Array(2**12)
+a = sint.Array(2**18)
 a.input_from(0)
 
 # print_ln('got %s from player 0', a.reveal())
