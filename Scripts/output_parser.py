@@ -19,3 +19,6 @@ protocol_n_m_str = [str(t) for t in protocol_n_m]
 file = open('protocol_n_m.out', 'w')
 file.write("\n".join(protocol_n_m_str))
 file.close()
+
+
+
