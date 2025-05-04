@@ -199,15 +199,22 @@ plot_experiment(
 
 waksman_real_m_online_time = all_experiments["waksman_real_m"]["online_time"]
 waksman_real_m_m = all_experiments["waksman_real_m"]["m"]
+
 plot_experiment(
-    "plots/waksman_real_m_divided_by_m*log(m).pdf",
-    all_experiments["waksman_real_m"]["m"],
-    [
-        ([t / (int(m) * (2**int(m))) for (t, m) in zip(waksman_real_m_online_time, waksman_real_m_m)], "Waksman"),
+    output_path="plots/waksman_real_m_divided_by_m*log(m).pdf",
+    x=all_experiments["waksman_real_m"]["m"],
+    y=[
+        (
+            [
+                t / (int(m) * (2 ** int(m)))
+                for (t, m) in zip(waksman_real_m_online_time, waksman_real_m_m)
+            ],
+            "Waksman",
+        ),
     ],
-    "Waksman based with real offline phase, time divided by m*log(m)",
-    "log(m)",
-    "time (ms) / (m * log(m))",
+    title="Waksman based with real offline phase, time divided by m*log(m)",
+    x_title="log(m)",
+    y_title="time (ms) / (m * log(m))",
 )
 
 # title = "Waksman based with fake offline phase, time divided by m"
