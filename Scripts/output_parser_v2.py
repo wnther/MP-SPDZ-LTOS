@@ -35,7 +35,7 @@ def parse_terminal_output(input_path: Path):
         fastest_time = min([float(t) for t in times])
         
         unfiltered_experiments.append(
-            {"protocol": protocol, "n": n, "m": m_base, "rounds": rounds, "data_sent": data_sent, "total_time": fastest_time}
+            {"protocol": protocol, "n": n, "m": m_base, "rounds": rounds, "data_sent": float(data_sent), "total_time": fastest_time}
         )
         
         # Possibly stupid solution but good for now :)

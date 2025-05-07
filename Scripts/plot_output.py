@@ -1,3 +1,4 @@
+import math
 import time
 import plotly.graph_objects as go
 import re
@@ -43,7 +44,7 @@ all_experiments = parse_combined("SecondRunTerminal.out", "SecondRun.out")
 
 
 def plot_experiment(
-    output_path: str, x: list, y: list[list], title: str, x_title: str, y_title: str
+    output_path: str, x: list, y: list[list], title: str, x_title: str, y_title: str, log_y: bool = False
 ):
     x_vals = x
     y_vals = y
@@ -53,6 +54,7 @@ def plot_experiment(
     for y_val, name in y_vals:
         fig.add_trace(go.Scatter(x=x_vals, y=y_val, mode="lines+markers", name=name))
 
+    
     fig.update_layout(
         title=title,
         xaxis_title=x_title,
@@ -63,16 +65,41 @@ def plot_experiment(
         xaxis_tickvals=x_vals,
     )
 
+    if log_y:
+        fig.update_layout(yaxis_range=[math.log(min(min(y_val[0]) for y_val in y_vals), 10), 1.1*math.log(max(max(y_val[0]) for y_val in y_vals), 10)])
+        fig.update_yaxes(type="log")
+
     fig.write_image(output_path)
 
 
 plot_experiment(
-    "plots/test_plot222.pdf",
-    all_experiments["ltos_real_m"]["m"],
-    [(all_experiments["ltos_real_m"]["online_time"], "")],
-    "some_title",
+    "plots/bandwidth-fake.pdf",
+    all_experiments["ltos_fake_m"]["m"],
+    [(all_experiments["ltos_fake_m"]["data_sent"], "ltos"), (all_experiments["waksman_fake_m"]["data_sent"], "waksman-based")],
+    "bandwidth used when using fake offline phase ltos",
     "log(m)",
-    "time (ms)",
+    "bandwidth (MB)",
+    log_y=True,
+)
+
+plot_experiment(
+    "plots/bandwidth-real.pdf",
+    all_experiments["ltos_real_m"]["m"],
+    [(all_experiments["ltos_real_m"]["data_sent"], "ltos"), (all_experiments["waksman_real_m"]["data_sent"], "waksman-based")],
+    "bandwidth used when using real offline phase ltos",
+    "log(m)",
+    "bandwidth (MB)",
+    log_y=True,
+)
+
+plot_experiment(
+    "plots/bandwidth-real-n.pdf",
+    all_experiments["ltos_real_n"]["n"],
+    [(all_experiments["ltos_real_n"]["data_sent"], "ltos"), (all_experiments["waksman_real_n"]["data_sent"], "waksman-based")],
+    "bandwidth used when using real offline phase ltos",
+    "n",
+    "bandwidth (MB)",
+    log_y=True,
 )
 
 # # ##
@@ -124,7 +151,7 @@ plot_experiment(
 
 #     fig.write_image(f"plots/{file_names[i]}.pdf")
 plot_experiment(
-    "plots/Compare_real_m2.pdf",
+    "plots/Compare_real_m.pdf",
     all_experiments["ltos_real_m"]["m"],
     [
         (all_experiments["ltos_real_m"]["online_time"], "Ltos"),
@@ -133,10 +160,11 @@ plot_experiment(
     "Comparison using real offline phase",
     "log(m)",
     "time (ms)",
+    log_y=True,
 )
 
 plot_experiment(
-    "plots/Compare_real_n2.pdf",
+    "plots/Compare_real_n.pdf",
     all_experiments["ltos_real_n"]["n"],
     [
         (all_experiments["ltos_real_n"]["online_time"], "Ltos"),
@@ -145,9 +173,10 @@ plot_experiment(
     "Comparison using real offline phase",
     "n",
     "time (ms)",
+    log_y=True,
 )
 plot_experiment(
-    "plots/Compare_fake_m2.pdf",
+    "plots/Compare_fake_m.pdf",
     all_experiments["ltos_fake_m"]["m"],
     [
         (all_experiments["ltos_fake_m"]["online_time"], "Ltos"),
@@ -156,9 +185,10 @@ plot_experiment(
     "Comparison using fake offline phase",
     "log(m)",
     "time (ms)",
+    log_y=True,
 )
 plot_experiment(
-    "plots/Compare_fake_n2.pdf",
+    "plots/Compare_fake_n.pdf",
     all_experiments["ltos_fake_n"]["n"],
     [
         (all_experiments["ltos_fake_n"]["online_time"], "Ltos"),
@@ -167,6 +197,7 @@ plot_experiment(
     "Comparison using fake offline phase",
     "n",
     "time (ms)",
+    log_y=True,
 )
 
 
