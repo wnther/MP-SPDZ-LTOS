@@ -121,6 +121,8 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T>& a, vector<size_t>& sizes
 template<class T>
 void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes, vector<size_t> &destinations,
     vector<size_t> &sources, vector<size_t> &unit_sizes, vector<shuffle_type> &shuffles, vector<bool> &reverse) {
+    auto start = chrono::high_resolution_clock::now();
+    
     const auto n_shuffles = sizes.size();
     assert(sources.size() == n_shuffles);
     assert(destinations.size() == n_shuffles);
@@ -138,7 +140,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     vector<vector<T>> to_shuffle;
     int max_depth = prep_multiple(a, sizes, sources, unit_sizes, to_shuffle, is_exact);
 
-    auto start = chrono::high_resolution_clock::now();
+    auto mid = chrono::high_resolution_clock::now();
     // Apply the shuffles.
     for (size_t pass = 0; pass < n_passes; pass++)
     {
@@ -149,7 +151,9 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     }
 
     auto end = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+    auto duration_prep = chrono::duration_cast<chrono::microseconds>(mid - start);
+    auto duration = chrono::duration_cast<chrono::microseconds>(end - mid);
+    println_for_party(proc, "Waksman size dependent prep: n=" + to_string(proc.P.num_players()) + " m=2^" + to_string(mylog2(sizes[0])) + ": " + to_string(duration_prep.count()));
     println_for_party(proc, "Waksman based: n=" + to_string(proc.P.num_players()) + " m=2^" + to_string(mylog2(sizes[0])) + ": " + to_string(duration.count()));
 
     // Write the shuffled results into memory.

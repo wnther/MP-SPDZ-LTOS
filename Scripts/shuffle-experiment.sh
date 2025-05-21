@@ -46,39 +46,63 @@ run_script() {
   # $2 = number of parties
   # $3 = mascot or ltos
   # $4 = fake offline
+  # $5 = batch size
+  echo $0
+  echo $5
   for ((i=0;i<$1;i++)); do
     if [ "$4" = "F" ]; then
-      Scripts/"$3".sh permutation2 -N $2 -F
+      Scripts/"$3".sh permutation2 -N $2 -F --batch-size $5
     else 
-      Scripts/"$3".sh permutation2 -N $2 
+      Scripts/"$3".sh permutation2 -N $2 --batch-size $5
     fi
   done
 }
 
 
+run_experiemtn() {
+  # $1 = mascot or ltos
+  # $2 = M
+  # $3 = N
+  # $4 = F for fake offline or R for real offline
+  for ((m=2;m<=$2;m++)); do
+      PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m "$m"
+      
+      echo "running "$1" with n=2 and m="$m""
+      if [ $m -le 8 ]; then
+        run_script 10 2 $1 $4
+      elif [ $m -le 10 ]; then
+        run_script 5 2 $1 $4
+      elif [ $m -le 12 ]; then
+        run_script 3 2 $1 $4
+      else
+        run_script 1 2 $1 $4
+      fi
+  done
 
-for ((m=2;m<=$2;m++)); do
-    PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m "$m"
-    
-    echo "running "$1" with n=2 and m="$m""
-    if [ $m -le 8 ]; then
-      run_script 10 2 $1 $4
-    elif [ $m -le 10 ]; then
-      run_script 5 2 $1 $4
-    elif [ $m -le 12 ]; then
-      run_script 3 2 $1 $4
-    else
-      run_script 1 2 $1 $4
-    fi
-done
+  echo "-" >> party0.out 
 
-echo "-" >> party0.out 
+  for ((n=2;n<=$3;n++)); do
+      PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
+      
+      echo "running "$1" with n="$n" and m=12"
+      run_script 1 $n $1 $4
+  done
 
-for ((n=2;n<=$3;n++)); do
-    PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
-    
-    echo "running "$1" with n="$n" and m=12"
-    run_script 1 $n $1 $4
-done
+  echo "-" >> party0.out 
+}
 
-echo "-" >> party0.out 
+
+batch_test() {
+  # $1 = m
+  # $2 = mascot/ltos
+  # $3 = fake offline
+  PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m "$1"
+
+  for ((j = 100; j<=2000;j+=100)); do
+    run_script 1 2 $2 $3 $j
+    echo "ran script with batch size $j" >> party0.out
+  done
+}
+
+
+batch_test 12 "ltos" "R"

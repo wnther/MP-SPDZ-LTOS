@@ -275,6 +275,9 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T>& a, vector<size_t>& sizes
 template<class T>
 void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes, vector<size_t> &destinations,
     vector<size_t> &sources, vector<size_t> &unit_sizes, vector<shuffle_type> &shuffles, vector<bool> &reverse) {
+    
+    auto start = chrono::high_resolution_clock::now();
+
 
     const auto n_shuffles = sizes.size();
     assert(sources.size() == n_shuffles);
@@ -302,7 +305,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
         old[i] = a[source_offset + i];
     }
 
-    auto start = chrono::high_resolution_clock::now();
+    auto start1 = chrono::high_resolution_clock::now();
     for (size_t i = 0; i < n; i++) {
         if (i == me) {
             vector<vector<T>> rs(n, vector<T>(input_size));
@@ -380,15 +383,18 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
         }
     }
 
-
     auto end1 = chrono::high_resolution_clock::now();
     if (!verify_permutation(to_shuffle, old, proc, input_size)) {
         throw runtime_error("Permutation verification failed");
     }
     auto end2 = chrono::high_resolution_clock::now();
-    auto duration1 = chrono::duration_cast<chrono::microseconds>(end1 - start);
-    auto duration2 = chrono::duration_cast<chrono::microseconds>(end2 - start);
-    cout << "LTOS_without_verification: n=" + to_string(n) + " m=2^" + to_string(mylog2(input_size)) + ": " + to_string(duration1.count());
+
+    auto duration0 = chrono::duration_cast<chrono::microseconds>(start1 - start);
+
+    auto duration1 = chrono::duration_cast<chrono::microseconds>(end1 - start1);
+    auto duration2 = chrono::duration_cast<chrono::microseconds>(end2 - start1);
+    println_for_party(proc, "LTOS_size_dependent_prep: n=" + to_string(n) + " m=2^" + to_string(mylog2(input_size)) + ": " + to_string(duration0.count()));
+    println_for_party(proc, "LTOS_without_verification: n=" + to_string(n) + " m=2^" + to_string(mylog2(input_size)) + ": " + to_string(duration1.count()));
     println_for_party(proc, "LTOS_with_verification: n=" + to_string(n) + " m=2^" + to_string(mylog2(input_size)) + ": " + to_string(duration2.count()));
 
     for (size_t i = 0; i < n_shuffles; i++) {
