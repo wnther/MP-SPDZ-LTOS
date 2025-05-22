@@ -1,115 +1,58 @@
 import re
 from pathlib import Path
-from collections import defaultdict
 
-def parse_terminal_output(input_path: Path):
-    experiments = {
-        "ltos_real_m": defaultdict(list),
-        "ltos_real_n": defaultdict(list),
-        "ltos_fake_m": defaultdict(list),
-        "ltos_fake_n": defaultdict(list),
-        "waksman_real_m": defaultdict(list),
-        "waksman_real_n": defaultdict(list),
-        "waksman_fake_m": defaultdict(list),
-        "waksman_fake_n": defaultdict(list),
-    }
-
-    with open(input_path, 'r') as f:
-        text = f.read()
-
-    protocol_matches = list(re.finditer(r"running (\w+) with n=(\d+) and m=(\d+)", text))
-    cuts = []
-    unfiltered_experiments = []
-    last_n = 0
-
-    for i, match in enumerate(protocol_matches):
-        protocol, n, m_base = match.groups()
-        start = match.end()
-        end = protocol_matches[i + 1].start() if i + 1 < len(protocol_matches) else len(text)
-        chunk = text[start:end]
-
-        times = re.findall(r'Time\s*=\s*(\d+(?:\.\d+)?)', chunk)
-        rounds = re.search(r'~(\d+)', chunk).group(1)
-        data_sent = re.search(r'Data sent\s*=\s*(\d+(?:\.\d+)?)', chunk).group(1)
-        
-        fastest_time = min([float(t) for t in times])
-        
-        unfiltered_experiments.append(
-            {"protocol": protocol, "n": n, "m": m_base, "rounds": rounds, "data_sent": float(data_sent), "total_time": fastest_time}
-        )
-        
-        # Possibly stupid solution but good for now :)
-        if int(n) == 3:
-            cuts.append(i - 1)
-        if int(n) < last_n:
-            cuts.append(i)
-
-        last_n = int(n)
-
-    cuts.append(len(unfiltered_experiments))
-
-    start = 0
-    experiment_keys = list(experiments.keys())
-    for i, k in enumerate(experiment_keys):
-        for exp in unfiltered_experiments[start:cuts[i]]:
-            for key, value in exp.items():
-                experiments[k][key].append(value)
-        start = cuts[i]
-
-    return {k: dict(v) for k, v in experiments.items()}
-    
-
-def parse_party_output(input_path: Path):
+def parse_output(input_path: Path):
     with open(input_path, 'r') as f:
         content = f.read()
 
-    blocks = content.strip().split('-')
+    blocks = content.strip().split('NEW_EXPERIMENT: ')[1:]
 
-    all_results = []
+    all_results = {}
 
     for block in blocks:
-        block_results = {}
-        lines = block.strip().splitlines()
+        experiments = block.split("Using statistical security parameter 40")
+        name = experiments.pop(0).strip()
+        
+        block_results = {
+                "n": [],
+                "m": [],
+                "rounds": [],
+                "data_sent": [],
+                "total_time": [],
+                "time_size_dependent_prep": [],
+                "full_online_time": [],
+                "online_time_without_verification": [],
+                "batch_size": []
+            }        
 
-        for line in lines:
-            match = re.findall(r'n=(\d+)\s+m=2\^(\d+):\s+(\d+)', line)
-            if match:
-                n_str, m_exp_str, time_str = match[0]
-                n = int(n_str)
-                m = int(m_exp_str)
-                time = int(time_str)
-                key = (n, m)
-                if key not in block_results or time < block_results[key]['online_time']:
-                    block_results[key] = {'n': n, 'm': m, 'online_time': time}
+        for experiment in experiments:
+            n = re.search(r'n=(\d+)', experiment).group(1)
+            m = re.search(r'm=2\^(\d+)', experiment).group(1)
+            cpp_times = re.findall(r':\s+(\d+)', experiment)
+            
+            if len(cpp_times) == 2:
+                time_size_dependent_prep, online_time = cpp_times
+            elif len(cpp_times) == 3:
+                time_size_dependent_prep, time_without_verification, online_time = cpp_times
 
-        all_results.append(list(block_results.values()))
+            full_time = re.search(r'Time\s*=\s*(\d+(?:\.\d+)?)', experiment).group(1)
+            rounds = re.search(r'~(\d+)', experiment).group(1)
+            data_sent = re.search(r'Data sent\s*=\s*(\d+(?:\.\d+)?)', experiment).group(1)
+            batch_size = re.search(r'batch\ssize\s(\d+)', experiment).group(1)
+            
+            block_results["n"].append(int(n))
+            block_results["m"].append(int(m))
+            block_results["rounds"].append(int(rounds))
+            block_results["data_sent"].append(float(data_sent))
+            block_results["total_time"].append(float(full_time))
+            block_results["time_size_dependent_prep"].append(float(time_size_dependent_prep))
+            block_results["full_online_time"].append(float(online_time))
+            block_results["batch_size"].append(int(batch_size))
+            
 
-    experiment_keys = [
-        "ltos_real_m", "ltos_real_n",
-        "ltos_fake_m", "ltos_fake_n",
-        "waksman_real_m", "waksman_real_n",
-        "waksman_fake_m", "waksman_fake_n"
-    ]
+            if len(cpp_times) == 3:
+                block_results["online_time_without_verification"].append(float(time_without_verification))
 
-    experiments = {k: defaultdict(list) for k in experiment_keys}
+        all_results[name] = block_results
 
-    for key, results in zip(experiment_keys, all_results):
-        for result in results:
-            for field, value in result.items():
-                experiments[key][field].append(value)
-
-    experiments = {k: dict(v) for k, v in experiments.items()}
-
-    return experiments
-
-def parse_combined(terminal_output_path: Path, party_output_path: Path):
-    terminal = parse_terminal_output(terminal_output_path)
-    party = parse_party_output(party_output_path)
-
-    for key in terminal:
-        for subkey in party[key]:
-            if subkey not in terminal[key]:
-                terminal[key][subkey] = party[key][subkey]
-    return terminal
-
-parse_combined("SecondRunTerminal.out", "SecondRun.out")
+    return all_results
