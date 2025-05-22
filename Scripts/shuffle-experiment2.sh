@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# ***
+#
+# Script for running experiments
+#
+# ***
+
 run_make() {
   # $1 = mascot or ltos
   if test -f "$1-has-been-made"; then
@@ -23,9 +29,6 @@ setup_fake_data() {
   # ./Fake-Offline.x "$1" > /dev/null # Might need to to all integers up to N, instead of just N
 }
 
-
-
-
 run_script() {
   # $1 = number of repetitions
   # $2 = number of parties
@@ -44,37 +47,12 @@ run_script() {
 }
 
 
-run_experiment() {
-  # $1 = mascot or ltos
-  # $2 = M
-  # $3 = N
-  # $4 = F for fake offline or R for real offline
-  for ((m=2;m<=$2;m++)); do
-      PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m "$m"
-      
-      echo "running "$1" with n=2 and m="$m""
-      if [ $m -le 8 ]; then
-        run_script 10 2 $1 $4
-      elif [ $m -le 10 ]; then
-        run_script 5 2 $1 $4
-      elif [ $m -le 12 ]; then
-        run_script 3 2 $1 $4
-      else
-        run_script 1 2 $1 $4
-      fi
-  done
 
-  echo "-" >> party0.out 
-
-  for ((n=2;n<=$3;n++)); do
-      PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
-      
-      echo "running "$1" with n="$n" and m=12"
-      run_script 1 $n $1 $4
-  done
-
-  echo "-" >> party0.out 
-}
+# ***
+#
+# Different helper functions for running specific experiments
+#
+# ***
 
 
 batch_test() {
@@ -83,13 +61,68 @@ batch_test() {
   # $3 = fake offline
   # $4 = output file
   run_make $2
-
   PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m "$1"
 
-  for ((j = 100; j<=2000;j+=100)); do
+  for ((j = 250; j<=5000;j+=250)); do
     run_script 1 2 $2 $3 $j $4
   done
 }
+
+batch_test_small() {
+  # $1 = m
+  # $2 = mascot/ltos
+  # $3 = fake offline
+  # $4 = output file
+  run_make $2
+  PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m "$1"
+
+  for ((j = 25; j<=500;j+=25)); do
+    run_script 1 2 $2 $3 $j $4
+  done
+}
+
+fake_compare_test_20() {
+  # $1 = output file
+
+  run_make "ltos"
+  echo "NEW_EXPERIMENT: ltos_fake" >> $1
+  for ((vec_size=3;vec_size<=20;vec_size+=1)); do
+    PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
+    echo "running fake (ltos) comparrison test with vec_size=$vec_size"
+    run_script 1 2 "ltos" "F" 100 $1
+  done
+
+  run_make "mascot"
+  echo "NEW_EXPERIMENT: waksman_based_fake" >> $1
+  for ((vec_size=3;vec_size<=20;vec_size+=1)); do
+    PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
+    echo "running fake (mascot) comparrison test with vec_size=$vec_size"
+    run_script 1 2 "mascot" "F" 100 $1
+  done
+}
+
+real_compare_test_20() {
+  # $1 = output file
+
+  # BATCH SIZE IS NOT OPTIMAL IN TERMS OF ROUND COMPLEXITY
+
+  run_make "ltos"
+  echo "NEW_EXPERIMENT: ltos_real" >> $1
+  for ((vec_size=3;vec_size<=20;vec_size+=1)); do
+    PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
+    echo "running real (ltos) comparrison test with vec_size=$vec_size"
+    run_script 1 2 "ltos" "R" 1000 $1
+  done
+
+  run_make "mascot"
+  echo "NEW_EXPERIMENT: waksman_based_real" >> $1
+  for ((vec_size=3;vec_size<=20;vec_size+=1)); do
+    PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
+    echo "running real (mascot) comparrison test with vec_size=$vec_size"
+    run_script 1 2 "mascot" "R" 1000 $1
+  done
+}
+
 
 get_fake_data_size() {
   # $1 = m
@@ -109,27 +142,38 @@ fi
 if [ "$1" = "fake-data" ]; then
   setup_fake_data 2 $(get_fake_data_size 18)
 elif [ "$1" = "batch" ]; then
-  for ((vec_size=5;vec_size<=10;vec_size+=5)); do
-    echo "running ltos batch test with m=$vec_size and real prep"
+  for ((vec_size=3;vec_size<=15;vec_size+=3)); do
+    echo "running ltos batch test with vec_size=$vec_size and real prep"
     echo "NEW_EXPERIMENT: ltos_batch_real_$vec_size" >> $2
     batch_test $vec_size "ltos" "R" $2
-    echo "running ltos batch test with m=$vec_size and fake prep"
+    echo "running ltos batch test with vec_size=$vec_size and fake prep"
     echo "NEW_EXPERIMENT: ltos_batch_fake_$vec_size" >> $2
     batch_test $vec_size "ltos" "F" $2
   done
-  for ((vec_size=5;vec_size<=10;vec_size+=5)); do
-    echo "running mascot batch test with m=$vec_size and real prep"
+  for ((vec_size=3;vec_size<=15;vec_size+=3)); do
+    echo "running mascot batch test with vec_size=$vec_size and real prep"
     echo "NEW_EXPERIMENT: mascot_batch_real_$vec_size" >> $2
     batch_test $vec_size "mascot" "R" $2
-    echo "running mascot batch test with m=$vec_size and fake prep"
+    echo "running mascot batch test with vec_size=$vec_size and fake prep"
     echo "NEW_EXPERIMENT: mascot_batch_fake_$vec_size" >> $2
     batch_test $vec_size "mascot" "F" $2
   done
 
-elif [ "$1" = "2" ]; then
-  run_experiment $1 12 12 "R"
-elif [ "$1" = "3" ]; then
-  run_experiment $1 12 12 "F"
+elif [ "$1" = "batch-small" ]; then
+  for ((vec_size=5;vec_size<=20;vec_size+=5)); do
+    echo "running ltos batch test with vec_size=$vec_size and fake prep"
+    echo "NEW_EXPERIMENT: ltos_batch_fake_$vec_size" >> $2
+    batch_test_small $vec_size "ltos" "F" $2
+  done
+  for ((vec_size=5;vec_size<=20;vec_size+=5)); do
+    echo "running mascot batch test with vec_size=$vec_size and fake prep"
+    echo "NEW_EXPERIMENT: mascot_batch_fake_$vec_size" >> $2
+    batch_test_small $vec_size "mascot" "F" $2
+  done
+elif [ "$1" = "fake-compare" ]; then
+  fake_compare_test_20 $2
+elif [ "$1" = "real-compare" ]; then
+  real_compare_test_20 $2
 else
-  echo "Invalid argument for experiment. Use fake-data|batch"
+  echo "Invalid argument for experiment. Use fake-data|batch|batch-small|fake-compare|real-compare"
 fi
