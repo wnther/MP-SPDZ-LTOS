@@ -93,12 +93,16 @@ batch_test() {
 
 get_fake_data_size() {
   # $1 = m
-  echo 2**$1 * $1 * 4
+  let f_size=2**$1*$1*4;
+  echo $f_size
 }
 
 # $1 = which tests to run
-if [ "$#" -lt 1 ]; then
-    echo "Usage: $0 <experiment>" 
+if [ "$#" -lt 2 ]; then
+    echo "Usage: $0 <experiment> <outfile>"
+    echo "Where:"
+    echo "experiment=fake-data|batch"
+    echo "outfile is a string such as party0.out"
     exit 1
 fi
 
@@ -108,18 +112,18 @@ elif [ "$1" = "batch" ]; then
   for ((vec_size=5;vec_size<=10;vec_size+=5)); do
     echo "running ltos batch test with m=$vec_size and real prep"
     echo "NEW_EXPERIMENT: ltos_batch_real_$vec_size" >> $2
-    batch_test $vec_size "ltos" "R" $2   
+    batch_test $vec_size "ltos" "R" $2
     echo "running ltos batch test with m=$vec_size and fake prep"
     echo "NEW_EXPERIMENT: ltos_batch_fake_$vec_size" >> $2
-    batch_test $vec_size "ltos" "F" $2   
+    batch_test $vec_size "ltos" "F" $2
   done
   for ((vec_size=5;vec_size<=10;vec_size+=5)); do
     echo "running mascot batch test with m=$vec_size and real prep"
     echo "NEW_EXPERIMENT: mascot_batch_real_$vec_size" >> $2
-    batch_test $vec_size "mascot" "R" $2   
+    batch_test $vec_size "mascot" "R" $2
     echo "running mascot batch test with m=$vec_size and fake prep"
     echo "NEW_EXPERIMENT: mascot_batch_fake_$vec_size" >> $2
-    batch_test $vec_size "mascot" "F" $2 
+    batch_test $vec_size "mascot" "F" $2
   done
 
 elif [ "$1" = "2" ]; then
@@ -127,5 +131,5 @@ elif [ "$1" = "2" ]; then
 elif [ "$1" = "3" ]; then
   run_experiment $1 12 12 "F"
 else
-  echo "Invalid argument. Use '1', '2', '3', '4', '5', or '6'."
+  echo "Invalid argument for experiment. Use fake-data|batch"
 fi
