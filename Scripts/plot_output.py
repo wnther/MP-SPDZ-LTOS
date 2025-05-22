@@ -49,71 +49,122 @@ def plot_experiment(
 
     fig.write_image(output_path)
 
-# plot_experiment(
-#     "plots/small_batch_fake_m.pdf",
-#     all_experiments["ltos_batch_fake_5"]["batch_size"],
-#     [
-#         (all_experiments["ltos_batch_fake_5"]["rounds"], "ltos_5"),
-#         (all_experiments["ltos_batch_fake_10"]["rounds"], "ltos_10"),
-#         (all_experiments["ltos_batch_fake_15"]["rounds"], "ltos_15"),
-#         (all_experiments["ltos_batch_fake_20"]["rounds"], "ltos_20"),
-# 	    (all_experiments["mascot_batch_fake_5"]["rounds"], "waksman-based_5"),
-# 	    (all_experiments["mascot_batch_fake_10"]["rounds"], "waksman-based_10"),
-# 	    (all_experiments["mascot_batch_fake_15"]["rounds"], "waksman-based_15"),
-# 	    (all_experiments["mascot_batch_fake_20"]["rounds"], "waksman-based_20"),
-#     ],
-#     "Number of rounds when changing batch size, all preprocessing data (triples) is faked",
-#     "batch size",
-#     "Number of rounds",
-#     log_y=True,
-# )
 
-plot_experiment(
-    "plots/compare_m_log.pdf",
-    all_experiments["ltos_fake"]["m"],
-    [
-        (all_experiments["ltos_fake"]["total_time"], "ltos"),
-        (all_experiments["waksman_based_fake"]["total_time"], "waksman based"),
-    ],
-    "TIme comparison where all preprocessing data (triples) is faked",
-    "exponent of vector_size",
-    "Total time in seconds",
-    log_y=True,
-)
+def plot_fake_batch():
+    plot_experiment(
+        "plots/small_batch_fake_m.pdf",
+        all_experiments["ltos_batch_fake_5"]["batch_size"],
+        [
+            (all_experiments["ltos_batch_fake_5"]["rounds"], "ltos_5"),
+            (all_experiments["ltos_batch_fake_10"]["rounds"], "ltos_10"),
+            (all_experiments["ltos_batch_fake_15"]["rounds"], "ltos_15"),
+            (all_experiments["ltos_batch_fake_20"]["rounds"], "ltos_20"),
+    	    (all_experiments["mascot_batch_fake_5"]["rounds"], "waksman-based_5"),
+    	    (all_experiments["mascot_batch_fake_10"]["rounds"], "waksman-based_10"),
+    	    (all_experiments["mascot_batch_fake_15"]["rounds"], "waksman-based_15"),
+    	    (all_experiments["mascot_batch_fake_20"]["rounds"], "waksman-based_20"),
+        ],
+        "Number of rounds when changing batch size, all preprocessing data (triples) is faked",
+        "batch size",
+        "Number of rounds",
+        log_y=True,
+    )
 
-plot_experiment(
-    "plots/compare_m.pdf",
-    all_experiments["ltos_fake"]["m"],
-    [
-        (all_experiments["ltos_fake"]["total_time"], "ltos"),
-        (all_experiments["waksman_based_fake"]["total_time"], "waksman based"),
-    ],
-    "TIme comparison where all preprocessing data (triples) is faked",
-    "exponent of vector_size",
-    "Total time in seconds",
-    log_y=False,
-)
 
-# plot_experiment(
-#     "plots/batch_real_m.pdf",
-#     all_experiments["ltos_batch_real_3"]["batch_size"],
-#     [
-#         (all_experiments["ltos_batch_real_3"]["rounds"], "ltos_3"),
-# 	    (all_experiments["mascot_batch_real_3"]["rounds"], "waksman-based_3"),
-#         (all_experiments["ltos_batch_real_6"]["rounds"], "ltos_6"),
-# 	    (all_experiments["mascot_batch_real_6"]["rounds"], "waksman-based_6"),
-#         (all_experiments["ltos_batch_real_9"]["rounds"], "ltos_9"),
-# 	    (all_experiments["mascot_batch_real_9"]["rounds"], "waksman-based_9"),
-#         (all_experiments["ltos_batch_real_12"]["rounds"], "ltos_12"),
-# 	    (all_experiments["mascot_batch_real_12"]["rounds"], "waksman-based_12"),
-#         (all_experiments["ltos_batch_real_15"]["rounds"], "ltos_15"),
-# 	    (all_experiments["mascot_batch_real_15"]["rounds"], "waksman-based_15"),
-#     ],
-#     "Number of rounds when changing batch size with MASCOT preprocessing",
-#     "batch size",
-#     "Number of rounds ",
-#     log_y=True,
-# )
+def plot_real_batch():
+    plot_experiment(
+        "plots/batch_real_m.pdf",
+        all_experiments["ltos_batch_real_3"]["batch_size"],
+        [
+            (all_experiments["ltos_batch_real_3"]["rounds"], "ltos_3"),
+    	    (all_experiments["mascot_batch_real_3"]["rounds"], "waksman-based_3"),
+            (all_experiments["ltos_batch_real_6"]["rounds"], "ltos_6"),
+    	    (all_experiments["mascot_batch_real_6"]["rounds"], "waksman-based_6"),
+            (all_experiments["ltos_batch_real_9"]["rounds"], "ltos_9"),
+    	    (all_experiments["mascot_batch_real_9"]["rounds"], "waksman-based_9"),
+            (all_experiments["ltos_batch_real_12"]["rounds"], "ltos_12"),
+    	    (all_experiments["mascot_batch_real_12"]["rounds"], "waksman-based_12"),
+            (all_experiments["ltos_batch_real_15"]["rounds"], "ltos_15"),
+    	    (all_experiments["mascot_batch_real_15"]["rounds"], "waksman-based_15"),
+        ],
+        "Number of rounds when changing batch size with MASCOT preprocessing",
+        "batch size",
+        "Number of rounds ",
+        log_y=True,
+    )
+
+def plot_fake_compare():
+    plot_experiment(
+        "plots/compare_m_fake_log.pdf",
+        all_experiments["ltos_fake"]["m"],
+        [
+            (all_experiments["ltos_fake"]["total_time"], "ltos"),
+            (all_experiments["waksman_based_fake"]["total_time"], "waksman based"),
+        ],
+        "Time comparison where all preprocessing data (triples) is faked",
+        "exponent of vector_size",
+        "Total time in seconds",
+        log_y=True,
+    )
+
+    plot_experiment(
+        "plots/compare_m_fake.pdf",
+        all_experiments["ltos_fake"]["m"],
+        [
+            (all_experiments["ltos_fake"]["total_time"], "ltos"),
+            (all_experiments["waksman_based_fake"]["total_time"], "waksman based"),
+        ],
+        "Time comparison where all preprocessing data (triples) is faked",
+        "exponent of vector_size",
+        "Total time in seconds",
+        log_y=False,
+    )
+
+def plot_real_compare():
+    plot_experiment(
+        "plots/compare_m_real_log.pdf",
+        all_experiments["ltos_real"]["m"],
+        [
+            (all_experiments["ltos_real"]["total_time"], "ltos"),
+            (all_experiments["waksman_based_real"]["total_time"], "waksman based"),
+        ],
+        "Time comparison with all preprocessing triples as in MASCOT",
+        "exponent of vector_size",
+        "Total time in seconds",
+        log_y=True,
+    )
+
+    plot_experiment(
+        "plots/compare_real_m.pdf",
+        all_experiments["ltos_real"]["m"],
+        [
+            (all_experiments["ltos_real"]["total_time"], "ltos"),
+            (all_experiments["waksman_based_real"]["total_time"], "waksman based"),
+        ],
+        "Time comparison with all preprocessing triples as in MASCOT",
+        "exponent of vector_size",
+        "Total time in seconds",
+        log_y=False,
+    )
+
+plot_real_compare()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # plot_experiment(
 #     "plots/bandwidth-fake.pdf",
