@@ -1,0 +1,164 @@
+NEW_EXPERIMENT: ltos_fake_network_local
+LTOS_size_dependent_prep: n=2 m=2^3: 42
+LTOS_without_verification: n=2 m=2^3: 17
+LTOS_with_verification: n=2 m=2^3: 394
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^4: 28
+LTOS_without_verification: n=2 m=2^4: 32
+LTOS_with_verification: n=2 m=2^4: 429
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^5: 56
+LTOS_without_verification: n=2 m=2^5: 37
+LTOS_with_verification: n=2 m=2^5: 565
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^6: 72
+LTOS_without_verification: n=2 m=2^6: 33
+LTOS_with_verification: n=2 m=2^6: 538
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^7: 76
+LTOS_without_verification: n=2 m=2^7: 38
+LTOS_with_verification: n=2 m=2^7: 663
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^8: 128
+LTOS_without_verification: n=2 m=2^8: 69
+LTOS_with_verification: n=2 m=2^8: 855
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^9: 231
+LTOS_without_verification: n=2 m=2^9: 88
+LTOS_with_verification: n=2 m=2^9: 1085
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^10: 414
+LTOS_without_verification: n=2 m=2^10: 140
+LTOS_with_verification: n=2 m=2^10: 2088
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^11: 705
+LTOS_without_verification: n=2 m=2^11: 314
+LTOS_with_verification: n=2 m=2^11: 3129
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^12: 1229
+LTOS_without_verification: n=2 m=2^12: 657
+LTOS_with_verification: n=2 m=2^12: 5233
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^13: 2567
+LTOS_without_verification: n=2 m=2^13: 1735
+LTOS_with_verification: n=2 m=2^13: 11193
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^14: 5245
+LTOS_without_verification: n=2 m=2^14: 2547
+LTOS_with_verification: n=2 m=2^14: 19410
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^15: 11380
+LTOS_without_verification: n=2 m=2^15: 4767
+LTOS_with_verification: n=2 m=2^15: 36912
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^16: 19843
+LTOS_without_verification: n=2 m=2^16: 9958
+LTOS_with_verification: n=2 m=2^16: 74391
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^17: 38054
+LTOS_without_verification: n=2 m=2^17: 25815
+LTOS_with_verification: n=2 m=2^17: 176748
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^18: 71584
+LTOS_without_verification: n=2 m=2^18: 56500
+LTOS_with_verification: n=2 m=2^18: 324261
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^19: 147383
+LTOS_without_verification: n=2 m=2^19: 126763
+LTOS_with_verification: n=2 m=2^19: 614771
+ran script with batch size 1000
+plot_line_break
+LTOS_size_dependent_prep: n=2 m=2^20: 298195
+LTOS_without_verification: n=2 m=2^20: 293314
+LTOS_with_verification: n=2 m=2^20: 1377296
+ran script with batch size 1000
+plot_line_break
+NEW_EXPERIMENT: waksman_based_fake_network_local
+Waksman size dependent prep: n=2 m=2^3: 0
+Waksman based: n=2 m=2^3: 288
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^4: 0
+Waksman based: n=2 m=2^4: 401
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^5: 0
+Waksman based: n=2 m=2^5: 571
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^6: 1
+Waksman based: n=2 m=2^6: 785
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^7: 0
+Waksman based: n=2 m=2^7: 1230
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^8: 1
+Waksman based: n=2 m=2^8: 2174
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^9: 2
+Waksman based: n=2 m=2^9: 3883
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^10: 3
+Waksman based: n=2 m=2^10: 8149
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^11: 7
+Waksman based: n=2 m=2^11: 15655
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^12: 12
+Waksman based: n=2 m=2^12: 35921
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^13: 46
+Waksman based: n=2 m=2^13: 76245
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^14: 87
+Waksman based: n=2 m=2^14: 189240
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^15: 116
+Waksman based: n=2 m=2^15: 315321
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^16: 265
+Waksman based: n=2 m=2^16: 730531
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^17: 592
+Waksman based: n=2 m=2^17: 1549259
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^18: 1056
+Waksman based: n=2 m=2^18: 3281644
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^19: 2148
+Waksman based: n=2 m=2^19: 7060821
+ran script with batch size 1000
+plot_line_break
+Waksman size dependent prep: n=2 m=2^20: 27662
+Waksman based: n=2 m=2^20: 15969916
+ran script with batch size 1000
+plot_line_break
