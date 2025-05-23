@@ -167,12 +167,12 @@ fi
 if [ "$1" = "fake-data" ]; then
   setup_fake_data 2 $(get_fake_data_size 18)
 elif [ "$1" = "batch-real" ]; then
-  for ((vec_size=3;vec_size<=12;vec_size+=3)); do
+  for ((vec_size=3;vec_size<=15;vec_size+=3)); do
     echo "running ltos batch test with vec_size=$vec_size and real prep"
     echo "NEW_EXPERIMENT: ltos_batch_real_$vec_size" >> $2
     batch_test_large $vec_size "ltos" "R" $2
   done
-  for ((vec_size=3;vec_size<=12;vec_size+=3)); do
+  for ((vec_size=3;vec_size<=15;vec_size+=3)); do
     echo "running mascot batch test with vec_size=$vec_size and real prep"
     echo "NEW_EXPERIMENT: mascot_batch_real_$vec_size" >> $2
     batch_test_large $vec_size "mascot" "R" $2
