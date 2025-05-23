@@ -55,7 +55,7 @@ run_script() {
 # ***
 
 
-batch_test() {
+batch_test_large() {
   # $1 = m
   # $2 = mascot/ltos
   # $3 = fake offline
@@ -63,7 +63,7 @@ batch_test() {
   run_make $2
   PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m "$1"
 
-  for ((j = 250; j<=5000;j+=250)); do
+  for ((j = 1000; j<=20000;j+=1000)); do
     run_script 1 2 $2 $3 $j $4
   done
 }
@@ -141,25 +141,18 @@ fi
 
 if [ "$1" = "fake-data" ]; then
   setup_fake_data 2 $(get_fake_data_size 18)
-elif [ "$1" = "batch" ]; then
-  for ((vec_size=3;vec_size<=15;vec_size+=3)); do
+elif [ "$1" = "batch-real" ]; then
+  for ((vec_size=3;vec_size<=12;vec_size+=3)); do
     echo "running ltos batch test with vec_size=$vec_size and real prep"
     echo "NEW_EXPERIMENT: ltos_batch_real_$vec_size" >> $2
-    batch_test $vec_size "ltos" "R" $2
-    echo "running ltos batch test with vec_size=$vec_size and fake prep"
-    echo "NEW_EXPERIMENT: ltos_batch_fake_$vec_size" >> $2
-    batch_test $vec_size "ltos" "F" $2
+    batch_test_large $vec_size "ltos" "R" $2
   done
-  for ((vec_size=3;vec_size<=15;vec_size+=3)); do
+  for ((vec_size=3;vec_size<=12;vec_size+=3)); do
     echo "running mascot batch test with vec_size=$vec_size and real prep"
     echo "NEW_EXPERIMENT: mascot_batch_real_$vec_size" >> $2
-    batch_test $vec_size "mascot" "R" $2
-    echo "running mascot batch test with vec_size=$vec_size and fake prep"
-    echo "NEW_EXPERIMENT: mascot_batch_fake_$vec_size" >> $2
-    batch_test $vec_size "mascot" "F" $2
+    batch_test_large $vec_size "mascot" "R" $2
   done
-
-elif [ "$1" = "batch-small" ]; then
+elif [ "$1" = "batch-fake" ]; then
   for ((vec_size=5;vec_size<=20;vec_size+=5)); do
     echo "running ltos batch test with vec_size=$vec_size and fake prep"
     echo "NEW_EXPERIMENT: ltos_batch_fake_$vec_size" >> $2
@@ -170,10 +163,10 @@ elif [ "$1" = "batch-small" ]; then
     echo "NEW_EXPERIMENT: mascot_batch_fake_$vec_size" >> $2
     batch_test_small $vec_size "mascot" "F" $2
   done
-elif [ "$1" = "fake-compare" ]; then
+elif [ "$1" = "compare-fake" ]; then
   fake_compare_test_20 $2
-elif [ "$1" = "real-compare" ]; then
+elif [ "$1" = "compare-real" ]; then
   real_compare_test_20 $2
 else
-  echo "Invalid argument for experiment. Use fake-data|batch|batch-small|fake-compare|real-compare"
+  echo "Invalid argument for experiment. Use fake-data|batch-fake|batch-real|compare-fake|compare-real"
 fi

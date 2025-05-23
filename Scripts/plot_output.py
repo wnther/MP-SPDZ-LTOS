@@ -77,15 +77,13 @@ def plot_real_batch():
         all_experiments["ltos_batch_real_3"]["batch_size"],
         [
             (all_experiments["ltos_batch_real_3"]["rounds"], "ltos_3"),
-    	    (all_experiments["mascot_batch_real_3"]["rounds"], "waksman-based_3"),
             (all_experiments["ltos_batch_real_6"]["rounds"], "ltos_6"),
-    	    (all_experiments["mascot_batch_real_6"]["rounds"], "waksman-based_6"),
             (all_experiments["ltos_batch_real_9"]["rounds"], "ltos_9"),
-    	    (all_experiments["mascot_batch_real_9"]["rounds"], "waksman-based_9"),
             (all_experiments["ltos_batch_real_12"]["rounds"], "ltos_12"),
+    	    (all_experiments["mascot_batch_real_3"]["rounds"], "waksman-based_3"),
+    	    (all_experiments["mascot_batch_real_6"]["rounds"], "waksman-based_6"),
+    	    (all_experiments["mascot_batch_real_9"]["rounds"], "waksman-based_9"),
     	    (all_experiments["mascot_batch_real_12"]["rounds"], "waksman-based_12"),
-            (all_experiments["ltos_batch_real_15"]["rounds"], "ltos_15"),
-    	    (all_experiments["mascot_batch_real_15"]["rounds"], "waksman-based_15"),
         ],
         "Number of rounds when changing batch size with MASCOT preprocessing",
         "batch size",
@@ -147,8 +145,41 @@ def plot_real_compare():
         log_y=False,
     )
 
-plot_real_compare()
+def compare_verification():
+    plot_experiment(
+        "plots/ltos_fake_verification_log.pdf",
+        all_experiments["ltos_fake"]["m"],
+        [
+            ([i*1000000 for i in all_experiments["ltos_fake"]["total_time"]], "Total time of everything (μs)"), #total time is in seconds
+            #(all_experiments["ltos_fake"]["time_size_dependent_prep"], "Size dependent preprocessing time (μs)"),
+            (all_experiments["ltos_fake"]["full_online_time"], "Total online phase time (μs)"),
+            (all_experiments["ltos_fake"]["online_time_without_verification"], "Online phase time but without the verification step (μs)"),
+        ],
+        "Time benchmarks of the different phases for ltos with faked triples",
+        "exponent of vector_size",
+        "Total time in microseconds, except total time which is in seconds",
+        log_y=True,
+    )
+    plot_experiment(
+        "plots/ltos_fake_verification.pdf",
+        all_experiments["ltos_fake"]["m"],
+        [
+            ([i*1000000 for i in all_experiments["ltos_fake"]["total_time"]], "Total time of everything (μs)"), #total time is in seconds
+            #(all_experiments["ltos_fake"]["time_size_dependent_prep"], "Size dependent preprocessing time (μs)"),
+            (all_experiments["ltos_fake"]["full_online_time"], "Total online phase time (μs)"),
+            (all_experiments["ltos_fake"]["online_time_without_verification"], "Online phase time but without the verification step (μs)"),
+        ],
+        "Time benchmarks of the different phases for ltos with faked triples",
+        "exponent of vector_size",
+        "Total time in microseconds, except total time which is in seconds",
+        log_y=False,
+    )
 
+plot_fake_batch()
+plot_real_batch()
+plot_fake_compare()
+plot_real_compare()
+compare_verification()
 
 
 
