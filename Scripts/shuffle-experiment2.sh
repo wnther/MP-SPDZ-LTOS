@@ -128,7 +128,7 @@ fake_compare_test_network_20() {
   # $2 = ip address
   # $3 = party number
   run_make "ltos"
-  echo "NEW_EXPERIMENT: ltos_fake_network" >> $1
+  echo "NEW_EXPERIMENT: ltos_fake_network_local" >> $1
   for ((vec_size=3;vec_size<=20;vec_size+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
     echo "running fake (ltos) comparrison test over simulated network with vec_size=$vec_size"
@@ -136,14 +136,14 @@ fake_compare_test_network_20() {
     echo "ran script with batch size 1000" >> $1
   done
 
-  run_make "mascot"
-  echo "NEW_EXPERIMENT: waksman_based_fake_network" >> $1
-  for ((vec_size=3;vec_size<=20;vec_size+=1)); do
-    PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
-    echo "running fake (mascot) comparrison test over simulated network with vec_size=$vec_size"
-    ./mascot-party.x -N 2 -h $2 $3 permutation2 -F >> $1
-    echo "ran script with batch size 1000" >> $1
-  done
+  # run_make "mascot"
+  # echo "NEW_EXPERIMENT: waksman_based_fake_network_local" >> $1
+  # for ((vec_size=3;vec_size<=20;vec_size+=1)); do
+  #   PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
+  #   echo "running fake (mascot) comparrison test over simulated network with vec_size=$vec_size"
+  #   ./mascot-party.x -N 2 -h $2 $3 permutation2 -F >> $1
+  #   echo "ran script with batch size 1000" >> $1S
+  # done
 }
 
 get_fake_data_size() {
