@@ -136,7 +136,7 @@ fake_compare_test_network_20() {
     run_make "ltos"
   fi
   echo "NEW_EXPERIMENT: ltos_fake_network_local" >> $1
-  for ((vec_size=3;vec_size<=20;vec_size+=1)); do
+  for ((vec_size=3;vec_size<=14;vec_size+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
     echo "running fake (ltos) comparrison test over simulated network with vec_size=$vec_size"
     ./ltos-mascot-party.x -N 2 -h $2 $3 permutation2 -F >> $1
@@ -152,7 +152,7 @@ fake_compare_test_network_20() {
     run_make "mascot"
   fi
   echo "NEW_EXPERIMENT: waksman_based_fake_network_local" >> $1
-  for ((vec_size=3;vec_size<=20;vec_size+=1)); do
+  for ((vec_size=3;vec_size<=14;vec_size+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
     echo "running fake (mascot) comparrison test over simulated network with vec_size=$vec_size"
     ./mascot-party.x -N 2 -h $2 $3 permutation2 -F >> $1
