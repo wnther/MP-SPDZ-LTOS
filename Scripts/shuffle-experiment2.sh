@@ -127,23 +127,38 @@ fake_compare_test_network_20() {
   # $1 = output file
   # $2 = ip address
   # $3 = party number
-  run_make "ltos"
+  # $4 = nomake
+  if [ "$4" == "nomake" ]; then
+    echo "Press any key to continue..." 
+    read -n 1 -s
+    echo "Continuing..." 
+  else
+    run_make "ltos"
+  fi
   echo "NEW_EXPERIMENT: ltos_fake_network_local" >> $1
   for ((vec_size=3;vec_size<=20;vec_size+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
     echo "running fake (ltos) comparrison test over simulated network with vec_size=$vec_size"
     ./ltos-mascot-party.x -N 2 -h $2 $3 permutation2 -F >> $1
     echo "ran script with batch size 1000" >> $1
+    echo "plot_line_break" >> $1
   done
-
-  # run_make "mascot"
-  # echo "NEW_EXPERIMENT: waksman_based_fake_network_local" >> $1
-  # for ((vec_size=3;vec_size<=20;vec_size+=1)); do
-  #   PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
-  #   echo "running fake (mascot) comparrison test over simulated network with vec_size=$vec_size"
-  #   ./mascot-party.x -N 2 -h $2 $3 permutation2 -F >> $1
-  #   echo "ran script with batch size 1000" >> $1S
-  # done
+  
+  if [ "$4" = "nomake" ]; then
+    echo "Press any key to continue..." 
+    read -n 1 -s
+    echo "Continuing..." 
+  else
+    run_make "mascot"
+  fi
+  echo "NEW_EXPERIMENT: waksman_based_fake_network_local" >> $1
+  for ((vec_size=3;vec_size<=20;vec_size+=1)); do
+    PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
+    echo "running fake (mascot) comparrison test over simulated network with vec_size=$vec_size"
+    ./mascot-party.x -N 2 -h $2 $3 permutation2 -F >> $1
+    echo "ran script with batch size 1000" >> $1
+    echo "plot_line_break" >> $1
+  done
 }
 
 get_fake_data_size() {
@@ -157,7 +172,7 @@ get_fake_data_size() {
 
 # $1 = which tests to run
 if [ "$#" -lt 2 ]; then
-    echo "Usage: $0 <experiment> <outfile> <ip address> <party number>"
+    echo "Usage: $0 <experiment> <outfile> [ip address] [party number] [nomake]"
     echo "Where:"
     echo "experiment=fake-data|batch"
     echo "outfile is a string such as party0.out"
@@ -197,7 +212,7 @@ elif [ "$1" = "compare-fake-network" ]; then
     echo "no ip address or party number given"
     exit 1
   fi
-  fake_compare_test_network_20 $2 $3 $4
+  fake_compare_test_network_20 $2 $3 $4 $5
 else
   echo "Invalid argument for experiment. Use fake-data|batch-fake|batch-real|compare-fake|compare-real|compare-fake-network"
 fi
