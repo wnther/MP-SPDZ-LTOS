@@ -1,0 +1,439 @@
+rm: cannot remove 'ltos-has-been-made': No such file or directory
+gfe4x.c:150:49: warning: argument 2 of type ‘const unsigned char[128]’ with mismatched bound [-Warray-parameter=]
+  150 | void gfe4x_unpack(gfe4x *r, const unsigned char x[128])
+      |                             ~~~~~~~~~~~~~~~~~~~~^~~~~~
+In file included from gfe4x.c:2:
+gfe4x.h:14:28: note: previously declared as ‘const unsigned char *’
+   14 | void gfe4x_unpack(gfe4x *, const unsigned char *);
+      |                            ^~~~~~~~~~~~~~~~~~~~~
+/usr/bin/ld: warning: consts4x.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: consts4x.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[33mCMake Warning at cmake/buildOptions.cmake:136 (message):
+  NO Base OT enabled.
+Call Stack (most recent call first):
+  CMakeLists.txt:77 (include)
+
+[0m
+[33mCMake Warning at cmake/buildOptions.cmake:136 (message):
+  NO Base OT enabled.
+Call Stack (most recent call first):
+  CMakeLists.txt:77 (include)
+
+[0m
+[33mCMake Warning at cmake/buildOptions.cmake:136 (message):
+  NO Base OT enabled.
+Call Stack (most recent call first):
+  CMakeLists.txt:77 (include)
+
+[0m
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcEncoder.cpp:6:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcDecoder.cpp:5:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcDecoder.cpp:537:17: warning: variable 'tries' set but not used [-Wunused-but-set-variable]
+  537 |             u64 tries = 0;
+      |                 ^
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.cpp:1:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/Mtx.cpp:3:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcImpulseDist.cpp:9:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/Util.cpp:14:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+2 warnings generated.
+2 warnings generated.
+3 warnings generated.
+2 warnings generated.
+2 warnings generated.
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/TwoChooseOne/SilentOtExtReceiver.cpp:10:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+2 warnings generated.
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Vole/SilentVoleReceiver.cpp:11:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/TwoChooseOne/SoftSpokenOT/DotMaliciousLeaky.cpp:1:
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/TwoChooseOne/SoftSpokenOT/DotMaliciousLeaky.h:5:
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/TwoChooseOne/SoftSpokenOT/DotSemiHonest.h:13:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Vole/SoftSpokenOT/SmallFieldVole.h:292:61: warning: suggest braces around initialization of subobject [-Wmissing-braces]
+  292 |         T products[4][2 * SmallFieldVoleBase::fieldBitsMax - 1] = {0};
+      |                                                                    ^
+      |                                                                    {}
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Vole/SoftSpokenOT/SmallFieldVole.h:321:3: note: in instantiation of function template specialization 'osuCrypto::SoftSpokenOT::SmallFieldVoleReceiver::sharedFunctionXorGFImpl<unsigned long>' requested here
+  321 |                 sharedFunctionXorGFImpl(u, product, modulus, nVole, 4);
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Vole/SoftSpokenOT/SubspaceVoleMaliciousLeaky.h:445:18: note: in instantiation of function template specialization 'osuCrypto::SoftSpokenOT::SmallFieldVoleReceiver::sharedFunctionXorGF<unsigned long>' requested here
+  445 |                 Receiver::vole.sharedFunctionXorGF(finalHashU, finalHashW.get(), gfMods[fieldBits]);
+      |                                ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/TwoChooseOne/SoftSpokenOT/DotMaliciousLeaky.cpp:45:8: note: in instantiation of member function 'osuCrypto::SoftSpokenOT::SubspaceVoleMaliciousReceiver<osuCrypto::RepetitionCode>::checkResponse' requested here
+   45 |         vole->checkResponse(chl);
+      |               ^
+2 warnings generated.
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Vole/SilentVoleSender.cpp:12:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+2 warnings generated.
+2 warnings generated.
+1 warning generated.
+/usr/bin/ld: warning: ge25519_p1p1_to_p3.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: ge25519_p1p1_to_p3.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: ge25519_p1p1_to_p3.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: ge25519_p1p1_to_p3.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.0114832 seconds 
+Data sent = 0.001596 MB in ~25 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.003064 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00148787 seconds 
+Data sent = 0.003004 MB in ~27 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.005752 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00159833 seconds 
+Data sent = 0.00582 MB in ~29 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.011128 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00283515 seconds 
+Data sent = 0.011452 MB in ~31 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.02188 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00226647 seconds 
+Data sent = 0.022716 MB in ~33 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.043384 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00234789 seconds 
+Data sent = 0.045244 MB in ~35 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.086392 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00271592 seconds 
+Data sent = 0.0903 MB in ~37 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.172408 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00447555 seconds 
+Data sent = 0.180412 MB in ~41 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.34444 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00702231 seconds 
+Data sent = 0.360636 MB in ~45 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.688504 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.0123051 seconds 
+Data sent = 0.721084 MB in ~51 rounds (party 0 only; use '-v' for more details)
+Global data sent = 1.37663 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.0203691 seconds 
+Data sent = 1.44198 MB in ~61 rounds (party 0 only; use '-v' for more details)
+Global data sent = 2.75289 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.0389039 seconds 
+Data sent = 2.88377 MB in ~79 rounds (party 0 only; use '-v' for more details)
+Global data sent = 5.5054 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.0746052 seconds 
+Data sent = 5.76736 MB in ~113 rounds (party 0 only; use '-v' for more details)
+Global data sent = 11.0104 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.178127 seconds 
+Data sent = 11.5345 MB in ~181 rounds (party 0 only; use '-v' for more details)
+Global data sent = 22.0205 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.356207 seconds 
+Data sent = 23.0689 MB in ~317 rounds (party 0 only; use '-v' for more details)
+Global data sent = 44.0406 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.617303 seconds 
+Data sent = 46.1376 MB in ~589 rounds (party 0 only; use '-v' for more details)
+Global data sent = 88.081 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 1.16344 seconds 
+Data sent = 92.2751 MB in ~1127 rounds (party 0 only; use '-v' for more details)
+Global data sent = 176.162 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 2.81186 seconds 
+Data sent = 184.55 MB in ~2197 rounds (party 0 only; use '-v' for more details)
+Global data sent = 352.323 MB (all parties)
+rm: cannot remove 'mascot-has-been-made': No such file or directory
+gfe4x.c:150:49: warning: argument 2 of type ‘const unsigned char[128]’ with mismatched bound [-Warray-parameter=]
+  150 | void gfe4x_unpack(gfe4x *r, const unsigned char x[128])
+      |                             ~~~~~~~~~~~~~~~~~~~~^~~~~~
+In file included from gfe4x.c:2:
+gfe4x.h:14:28: note: previously declared as ‘const unsigned char *’
+   14 | void gfe4x_unpack(gfe4x *, const unsigned char *);
+      |                            ^~~~~~~~~~~~~~~~~~~~~
+/usr/bin/ld: warning: consts4x.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: consts4x.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[33mCMake Warning at cmake/buildOptions.cmake:136 (message):
+  NO Base OT enabled.
+Call Stack (most recent call first):
+  CMakeLists.txt:77 (include)
+
+[0m
+[33mCMake Warning at cmake/buildOptions.cmake:136 (message):
+  NO Base OT enabled.
+Call Stack (most recent call first):
+  CMakeLists.txt:77 (include)
+
+[0m
+[33mCMake Warning at cmake/buildOptions.cmake:136 (message):
+  NO Base OT enabled.
+Call Stack (most recent call first):
+  CMakeLists.txt:77 (include)
+
+[0m
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcImpulseDist.cpp:9:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/Mtx.cpp:3:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcDecoder.cpp:5:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcDecoder.cpp:537:17: warning: variable 'tries' set but not used [-Wunused-but-set-variable]
+  537 |             u64 tries = 0;
+      |                 ^
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.cpp:1:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcEncoder.cpp:6:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/Util.cpp:14:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+2 warnings generated.
+2 warnings generated.
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/TwoChooseOne/SilentOtExtReceiver.cpp:10:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+2 warnings generated.
+2 warnings generated.
+3 warnings generated.
+2 warnings generated.
+2 warnings generated.
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Vole/SilentVoleReceiver.cpp:11:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/TwoChooseOne/SoftSpokenOT/DotMaliciousLeaky.cpp:1:
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/TwoChooseOne/SoftSpokenOT/DotMaliciousLeaky.h:5:
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/TwoChooseOne/SoftSpokenOT/DotSemiHonest.h:13:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Vole/SoftSpokenOT/SmallFieldVole.h:292:61: warning: suggest braces around initialization of subobject [-Wmissing-braces]
+  292 |         T products[4][2 * SmallFieldVoleBase::fieldBitsMax - 1] = {0};
+      |                                                                    ^
+      |                                                                    {}
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Vole/SoftSpokenOT/SmallFieldVole.h:321:3: note: in instantiation of function template specialization 'osuCrypto::SoftSpokenOT::SmallFieldVoleReceiver::sharedFunctionXorGFImpl<unsigned long>' requested here
+  321 |                 sharedFunctionXorGFImpl(u, product, modulus, nVole, 4);
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Vole/SoftSpokenOT/SubspaceVoleMaliciousLeaky.h:445:18: note: in instantiation of function template specialization 'osuCrypto::SoftSpokenOT::SmallFieldVoleReceiver::sharedFunctionXorGF<unsigned long>' requested here
+  445 |                 Receiver::vole.sharedFunctionXorGF(finalHashU, finalHashW.get(), gfMods[fieldBits]);
+      |                                ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/TwoChooseOne/SoftSpokenOT/DotMaliciousLeaky.cpp:45:8: note: in instantiation of member function 'osuCrypto::SoftSpokenOT::SubspaceVoleMaliciousReceiver<osuCrypto::RepetitionCode>::checkResponse' requested here
+   45 |         vole->checkResponse(chl);
+      |               ^
+In file included from /home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/Vole/SilentVoleSender.cpp:12:
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:186:17: warning: variable 'i' set but not used [-Wunused-but-set-variable]
+  186 |             u64 i = 1;
+      |                 ^
+/home/ubuntu/Code/MP-SPDZ-LTOS/deps/libOTe/libOTe/../libOTe/Tools/LDPC/LdpcSampler.h:704:34: warning: implicit conversion from 'u64' (aka 'unsigned long') to 'double' changes value from 18446744073709551615 to 18446744073709551616 [-Wimplicit-const-int-float-conversion]
+  704 |         u64 t = static_cast<u64>(~u64{ 0 } *density);
+      |                                  ^~~~~~~~~ ~
+2 warnings generated.
+2 warnings generated.
+1 warning generated.
+/usr/bin/ld: warning: ge25519_p1p1_to_p3.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: ge25519_p1p1_to_p3.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: ge25519_p1p1_to_p3.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: ge25519_p1p1_to_p3.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00187835 seconds 
+Data sent = 0.002952 MB in ~47 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.005776 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00237035 seconds 
+Data sent = 0.007688 MB in ~55 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.01512 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00332898 seconds 
+Data sent = 0.019464 MB in ~63 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.038416 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00372656 seconds 
+Data sent = 0.047624 MB in ~71 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.094224 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00689572 seconds 
+Data sent = 0.11316 MB in ~79 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.224272 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.00782953 seconds 
+Data sent = 0.262664 MB in ~87 rounds (party 0 only; use '-v' for more details)
+Global data sent = 0.521232 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.0174047 seconds 
+Data sent = 0.598536 MB in ~95 rounds (party 0 only; use '-v' for more details)
+Global data sent = 1.18888 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.0304826 seconds 
+Data sent = 1.34401 MB in ~105 rounds (party 0 only; use '-v' for more details)
+Global data sent = 2.67163 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.0608414 seconds 
+Data sent = 2.98241 MB in ~115 rounds (party 0 only; use '-v' for more details)
+Global data sent = 5.93205 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.127857 seconds 
+Data sent = 6.55412 MB in ~127 rounds (party 0 only; use '-v' for more details)
+Global data sent = 13.0427 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.265615 seconds 
+Data sent = 14.2874 MB in ~143 rounds (party 0 only; use '-v' for more details)
+Global data sent = 28.4437 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 0.598112 seconds 
+Data sent = 30.9335 MB in ~167 rounds (party 0 only; use '-v' for more details)
+Global data sent = 61.6049 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 1.20315 seconds 
+Data sent = 66.5852 MB in ~211 rounds (party 0 only; use '-v' for more details)
+Global data sent = 132.646 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 3.03812 seconds 
+Data sent = 142.607 MB in ~297 rounds (party 0 only; use '-v' for more details)
+Global data sent = 284.166 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 7.838 seconds 
+Data sent = 304.088 MB in ~453 rounds (party 0 only; use '-v' for more details)
+Global data sent = 606.08 MB (all parties)
+Using statistical security parameter 40
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 14.8129 seconds 
+Data sent = 645.925 MB in ~759 rounds (party 0 only; use '-v' for more details)
+Global data sent = 1287.66 MB (all parties)
+Using statistical security parameter 40
+REUSING DATA - ONLY FOR BENCHMARKING
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 40.9444 seconds 
+Data sent = 1367.35 MB in ~1363 rounds (party 0 only; use '-v' for more details)
+Global data sent = 2726.31 MB (all parties)
+Using statistical security parameter 40
+REUSING DATA - ONLY FOR BENCHMARKING
+Scripts/shuffle-experiment2.sh: line 126:  7842 Killed                  ./mascot-party.x -N 2 -h $2 $3 permutation2 -F >> $1
