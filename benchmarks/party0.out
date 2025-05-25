@@ -1227,212 +1227,216 @@ Data sent = 14.2874 MB in ~143 rounds (party 0 only; use '-v' for more details)
 Global data sent = 28.4437 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-Fatal communication error on ubuntu-VMware-Virtual-Platform: Non-blocking receiving error (Connection reset by peer)
-This is probably because another party encountered a problem.
+Waksman size dependent prep: n=2 m=2^14: 66
+Waksman based: n=2 m=2^14: 69728788
+The following benchmarks are excluding preprocessing (offline phase).
+Time = 162.567 seconds 
+Data sent = 30.9335 MB in ~167 rounds (party 0 only; use '-v' for more details)
+Global data sent = 61.6049 MB (all parties)
 ran script with batch size 1000
 NEW_EXPERIMENT: ltos_fake_network_local_L-0_B-100Mbps
 Using statistical security parameter 40
-LTOS_size_dependent_prep: n=2 m=2^3: 77
-LTOS_without_verification: n=2 m=2^3: 226
-LTOS_with_verification: n=2 m=2^3: 2826
+LTOS_size_dependent_prep: n=2 m=2^3: 79
+LTOS_without_verification: n=2 m=2^3: 216
+LTOS_with_verification: n=2 m=2^3: 2841
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 0.00411414 seconds 
+Time = 0.00458846 seconds 
 Data sent = 0.001596 MB in ~25 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.003064 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-LTOS_size_dependent_prep: n=2 m=2^4: 70
-LTOS_without_verification: n=2 m=2^4: 185
-LTOS_with_verification: n=2 m=2^4: 2352
+LTOS_size_dependent_prep: n=2 m=2^4: 90
+LTOS_without_verification: n=2 m=2^4: 146
+LTOS_with_verification: n=2 m=2^4: 2349
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 0.00319635 seconds 
+Time = 0.00338763 seconds 
 Data sent = 0.003004 MB in ~27 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.005752 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-LTOS_size_dependent_prep: n=2 m=2^5: 137
-LTOS_without_verification: n=2 m=2^5: 137
-LTOS_with_verification: n=2 m=2^5: 2237
+LTOS_size_dependent_prep: n=2 m=2^5: 93
+LTOS_without_verification: n=2 m=2^5: 198
+LTOS_with_verification: n=2 m=2^5: 2569
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 0.00313774 seconds 
+Time = 0.00352114 seconds 
 Data sent = 0.00582 MB in ~29 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.011128 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
 LTOS_size_dependent_prep: n=2 m=2^6: 114
-LTOS_without_verification: n=2 m=2^6: 4303
-LTOS_with_verification: n=2 m=2^6: 22247
+LTOS_without_verification: n=2 m=2^6: 2223
+LTOS_with_verification: n=2 m=2^6: 19745
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 0.0233129 seconds 
+Time = 0.0207775 seconds 
 Data sent = 0.011452 MB in ~31 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.02188 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-LTOS_size_dependent_prep: n=2 m=2^7: 196
-LTOS_without_verification: n=2 m=2^7: 235
-LTOS_with_verification: n=2 m=2^7: 210308
+LTOS_size_dependent_prep: n=2 m=2^7: 213
+LTOS_without_verification: n=2 m=2^7: 160
+LTOS_with_verification: n=2 m=2^7: 3163
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 0.212561 seconds 
+Time = 0.00419833 seconds 
 Data sent = 0.022716 MB in ~33 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.043384 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-LTOS_size_dependent_prep: n=2 m=2^8: 20703
-LTOS_without_verification: n=2 m=2^8: 174
-LTOS_with_verification: n=2 m=2^8: 197949
+LTOS_size_dependent_prep: n=2 m=2^8: 329
+LTOS_without_verification: n=2 m=2^8: 3892
+LTOS_with_verification: n=2 m=2^8: 20141
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 0.219499 seconds 
+Time = 0.0216544 seconds 
 Data sent = 0.045244 MB in ~35 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.086392 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-LTOS_size_dependent_prep: n=2 m=2^9: 125748
-LTOS_without_verification: n=2 m=2^9: 274
-LTOS_with_verification: n=2 m=2^9: 441196
+LTOS_size_dependent_prep: n=2 m=2^9: 505
+LTOS_without_verification: n=2 m=2^9: 235
+LTOS_with_verification: n=2 m=2^9: 3748
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 0.568097 seconds 
+Time = 0.00528503 seconds 
 Data sent = 0.0903 MB in ~37 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.172408 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-LTOS_size_dependent_prep: n=2 m=2^10: 181520
-LTOS_without_verification: n=2 m=2^10: 196275
-LTOS_with_verification: n=2 m=2^10: 986232
+LTOS_size_dependent_prep: n=2 m=2^10: 890
+LTOS_without_verification: n=2 m=2^10: 2178
+LTOS_with_verification: n=2 m=2^10: 34076
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 1.1694 seconds 
+Time = 0.0396791 seconds 
 Data sent = 0.180412 MB in ~41 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.34444 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-LTOS_size_dependent_prep: n=2 m=2^11: 783776
-LTOS_without_verification: n=2 m=2^11: 573
-LTOS_with_verification: n=2 m=2^11: 1385349
+LTOS_size_dependent_prep: n=2 m=2^11: 1673
+LTOS_without_verification: n=2 m=2^11: 562
+LTOS_with_verification: n=2 m=2^11: 7038
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 2.19739 seconds 
+Time = 0.0109738 seconds 
 Data sent = 0.360636 MB in ~45 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.688504 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-LTOS_size_dependent_prep: n=2 m=2^12: 1372206
-LTOS_without_verification: n=2 m=2^12: 1465
-LTOS_with_verification: n=2 m=2^12: 2060942
+LTOS_size_dependent_prep: n=2 m=2^12: 3317
+LTOS_without_verification: n=2 m=2^12: 839
+LTOS_with_verification: n=2 m=2^12: 9615
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 3.75194 seconds 
+Time = 0.0159615 seconds 
 Data sent = 0.721084 MB in ~51 rounds (party 0 only; use '-v' for more details)
 Global data sent = 1.37663 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-LTOS_size_dependent_prep: n=2 m=2^13: 2744581
-LTOS_without_verification: n=2 m=2^13: 1703
-LTOS_with_verification: n=2 m=2^13: 4119195
+LTOS_size_dependent_prep: n=2 m=2^13: 5453
+LTOS_without_verification: n=2 m=2^13: 1986
+LTOS_with_verification: n=2 m=2^13: 80601
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 7.47931 seconds 
+Time = 0.0912903 seconds 
 Data sent = 1.44198 MB in ~61 rounds (party 0 only; use '-v' for more details)
 Global data sent = 2.75289 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-LTOS_size_dependent_prep: n=2 m=2^14: 5437977
-LTOS_without_verification: n=2 m=2^14: 4186
-LTOS_with_verification: n=2 m=2^14: 9033519
+LTOS_size_dependent_prep: n=2 m=2^14: 11581
+LTOS_without_verification: n=2 m=2^14: 5639
+LTOS_with_verification: n=2 m=2^14: 309391
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 15.9942 seconds 
+Time = 0.332541 seconds 
 Data sent = 2.88377 MB in ~79 rounds (party 0 only; use '-v' for more details)
 Global data sent = 5.5054 MB (all parties)
 ran script with batch size 1000
 NEW_EXPERIMENT: waksman_based_fake_network_local_L-0_B-100Mbps
 Using statistical security parameter 40
 Waksman size dependent prep: n=2 m=2^3: 1
-Waksman based: n=2 m=2^3: 1508
+Waksman based: n=2 m=2^3: 5366
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 0.00454984 seconds 
+Time = 0.0136478 seconds 
 Data sent = 0.002952 MB in ~47 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.005776 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-Waksman size dependent prep: n=2 m=2^4: 0
-Waksman based: n=2 m=2^4: 2040
+Waksman size dependent prep: n=2 m=2^4: 1
+Waksman based: n=2 m=2^4: 2055
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 0.00520516 seconds 
+Time = 0.00531527 seconds 
 Data sent = 0.007688 MB in ~55 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.01512 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
 Waksman size dependent prep: n=2 m=2^5: 1
-Waksman based: n=2 m=2^5: 45404
+Waksman based: n=2 m=2^5: 2813
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 0.0649354 seconds 
+Time = 0.00685903 seconds 
 Data sent = 0.019464 MB in ~63 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.038416 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-Waksman size dependent prep: n=2 m=2^6: 2
-Waksman based: n=2 m=2^6: 99247
+Waksman size dependent prep: n=2 m=2^6: 1
+Waksman based: n=2 m=2^6: 3434
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 0.329341 seconds 
+Time = 0.0073108 seconds 
 Data sent = 0.047624 MB in ~71 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.094224 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
 Waksman size dependent prep: n=2 m=2^7: 1
-Waksman based: n=2 m=2^7: 506969
+Waksman based: n=2 m=2^7: 4518
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 0.9334 seconds 
+Time = 0.00943911 seconds 
 Data sent = 0.11316 MB in ~79 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.224272 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-Waksman size dependent prep: n=2 m=2^8: 4
-Waksman based: n=2 m=2^8: 787312
+Waksman size dependent prep: n=2 m=2^8: 2
+Waksman based: n=2 m=2^8: 59209
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 1.49823 seconds 
+Time = 0.0715541 seconds 
 Data sent = 0.262664 MB in ~87 rounds (party 0 only; use '-v' for more details)
 Global data sent = 0.521232 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-Waksman size dependent prep: n=2 m=2^9: 4
-Waksman based: n=2 m=2^9: 1768844
+Waksman size dependent prep: n=2 m=2^9: 3
+Waksman based: n=2 m=2^9: 44985
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 4.27758 seconds 
+Time = 0.0580077 seconds 
 Data sent = 0.598536 MB in ~95 rounds (party 0 only; use '-v' for more details)
 Global data sent = 1.18888 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-Waksman size dependent prep: n=2 m=2^10: 6
-Waksman based: n=2 m=2^10: 3034546
+Waksman size dependent prep: n=2 m=2^10: 4
+Waksman based: n=2 m=2^10: 69721
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 7.05762 seconds 
+Time = 0.0937696 seconds 
 Data sent = 1.34401 MB in ~105 rounds (party 0 only; use '-v' for more details)
 Global data sent = 2.67163 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-Waksman size dependent prep: n=2 m=2^11: 10
-Waksman based: n=2 m=2^11: 7001271
+Waksman size dependent prep: n=2 m=2^11: 8
+Waksman based: n=2 m=2^11: 112404
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 16.9195 seconds 
+Time = 0.167267 seconds 
 Data sent = 2.98241 MB in ~115 rounds (party 0 only; use '-v' for more details)
 Global data sent = 5.93205 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-Waksman size dependent prep: n=2 m=2^12: 42
-Waksman based: n=2 m=2^12: 16293996
+Waksman size dependent prep: n=2 m=2^12: 16
+Waksman based: n=2 m=2^12: 198340
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 35.9501 seconds 
+Time = 0.808748 seconds 
 Data sent = 6.55412 MB in ~127 rounds (party 0 only; use '-v' for more details)
 Global data sent = 13.0427 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-Waksman size dependent prep: n=2 m=2^13: 35
-Waksman based: n=2 m=2^13: 32220351
+Waksman size dependent prep: n=2 m=2^13: 36
+Waksman based: n=2 m=2^13: 484343
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 75.1211 seconds 
+Time = 1.52616 seconds 
 Data sent = 14.2874 MB in ~143 rounds (party 0 only; use '-v' for more details)
 Global data sent = 28.4437 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
-Waksman size dependent prep: n=2 m=2^14: 66
-Waksman based: n=2 m=2^14: 69728788
+Waksman size dependent prep: n=2 m=2^14: 116
+Waksman based: n=2 m=2^14: 1574444
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 162.567 seconds 
+Time = 4.26142 seconds 
 Data sent = 30.9335 MB in ~167 rounds (party 0 only; use '-v' for more details)
 Global data sent = 61.6049 MB (all parties)
 ran script with batch size 1000
