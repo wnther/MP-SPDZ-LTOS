@@ -137,7 +137,7 @@ compare_parties_test() {
   echo "NEW_EXPERIMENT: ltos_real_parties" >> $1
   for ((parties=2;parties<=10;parties+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
-    echo "running real (ltos) comparrison test with vec_size=$vec_size"
+    echo "running real (ltos) comparrison test with n=$parties"
     run_script 1 $parties "ltos" "R" 5000 $1
   done
 
