@@ -1230,7 +1230,7 @@ Using statistical security parameter 40
 Waksman size dependent prep: n=2 m=2^14: 66
 Waksman based: n=2 m=2^14: 69728788
 The following benchmarks are excluding preprocessing (offline phase).
-Time = 162.567 seconds 
+Time = 312.567 seconds 
 Data sent = 30.9335 MB in ~167 rounds (party 0 only; use '-v' for more details)
 Global data sent = 61.6049 MB (all parties)
 ran script with batch size 1000

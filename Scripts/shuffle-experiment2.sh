@@ -123,6 +123,40 @@ real_compare_test_20() {
   done
 }
 
+compare_parties_test() {
+  # $1 = output file
+
+  # BATCH SIZE 5000 and 7000 is OPTIMAL for M=2^12 for ltos and waksman based repectivly
+  run_make "ltos"
+  echo "NEW_EXPERIMENT: ltos_fake_parties" >> $1
+  for ((parties=2;parties<=10;parties+=1)); do
+    PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
+    echo "running fake (ltos) comparrison test with n=$parties"
+    run_script 1 $parties "ltos" "F" 5000 $1
+  done
+  echo "NEW_EXPERIMENT: ltos_real_parties" >> $1
+  for ((parties=2;parties<=10;parties+=1)); do
+    PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
+    echo "running real (ltos) comparrison test with vec_size=$vec_size"
+    run_script 1 $parties "ltos" "R" 5000 $1
+  done
+
+  run_make "mascot"
+  echo "NEW_EXPERIMENT: waksman_based_fake_parties" >> $1
+  for ((parties=2;parties<=10;parties+=1)); do
+    PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
+    echo "running fake (mascot) comparrison test with n=$parties"
+    run_script 1 $parties "mascot" "F" 7000 $1
+  done
+  echo "NEW_EXPERIMENT: waksman_based_real_parties" >> $1
+  for ((parties=2;parties<=10;parties+=1)); do
+    PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
+    echo "running real (mascot) comparrison test with n=$parties"
+    run_script 1 $parties "mascot" "R" 7000 $1
+  done
+
+}
+
 fake_compare_test_network_20() {
   # $1 = output file
   # $2 = ip address
@@ -207,6 +241,8 @@ elif [ "$1" = "compare-fake" ]; then
   fake_compare_test_20 $2
 elif [ "$1" = "compare-real" ]; then
   real_compare_test_20 $2
+elif [ "$1" = "compare-parties" ]; then
+  compare_parties_test $2
 elif [ "$1" = "compare-fake-network" ]; then
   if [ "$#" -lt 4 ]; then
     echo "no ip address or party number given"
@@ -214,5 +250,5 @@ elif [ "$1" = "compare-fake-network" ]; then
   fi
   fake_compare_test_network_20 $2 $3 $4 $5 $6 $7
 else
-  echo "Invalid argument for experiment. Use fake-data|batch-fake|batch-real|compare-fake|compare-real|compare-fake-network"
+  echo "Invalid argument for experiment. Use fake-data|batch-fake|batch-real|compare-fake|compare-real|compare-fake-network|compare-parties"
 fi

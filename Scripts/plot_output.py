@@ -49,6 +49,79 @@ def plot_experiment(
 
     fig.write_image(output_path)
 
+def plot_network():
+    plot_experiment(
+        "plots/latency.pdf",
+        all_experiments["ltos_fake_network_local_L-0_B-inf"]["m"],
+        [
+            (all_experiments["ltos_fake_network_local_L-0_B-inf"]["total_time"], "ltos_0_latency"),
+            (all_experiments["ltos_fake_network_local_L-50_B-inf"]["total_time"], "ltos_50_latency"),
+            (all_experiments["ltos_fake_network_local_L-100_B-inf"]["total_time"], "ltos_100_latency"),
+            (all_experiments["ltos_fake_network_local_L-150_B-inf"]["total_time"], "ltos_150_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-0_B-inf"]["total_time"], "waksman-based_0_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-50_B-inf"]["total_time"], "waksman-based_50_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-100_B-inf"]["total_time"], "waksman-based_100_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["total_time"], "waksman-based_150_latency"),
+        ],
+        "Time for simualted network with different latency, all preprocessing data (triples) is faked",
+        "Exponent of vector size",
+        "Time",
+        log_y=False,
+    )
+    plot_experiment(
+        "plots/latency_log.pdf",
+        all_experiments["ltos_fake_network_local_L-0_B-inf"]["m"],
+        [
+            (all_experiments["ltos_fake_network_local_L-0_B-inf"]["total_time"], "ltos_0_latency"),
+            (all_experiments["ltos_fake_network_local_L-50_B-inf"]["total_time"], "ltos_50_latency"),
+            (all_experiments["ltos_fake_network_local_L-100_B-inf"]["total_time"], "ltos_100_latency"),
+            (all_experiments["ltos_fake_network_local_L-150_B-inf"]["total_time"], "ltos_150_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-0_B-inf"]["total_time"], "waksman-based_0_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-50_B-inf"]["total_time"], "waksman-based_50_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-100_B-inf"]["total_time"], "waksman-based_100_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["total_time"], "waksman-based_150_latency"),
+        ],
+        "Time for simualted network with different latency, all preprocessing data (triples) is faked",
+        "Exponent of vector size",
+        "Time",
+        log_y=True,
+    )
+    plot_experiment(
+        "plots/bandwidth.pdf",
+        all_experiments["ltos_fake_network_local_L-0_B-inf"]["m"],
+        [
+            (all_experiments["ltos_fake_network_local_L-0_B-inf"]["total_time"], "ltos_unlimited"),
+            (all_experiments["ltos_fake_network_local_L-0_B-100Mbps"]["total_time"], "ltos_100Mbps"),
+            (all_experiments["ltos_fake_network_local_L-0_B-10Mbps"]["total_time"], "ltos_10Mbps"),
+            (all_experiments["ltos_fake_network_local_L-0_B-1.544Mbps"]["total_time"], "ltos_1.544Mbps"),
+    	    (all_experiments["waksman_based_fake_network_local_L-0_B-inf"]["total_time"], "waksman-based_0_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-0_B-100Mbps"]["total_time"], "waksman-based_100Mbps"),
+    	    (all_experiments["waksman_based_fake_network_local_L-0_B-10Mbps"]["total_time"], "waksman-based_10Mbps"),
+    	    (all_experiments["waksman_based_fake_network_local_L-0_B-1.544Mbps"]["total_time"], "waksman-based_1.544Mbps"),
+        ],
+        "Time for simualted network with different bandwidth all preprocessing data (triples) is faked",
+        "Exponent of vector size",
+        "Time",
+        log_y=False,
+    )
+    plot_experiment(
+        "plots/bandwidth_log.pdf",
+        all_experiments["ltos_fake_network_local_L-0_B-inf"]["m"],
+        [
+            (all_experiments["ltos_fake_network_local_L-0_B-inf"]["total_time"], "ltos_unlimited"),
+            (all_experiments["ltos_fake_network_local_L-0_B-100Mbps"]["total_time"], "ltos_100Mbps"),
+            (all_experiments["ltos_fake_network_local_L-0_B-10Mbps"]["total_time"], "ltos_10Mbps"),
+            (all_experiments["ltos_fake_network_local_L-0_B-1.544Mbps"]["total_time"], "ltos_1.544Mbps"),
+    	    (all_experiments["waksman_based_fake_network_local_L-0_B-inf"]["total_time"], "waksman-based_0_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-0_B-100Mbps"]["total_time"], "waksman-based_100Mbps"),
+    	    (all_experiments["waksman_based_fake_network_local_L-0_B-10Mbps"]["total_time"], "waksman-based_10Mbps"),
+    	    (all_experiments["waksman_based_fake_network_local_L-0_B-1.544Mbps"]["total_time"], "waksman-based_1.544Mbps"),
+        ],
+        "Time for simualted network with different bandwidth all preprocessing data (triples) is faked",
+        "Exponent of vector size",
+        "Time",
+        log_y=True,
+    )
 
 def plot_fake_batch():
     plot_experiment(
@@ -181,6 +254,7 @@ plot_fake_batch()
 plot_real_batch()
 plot_fake_compare()
 plot_real_compare()
+plot_network()
 compare_verification()
 
 
