@@ -139,9 +139,8 @@ fake_compare_test_network_20() {
   for ((vec_size=3;vec_size<=13;vec_size+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
     echo "running fake (ltos) comparrison test over simulated network with vec_size=$vec_size"
-    ./ltos-mascot-party.x -N 2 -h $2 $3 permutation2 -F >> $1
+    ./ltos-mascot-party.x -N 2 -h $2 $3 permutation2 -F &>> $1
     echo "ran script with batch size 1000" >> $1
-    echo "plot_line_break" >> $1
   done
   
   if [ "$4" = "nomake" ]; then
@@ -155,9 +154,8 @@ fake_compare_test_network_20() {
   for ((vec_size=3;vec_size<=13;vec_size+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
     echo "running fake (mascot) comparrison test over simulated network with vec_size=$vec_size"
-    ./mascot-party.x -N 2 -h $2 $3 permutation2 -F >> $1
+    ./mascot-party.x -N 2 -h $2 $3 permutation2 -F >> &>> $1
     echo "ran script with batch size 1000" >> $1
-    echo "plot_line_break" >> $1
   done
 }
 
