@@ -128,6 +128,7 @@ fake_compare_test_network_20() {
   # $2 = ip address
   # $3 = party number
   # $4 = nomake
+  # $5 = experiment name suffix
   if [ "$4" == "nomake" ]; then
     echo "Press any key to continue..." 
     read -n 1 -s
@@ -135,7 +136,7 @@ fake_compare_test_network_20() {
   else
     run_make "ltos"
   fi
-  echo "NEW_EXPERIMENT: ltos_fake_network_local" >> $1
+  echo "NEW_EXPERIMENT: ltos_fake_network_local_$5" >> $1
   for ((vec_size=3;vec_size<=13;vec_size+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
     echo "running fake (ltos) comparrison test over simulated network with vec_size=$vec_size"
@@ -150,7 +151,7 @@ fake_compare_test_network_20() {
   else
     run_make "mascot"
   fi
-  echo "NEW_EXPERIMENT: waksman_based_fake_network_local" >> $1
+  echo "NEW_EXPERIMENT: waksman_based_fake_network_local_$5" >> $1
   for ((vec_size=3;vec_size<=13;vec_size+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m $vec_size
     echo "running fake (mascot) comparrison test over simulated network with vec_size=$vec_size"
@@ -170,7 +171,7 @@ get_fake_data_size() {
 
 # $1 = which tests to run
 if [ "$#" -lt 2 ]; then
-    echo "Usage: $0 <experiment> <outfile> [ip address] [party number] [nomake]"
+    echo "Usage: $0 <experiment> <outfile> [ip address] [party number] [nomake] [suffix for network test]"
     echo "Where:"
     echo "experiment=fake-data|batch"
     echo "outfile is a string such as party0.out"
@@ -210,7 +211,7 @@ elif [ "$1" = "compare-fake-network" ]; then
     echo "no ip address or party number given"
     exit 1
   fi
-  fake_compare_test_network_20 $2 $3 $4 $5
+  fake_compare_test_network_20 $2 $3 $4 $5 $6
 else
   echo "Invalid argument for experiment. Use fake-data|batch-fake|batch-real|compare-fake|compare-real|compare-fake-network"
 fi
