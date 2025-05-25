@@ -1,0 +1,128 @@
+NEW_EXPERIMENT: ltos_real_parties
+Using statistical security parameter 40
+LTOS_size_dependent_prep: n=2 m=2^12: 813
+LTOS_without_verification: n=2 m=2^12: 466
+LTOS_with_verification: n=2 m=2^12: 1666614
+Significant amount of unused triples of SPDZ gfp distorting the benchmark. For more accurate benchmarks, consider reducing the batch size with --batch-size.
+The following benchmarks are including preprocessing (offline phase).
+Time = 2.30383 seconds 
+Data sent = 297.874 MB in ~117 rounds (party 0 only; use '-v' for more details)
+Global data sent = 595.683 MB (all parties)
+ran script with batch size 5000
+Using statistical security parameter 40
+LTOS_size_dependent_prep: n=3 m=2^12: 1462
+LTOS_without_verification: n=3 m=2^12: 1094
+LTOS_with_verification: n=3 m=2^12: 2393102
+Significant amount of unused triples of SPDZ gfp distorting the benchmark. For more accurate benchmarks, consider reducing the batch size with --batch-size.
+The following benchmarks are including preprocessing (offline phase).
+Time = 3.08506 seconds 
+Data sent = 595.749 MB in ~209 rounds (party 0 only; use '-v' for more details)
+Global data sent = 1786.14 MB (all parties)
+ran script with batch size 5000
+Using statistical security parameter 40
+LTOS_size_dependent_prep: n=4 m=2^12: 2192
+LTOS_without_verification: n=4 m=2^12: 2036
+LTOS_with_verification: n=4 m=2^12: 3602681
+Significant amount of unused triples of SPDZ gfp distorting the benchmark. For more accurate benchmarks, consider reducing the batch size with --batch-size.
+The following benchmarks are including preprocessing (offline phase).
+Time = 4.40623 seconds 
+Data sent = 893.623 MB in ~305 rounds (party 0 only; use '-v' for more details)
+Global data sent = 3571.37 MB (all parties)
+ran script with batch size 5000
+Using statistical security parameter 40
+LTOS_size_dependent_prep: n=5 m=2^12: 3039
+LTOS_without_verification: n=5 m=2^12: 1587
+LTOS_with_verification: n=5 m=2^12: 5241525
+Significant amount of unused triples of SPDZ gfp distorting the benchmark. For more accurate benchmarks, consider reducing the batch size with --batch-size.
+The following benchmarks are including preprocessing (offline phase).
+Time = 6.1681 seconds 
+Data sent = 1191.5 MB in ~405 rounds (party 0 only; use '-v' for more details)
+Global data sent = 5951.38 MB (all parties)
+ran script with batch size 5000
+Using statistical security parameter 40
+LTOS_size_dependent_prep: n=6 m=2^12: 4230
+LTOS_without_verification: n=6 m=2^12: 2751
+LTOS_with_verification: n=6 m=2^12: 7517034
+Significant amount of unused triples of SPDZ gfp distorting the benchmark. For more accurate benchmarks, consider reducing the batch size with --batch-size.
+The following benchmarks are including preprocessing (offline phase).
+Time = 8.61355 seconds 
+Data sent = 1489.37 MB in ~509 rounds (party 0 only; use '-v' for more details)
+Global data sent = 8926.16 MB (all parties)
+ran script with batch size 5000
+Using statistical security parameter 40
+LTOS_size_dependent_prep: n=7 m=2^12: 5146
+LTOS_without_verification: n=7 m=2^12: 2407
+LTOS_with_verification: n=7 m=2^12: 10441981
+Significant amount of unused triples of SPDZ gfp distorting the benchmark. For more accurate benchmarks, consider reducing the batch size with --batch-size.
+The following benchmarks are including preprocessing (offline phase).
+Time = 11.7687 seconds 
+Data sent = 1787.25 MB in ~617 rounds (party 0 only; use '-v' for more details)
+Global data sent = 12495.7 MB (all parties)
+ran script with batch size 5000
+Using statistical security parameter 40
+LTOS_size_dependent_prep: n=8 m=2^12: 5986
+LTOS_without_verification: n=8 m=2^12: 3892
+LTOS_with_verification: n=8 m=2^12: 14284467
+Significant amount of unused triples of SPDZ gfp distorting the benchmark. For more accurate benchmarks, consider reducing the batch size with --batch-size.
+The following benchmarks are including preprocessing (offline phase).
+Time = 15.8664 seconds 
+Data sent = 2085.13 MB in ~731 rounds (party 0 only; use '-v' for more details)
+Global data sent = 16660.1 MB (all parties)
+ran script with batch size 5000
+NEW_EXPERIMENT: waksman_based_real_parties
+Using statistical security parameter 40
+Waksman size dependent prep: n=2 m=2^12: 18
+Waksman based: n=2 m=2^12: 10073937
+The following benchmarks are including preprocessing (offline phase).
+Time = 22.4143 seconds 
+Data sent = 3664.16 MB in ~733 rounds (party 0 only; use '-v' for more details)
+Global data sent = 7328.25 MB (all parties)
+ran script with batch size 7000
+Using statistical security parameter 40
+Waksman size dependent prep: n=3 m=2^12: 17
+Waksman based: n=3 m=2^12: 17779116
+The following benchmarks are including preprocessing (offline phase).
+Time = 38.1201 seconds 
+Data sent = 10985.4 MB in ~1888 rounds (party 0 only; use '-v' for more details)
+Global data sent = 32929.8 MB (all parties)
+ran script with batch size 7000
+Using statistical security parameter 40
+Waksman size dependent prep: n=4 m=2^12: 17
+Waksman based: n=4 m=2^12: 32220157
+The following benchmarks are including preprocessing (offline phase).
+Time = 68.2591 seconds 
+Data sent = 21598.5 MB in ~3521 rounds (party 0 only; use '-v' for more details)
+Global data sent = 86289.6 MB (all parties)
+ran script with batch size 7000
+Using statistical security parameter 40
+Waksman size dependent prep: n=5 m=2^12: 21
+Waksman based: n=5 m=2^12: 60352275
+The following benchmarks are including preprocessing (offline phase).
+Time = 127.82 seconds 
+Data sent = 36112.2 MB in ~5714 rounds (party 0 only; use '-v' for more details)
+Global data sent = 180299 MB (all parties)
+ran script with batch size 7000
+Using statistical security parameter 40
+Waksman size dependent prep: n=6 m=2^12: 32
+Waksman based: n=6 m=2^12: 109699430
+The following benchmarks are including preprocessing (offline phase).
+Time = 228.657 seconds 
+Data sent = 53674.4 MB in ~8357 rounds (party 0 only; use '-v' for more details)
+Global data sent = 321524 MB (all parties)
+ran script with batch size 7000
+Using statistical security parameter 40
+Waksman size dependent prep: n=7 m=2^12: 46
+Waksman based: n=7 m=2^12: 188844675
+The following benchmarks are including preprocessing (offline phase).
+Time = 383.313 seconds 
+Data sent = 74650.2 MB in ~11498 rounds (party 0 only; use '-v' for more details)
+Global data sent = 521640 MB (all parties)
+ran script with batch size 7000
+Using statistical security parameter 40
+Waksman size dependent prep: n=8 m=2^12: 137
+Waksman based: n=8 m=2^12: 297488025
+The following benchmarks are including preprocessing (offline phase).
+Time = 609.362 seconds 
+Data sent = 99891.6 MB in ~15241 rounds (party 0 only; use '-v' for more details)
+Global data sent = 797673 MB (all parties)
+ran script with batch size 7000

@@ -129,13 +129,13 @@ compare_parties_test() {
   # BATCH SIZE 5000 and 7000 is OPTIMAL for M=2^12 for ltos and waksman based repectivly
   run_make "ltos"
   echo "NEW_EXPERIMENT: ltos_fake_parties" >> $1
-  for ((parties=2;parties<=10;parties+=1)); do
+  for ((parties=2;parties<=8;parties+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
     echo "running fake (ltos) comparrison test with n=$parties"
     run_script 1 $parties "ltos" "F" 5000 $1
   done
   echo "NEW_EXPERIMENT: ltos_real_parties" >> $1
-  for ((parties=2;parties<=10;parties+=1)); do
+  for ((parties=2;parties<=8;parties+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
     echo "running real (ltos) comparrison test with n=$parties"
     run_script 1 $parties "ltos" "R" 5000 $1
@@ -143,13 +143,13 @@ compare_parties_test() {
 
   run_make "mascot"
   echo "NEW_EXPERIMENT: waksman_based_fake_parties" >> $1
-  for ((parties=2;parties<=10;parties+=1)); do
+  for ((parties=2;parties<=8;parties+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
     echo "running fake (mascot) comparrison test with n=$parties"
     run_script 1 $parties "mascot" "F" 7000 $1
   done
   echo "NEW_EXPERIMENT: waksman_based_real_parties" >> $1
-  for ((parties=2;parties<=10;parties+=1)); do
+  for ((parties=2;parties<=8;parties+=1)); do
     PYTHONPATH=. python3 Programs/Source/permutation2.mpc --m 12
     echo "running real (mascot) comparrison test with n=$parties"
     run_script 1 $parties "mascot" "R" 7000 $1
