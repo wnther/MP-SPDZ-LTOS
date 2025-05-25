@@ -168,7 +168,7 @@ def plot_real_batch():
 
 def plot_fake_compare():
     plot_experiment(
-        "plots/compare_m_fake_log.pdf",
+        "plots/compare_m_fake_time_log.pdf",
         all_experiments["ltos_fake"]["m"],
         [
             (all_experiments["ltos_fake"]["total_time"], "ltos"),
@@ -181,7 +181,7 @@ def plot_fake_compare():
     )
 
     plot_experiment(
-        "plots/compare_m_fake.pdf",
+        "plots/compare_m_time_fake.pdf",
         all_experiments["ltos_fake"]["m"],
         [
             (all_experiments["ltos_fake"]["total_time"], "ltos"),
@@ -190,6 +190,66 @@ def plot_fake_compare():
         "Time comparison where all preprocessing data (triples) is faked",
         "exponent of vector_size",
         "Total time in seconds",
+        log_y=False,
+    )
+    plot_experiment(
+        "plots/compare_m_fake_rounds_log.pdf",
+        all_experiments["ltos_fake"]["m"],
+        [
+            (all_experiments["ltos_fake"]["rounds"], "ltos"),
+            (all_experiments["waksman_based_fake"]["rounds"], "waksman based"),
+        ],
+        "Rounds comparison where triples are read from files",
+        "Exponent of vector_size",
+        "Number of rounds",
+        log_y=True,
+    )
+    plot_experiment(
+        "plots/compare_m_rounds_fake.pdf",
+        all_experiments["ltos_fake"]["m"],
+        [
+            (all_experiments["ltos_fake"]["rounds"], "ltos"),
+            (all_experiments["waksman_based_fake"]["rounds"], "waksman based"),
+        ],
+        "Rounds comparison where triples are read from files",
+        "Exponent of vector_size",
+        "Number of rounds",
+        log_y=False,
+    )
+    plot_experiment(
+        "plots/compare_m_rounds_fake_DIVIDED_by_m.pdf",
+        all_experiments["ltos_fake"]["m"],
+        [
+            ([i[0]/(2**i[1]) for i in zip(all_experiments["ltos_fake"]["rounds"], all_experiments["ltos_fake"]["m"])], "ltos"),
+            ([i[0]/(2**i[1]) for i in zip(all_experiments["waksman_based_fake"]["rounds"], all_experiments["waksman_based_fake"]["m"])], "waksman based"),
+        ],
+        "Rounds comparison where triples are read from files",
+        "Exponent of vector_size",
+        "Number of rounds divided by m",
+        log_y=False,
+    )
+    plot_experiment(
+        "plots/compare_m_fake_global_data_sent_log.pdf",
+        all_experiments["ltos_fake"]["m"],
+        [
+            (all_experiments["ltos_fake"]["global_data_sent"], "ltos"),
+            (all_experiments["waksman_based_fake"]["global_data_sent"], "waksman based"),
+        ],
+        "Global data sent comparison where triples are read from files",
+        "Exponent of vector_size",
+        "Global data sent in MB",
+        log_y=True,
+    )
+    plot_experiment(
+        "plots/compare_m_global_data_sent_fake.pdf",
+        all_experiments["ltos_fake"]["m"],
+        [
+            (all_experiments["ltos_fake"]["global_data_sent"], "ltos"),
+            (all_experiments["waksman_based_fake"]["global_data_sent"], "waksman based"),
+        ],
+        "Global data sent comparison where triples are read from files",
+        "Exponent of vector_size",
+        "Global data sent in MB",
         log_y=False,
     )
 
@@ -226,13 +286,13 @@ def compare_verification():
         all_experiments["ltos_fake"]["m"],
         [
             ([i*1000000 for i in all_experiments["ltos_fake"]["total_time"]], "Total time of everything (μs)"), #total time is in seconds
-            #(all_experiments["ltos_fake"]["time_size_dependent_prep"], "Size dependent preprocessing time (μs)"),
             (all_experiments["ltos_fake"]["full_online_time"], "Total online phase time (μs)"),
+            (all_experiments["ltos_fake"]["time_size_dependent_prep"], "Size dependent preprocessing time (μs)"),
             (all_experiments["ltos_fake"]["online_time_without_verification"], "Online phase time but without the verification step (μs)"),
         ],
         "Time benchmarks of the different phases for ltos with faked triples",
-        "exponent of vector_size",
-        "Total time in microseconds, except total time which is in seconds",
+        "Exponent of vector_size",
+        "Total time in microseconds (μs), ",
         log_y=True,
     )
     plot_experiment(
@@ -250,407 +310,61 @@ def compare_verification():
         log_y=False,
     )
 
+def plot_parties():
+    plot_experiment(
+        "plots/parties_fake.pdf",
+        all_experiments["ltos_fake_parties"]["n"],
+        [
+            (all_experiments["ltos_fake_parties"]["total_time"], "ltos"),
+            (all_experiments["waksman_based_fake_parties"]["total_time"], "waksman based"),
+        ],
+        "Time comparison with different number of parties for m=2^12, all preprocessing data (triples) is faked",
+        "Number of parties",
+        "Total time in seconds",
+        log_y=False,
+    )
+    plot_experiment(
+        "plots/parties_fake_log.pdf",
+        all_experiments["ltos_fake_parties"]["n"],
+        [
+            (all_experiments["ltos_fake_parties"]["total_time"], "ltos"),
+            (all_experiments["waksman_based_fake_parties"]["total_time"], "waksman based"),
+        ],
+        "Time comparison with different number of parties for m=2^12, all preprocessing data (triples) is faked",
+        "Number of parties",
+        "Total time in seconds",
+        log_y=True,
+    )
+
+    plot_experiment(
+        "plots/parties_real.pdf",
+        all_experiments["ltos_real_parties"]["n"],
+        [
+            (all_experiments["ltos_real_parties"]["total_time"], "ltos"),
+            (all_experiments["waksman_based_real_parties"]["total_time"], "waksman based"),
+        ],
+        "Time comparison with different number of parties for m=2^12, all preprocessing triples as in MASCOT",
+        "Number of parties",
+        "Total time in seconds",
+        log_y=False,
+    )
+    plot_experiment(
+        "plots/parties_real_log.pdf",
+        all_experiments["ltos_real_parties"]["n"],
+        [
+            (all_experiments["ltos_real_parties"]["total_time"], "ltos"),
+            (all_experiments["waksman_based_real_parties"]["total_time"], "waksman based"),
+        ],
+        "Time comparison with different number of parties for m=2^12, all preprocessing triples as in MASCOT",
+        "Number of parties",
+        "Total time in seconds",
+        log_y=True,
+    )
+
 plot_fake_batch()
 plot_real_batch()
 plot_fake_compare()
 plot_real_compare()
 plot_network()
 compare_verification()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# plot_experiment(
-#     "plots/bandwidth-fake.pdf",
-#     all_experiments["ltos_fake_m"]["m"],
-#     [(all_experiments["ltos_fake_m"]["data_sent"], "ltos"), (all_experiments["waksman_fake_m"]["data_sent"], "waksman-based")],
-#     "bandwidth used when using fake offline phase ltos",
-#     "log(m)",
-#     "bandwidth (MB)",
-#     log_y=True,
-# )
-
-# plot_experiment(
-#     "plots/bandwidth-real.pdf",
-#     all_experiments["ltos_real_m"]["m"],
-#     [(all_experiments["ltos_real_m"]["data_sent"], "ltos"), (all_experiments["waksman_real_m"]["data_sent"], "waksman-based")],
-#     "bandwidth used when using real offline phase ltos",
-#     "log(m)",
-#     "bandwidth (MB)",
-#     log_y=True,
-# )
-
-# plot_experiment(
-#     "plots/bandwidth-real-n.pdf",
-#     all_experiments["ltos_real_n"]["n"],
-#     [(all_experiments["ltos_real_n"]["data_sent"], "ltos"), (all_experiments["waksman_real_n"]["data_sent"], "waksman-based")],
-#     "bandwidth used when using real offline phase ltos",
-#     "n",
-#     "bandwidth (MB)",
-#     log_y=True,
-# )
-
-# # # ##
-# # #
-# # #  Comparison plots of the two algorithms
-# # #
-# # # ##
-
-
-# # titles = [
-# #     "Comparison using real offline phase",
-# #     "Comparison using real offline phase",
-# #     "Comparison using fake offline phase",
-# #     "Comparison using fake offline phase",
-# # ]
-# # file_names = [
-# #     "Compare_real_m",
-# #     "Compare_real_n",
-# #     "Compare_fake_m",
-# #     "Compare_fake_n",
-# # ]
-
-# # for i in range(4):
-# #     fig = go.Figure()
-# #     x_vals = [t[1] for t in lists[i+4]] if i % 2 == 0 else [t[0] for t in lists[i+4]]
-# #     ltos_y_vals = [t[2] for t in lists[i]]
-# #     waksman_y_vals = [t[2] for t in lists[i + 4]]
-# #     fig.add_trace(go.Scatter(
-# #         x=x_vals,
-# #         y=ltos_y_vals,
-# #         mode='lines+markers',
-# #         name="Ltos"
-# #     ))
-# #     fig.add_trace(go.Scatter(
-# #         x=x_vals,
-# #         y=waksman_y_vals,
-# #         mode='lines+markers',
-# #         name="Waksman Based"
-# #     ))
-# #     fig.update_layout(
-# #         title=titles[i],
-# #         xaxis_title='log(m)' if i % 2 == 0 else 'n',
-# #         yaxis_title='time (ms)',
-# #         margin=dict(l=40, r=20, t=40, b=40),
-# #         yaxis_range=[0, 1.1*max(max(ltos_y_vals), max(waksman_y_vals))],
-# #         xaxis_ticklabelstep=1,
-# #     xaxis_tickvals=x_vals,
-# #     )
-
-# #     fig.write_image(f"plots/{file_names[i]}.pdf")
-# plot_experiment(
-#     "plots/Compare_real_m.pdf",
-#     all_experiments["ltos_real_m"]["m"],
-#     [
-#         (all_experiments["ltos_real_m"]["online_time"], "Ltos"),
-#         (all_experiments["waksman_real_m"]["online_time"], "Waksman Based"),
-#     ],
-#     "Comparison using real offline phase",
-#     "log(m)",
-#     "time (ms)",
-#     log_y=True,
-# )
-
-# plot_experiment(
-#     "plots/Compare_real_n.pdf",
-#     all_experiments["ltos_real_n"]["n"],
-#     [
-#         (all_experiments["ltos_real_n"]["online_time"], "Ltos"),
-#         (all_experiments["waksman_real_n"]["online_time"], "Waksman Based"),
-#     ],
-#     "Comparison using real offline phase",
-#     "n",
-#     "time (ms)",
-#     log_y=True,
-# )
-# plot_experiment(
-#     "plots/Compare_fake_m.pdf",
-#     all_experiments["ltos_fake_m"]["m"],
-#     [
-#         (all_experiments["ltos_fake_m"]["online_time"], "Ltos"),
-#         (all_experiments["waksman_fake_m"]["online_time"], "Waksman Based"),
-#     ],
-#     "Comparison using fake offline phase",
-#     "log(m)",
-#     "time (ms)",
-#     log_y=True,
-# )
-# plot_experiment(
-#     "plots/Compare_fake_n.pdf",
-#     all_experiments["ltos_fake_n"]["n"],
-#     [
-#         (all_experiments["ltos_fake_n"]["online_time"], "Ltos"),
-#         (all_experiments["waksman_fake_n"]["online_time"], "Waksman Based"),
-#     ],
-#     "Comparison using fake offline phase",
-#     "n",
-#     "time (ms)",
-#     log_y=True,
-# )
-
-
-# # # ##
-# # #
-# # #  Time Scaled by expected time in terms of O-notation
-# # #
-# # # ##
-# # title = "Waksman based with real offline phase, time divided by m*log(m)"
-# # to_plot = 4
-# # fig = go.Figure()
-# # x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
-# # y_vals = [(t[2] / (t[1]*(2**t[1]))) for t in lists[to_plot]]
-# # fig.add_trace(go.Scatter(
-# #     x=x_vals,
-# #     y=y_vals,
-# #     mode='lines+markers',
-# #     name="divided by expected time"
-# # ))
-# # fig.update_layout(
-# #     title=title,
-# #     xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
-# #     yaxis_title='time (ms) / (m * log(m))',
-# #     margin=dict(l=40, r=20, t=40, b=40),
-# #     yaxis_range=[0, 1.1*max(y_vals)],
-# #     xaxis_ticklabelstep=1,
-# #     xaxis_tickvals=x_vals,
-# # )
-# # fig.write_image(f"plots/waksman_real_m_divided_by_m*log(m).pdf")
-
-# waksman_real_m_online_time = all_experiments["waksman_real_m"]["online_time"]
-# waksman_real_m_m = all_experiments["waksman_real_m"]["m"]
-
-# plot_experiment(
-#     output_path="plots/waksman_real_m_divided_by_m*log(m).pdf",
-#     x=all_experiments["waksman_real_m"]["m"],
-#     y=[
-#         (
-#             [
-#                 t / (int(m) * (2 ** int(m)))
-#                 for (t, m) in zip(waksman_real_m_online_time, waksman_real_m_m)
-#             ],
-#             "Waksman",
-#         ),
-#     ],
-#     title="Waksman based with real offline phase, time divided by m*log(m)",
-#     x_title="log(m)",
-#     y_title="time (ms) / (m * log(m))",
-# )
-
-# # title = "Waksman based with fake offline phase, time divided by m"
-# # to_plot = 6
-# # fig = go.Figure()
-# # x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
-# # y_vals = [(t[2] / (2**t[1])) for t in lists[to_plot]]
-# # fig.add_trace(go.Scatter(
-# #     x=x_vals,
-# #     y=y_vals,
-# #     mode='lines+markers',
-# #     name="divided by expected time"
-# # ))
-# # fig.update_layout(
-# #     title=title,
-# #     xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
-# #     yaxis_title='time (ms) / m',
-# #     margin=dict(l=40, r=20, t=40, b=40),
-# #     yaxis_range=[0, 1.1*max(y_vals)],
-# #     xaxis_ticklabelstep=1,
-# #     xaxis_tickvals=x_vals,
-# # )
-# # fig.write_image(f"plots/waksman_fake_m_divided_by_m.pdf")
-
-
-# # title = "Waksman based with real offline phase, time divided by n"
-# # to_plot = 5
-# # fig = go.Figure()
-# # x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
-# # y_vals = [(t[2] / t[0]) for t in lists[to_plot]]
-# # fig.add_trace(go.Scatter(
-# #     x=x_vals,
-# #     y=y_vals,
-# #     mode='lines+markers',
-# #     name="divided by expected time"
-# # ))
-# # fig.update_layout(
-# #     title=title,
-# #     xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
-# #     yaxis_title='time (ms) / n',
-# #     margin=dict(l=40, r=20, t=40, b=40),
-# #     yaxis_range=[0, 1.1*max(y_vals)],
-# #     xaxis_ticklabelstep=1,
-# #     xaxis_tickvals=x_vals,
-# # )
-# # fig.write_image(f"plots/waksman_real_n_divided_by_n.pdf")
-
-
-# # title = "Waksman based with fake offline phase, time divided by n"
-# # to_plot = 7
-# # fig = go.Figure()
-# # x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
-# # y_vals = [(t[2] / t[0]) for t in lists[to_plot]]
-# # fig.add_trace(go.Scatter(
-# #     x=x_vals,
-# #     y=y_vals,
-# #     mode='lines+markers',
-# #     name="divided by expected time"
-# # ))
-# # fig.update_layout(
-# #     title=title,
-# #     xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
-# #     yaxis_title='time (ms) / n',
-# #     margin=dict(l=40, r=20, t=40, b=40),
-# #     yaxis_range=[0, 1.1*max(y_vals)],
-# #     xaxis_ticklabelstep=1,
-# #     xaxis_tickvals=x_vals,
-# # )
-# # fig.write_image(f"plots/ltos_real_n_divided_by_n.pdf")
-
-
-# # title = "Ltos with real offline phase, time divided by log(m)"
-# # to_plot = 0
-# # fig = go.Figure()
-# # x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
-# # y_vals = [(t[2] / t[1]) for t in lists[to_plot]]
-# # fig.add_trace(go.Scatter(
-# #     x=x_vals,
-# #     y=y_vals,
-# #     mode='lines+markers',
-# #     name="divided by expected time"
-# # ))
-# # fig.update_layout(
-# #     title=title,
-# #     xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
-# #     yaxis_title='time (ms) / log(m)',
-# #     margin=dict(l=40, r=20, t=40, b=40),
-# #     yaxis_range=[0, 1.1*max(y_vals)],
-# #     xaxis_ticklabelstep=1,
-# #     xaxis_tickvals=x_vals,
-# # )
-# # fig.write_image(f"plots/ltos_real_m_divided_by_log(m).pdf")
-
-
-# # title = "Ltos with real offline phase, time divided by m"
-# # to_plot = 0
-# # fig = go.Figure()
-# # x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
-# # y_vals = [(t[2] / 2**t[1]) for t in lists[to_plot]]
-# # fig.add_trace(go.Scatter(
-# #     x=x_vals,
-# #     y=y_vals,
-# #     mode='lines+markers',
-# #     name="divided by expected time"
-# # ))
-# # fig.update_layout(
-# #     title=title,
-# #     xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
-# #     yaxis_title='time (ms) / m',
-# #     margin=dict(l=40, r=20, t=40, b=40),
-# #     yaxis_range=[0, 1.1*max(y_vals)],
-# #     xaxis_ticklabelstep=1,
-# #     xaxis_tickvals=x_vals,
-# # )
-# # fig.write_image(f"plots/ltos_real_m_divided_by_m.pdf")
-
-
-# # title = "Ltos with fake offline phase, time divided by log(m)"
-# # to_plot = 2
-# # fig = go.Figure()
-# # x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
-# # y_vals = [(t[2] / t[1]) for t in lists[to_plot]]
-# # fig.add_trace(go.Scatter(
-# #     x=x_vals,
-# #     y=y_vals,
-# #     mode='lines+markers',
-# #     name="divided by expected time"
-# # ))
-# # fig.update_layout(
-# #     title=title,
-# #     xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
-# #     yaxis_title='time (ms) / log(m)',
-# #     margin=dict(l=40, r=20, t=40, b=40),
-# #     yaxis_range=[0, 1.1*max(y_vals)],
-# #     xaxis_ticklabelstep=1,
-# #     xaxis_tickvals=x_vals,
-# # )
-# # fig.write_image(f"plots/ltos_fake_m_divided_by_log(m).pdf")
-
-
-# # title = "Ltos with fake offline phase, time divided by m"
-# # to_plot = 2
-# # fig = go.Figure()
-# # x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
-# # y_vals = [(t[2] / 2**t[1]) for t in lists[to_plot]]
-# # fig.add_trace(go.Scatter(
-# #     x=x_vals,
-# #     y=y_vals,
-# #     mode='lines+markers',
-# #     name="divided by expected time"
-# # ))
-# # fig.update_layout(
-# #     title=title,
-# #     xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
-# #     yaxis_title='time (ms) / m',
-# #     margin=dict(l=40, r=20, t=40, b=40),
-# #     yaxis_range=[0, 1.1*max(y_vals)],
-# #     xaxis_ticklabelstep=1,
-# #     xaxis_tickvals=x_vals,
-# # )
-# # fig.write_image(f"plots/ltos_fake_m_divided_by_m.pdf")
-
-
-# # title = "Ltos with real offline phase, time divided by n"
-# # to_plot = 1
-# # fig = go.Figure()
-# # x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
-# # y_vals = [(t[2] / t[0]) for t in lists[to_plot]]
-# # fig.add_trace(go.Scatter(
-# #     x=x_vals,
-# #     y=y_vals,
-# #     mode='lines+markers',
-# #     name="divided by expected time"
-# # ))
-# # fig.update_layout(
-# #     title=title,
-# #     xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
-# #     yaxis_title='time (ms) / n',
-# #     margin=dict(l=40, r=20, t=40, b=40),
-# #     yaxis_range=[0, 1.1*max(y_vals)],
-# #     xaxis_ticklabelstep=1,
-# #     xaxis_tickvals=x_vals,
-# # )
-# # fig.write_image(f"plots/ltos_real_n_divided_by_n.pdf")
-
-
-# # title = "Ltos with fake offline phase, time divided by n"
-# # to_plot = 3
-# # fig = go.Figure()
-# # x_vals = [t[1] for t in lists[to_plot]] if to_plot % 2 == 0 else [t[0] for t in lists[to_plot]]
-# # y_vals = [(t[2] / t[0]) for t in lists[to_plot]]
-# # fig.add_trace(go.Scatter(
-# #     x=x_vals,
-# #     y=y_vals,
-# #     mode='lines+markers',
-# #     name="divided by expected time"
-# # ))
-# # fig.update_layout(
-# #     title=title,
-# #     xaxis_title='log(m)' if to_plot % 2 == 0 else 'n',
-# #     yaxis_title='time (ms) / n',
-# #     margin=dict(l=40, r=20, t=40, b=40),
-# #     yaxis_range=[0, 1.1*max(y_vals)],
-# #     xaxis_ticklabelstep=1,
-# #     xaxis_tickvals=x_vals,
-# # )
-# # fig.write_image(f"plots/ltos_fake_n_divided_by_n.pdf")
+plot_parties()

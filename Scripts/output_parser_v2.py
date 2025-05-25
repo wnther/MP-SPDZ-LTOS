@@ -17,7 +17,8 @@ def parse_output(input_path: Path):
                 "n": [],
                 "m": [],
                 "rounds": [],
-                "data_sent": [],
+                "local_data_sent": [],
+                "global_data_sent": [],
                 "total_time": [],
                 "time_size_dependent_prep": [],
                 "full_online_time": [],
@@ -37,13 +38,15 @@ def parse_output(input_path: Path):
 
             full_time = re.search(r'Time\s*=\s*(\d+(?:\.\d+)?)', experiment).group(1)
             rounds = re.search(r'~(\d+)', experiment).group(1)
-            data_sent = re.search(r'Data sent\s*=\s*(\d+(?:\.\d+)?)', experiment).group(1)
+            local_data_sent = re.search(r'Data sent\s*=\s*(\d+(?:\.\d+)?)', experiment).group(1)
+            global_data_sent = re.search(r'Global data sent\s*=\s*(\d+(?:\.\d+)?)', experiment).group(1)
             batch_size = re.search(r'batch\ssize\s(\d+)', experiment).group(1)
             
             block_results["n"].append(int(n))
             block_results["m"].append(int(m))
             block_results["rounds"].append(int(rounds))
-            block_results["data_sent"].append(float(data_sent))
+            block_results["local_data_sent"].append(float(local_data_sent))
+            block_results["global_data_sent"].append(float(global_data_sent))
             block_results["total_time"].append(float(full_time))
             block_results["time_size_dependent_prep"].append(float(time_size_dependent_prep))
             block_results["full_online_time"].append(float(online_time))
