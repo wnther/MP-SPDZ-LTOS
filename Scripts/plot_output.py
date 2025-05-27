@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 import re
 import os
 from output_parser_v2 import parse_output
-
+from typing import Tuple, Union
 os.system("mkdir -p plots")
 
 fig = go.Figure()
@@ -18,19 +18,24 @@ time.sleep(1)
 # #  Basic plot of each set of data
 # #
 # # ##
-all_experiments = parse_output("party0.out")
+all_experiments = parse_output("benchmarks/data_combined.out")
 
 
 def plot_experiment(
-    output_path: str, x: list, y: list[list], title: str, x_title: str, y_title: str, log_y: bool = False
+    output_path: str, x: list, y: list[Tuple[list, str, Union[str, None]]], title: str, x_title: str, y_title: str, log_y: bool = False
 ):
     x_vals = x
     y_vals = y
 
     fig = go.Figure()
 
-    for y_val, name in y_vals:
-        fig.add_trace(go.Scatter(x=x_vals, y=y_val, mode="lines+markers", name=name))
+    for y_val in y_vals:
+        if len(y_val) == 2:
+            y_val, name = y_val
+            line_type = "solid"
+        elif len(y_val) == 3:
+            y_val, name, line_type = y_val
+        fig.add_trace(go.Scatter(x=x_vals, y=y_val, mode="lines+markers", name=name, line=dict(dash=line_type)))
 
     
     fig.update_layout(
@@ -58,10 +63,10 @@ def plot_network():
             (all_experiments["ltos_fake_network_local_L-50_B-inf"]["total_time"], "ltos_50_latency"),
             (all_experiments["ltos_fake_network_local_L-100_B-inf"]["total_time"], "ltos_100_latency"),
             (all_experiments["ltos_fake_network_local_L-150_B-inf"]["total_time"], "ltos_150_latency"),
-    	    (all_experiments["waksman_based_fake_network_local_L-0_B-inf"]["total_time"], "waksman-based_0_latency"),
-    	    (all_experiments["waksman_based_fake_network_local_L-50_B-inf"]["total_time"], "waksman-based_50_latency"),
-    	    (all_experiments["waksman_based_fake_network_local_L-100_B-inf"]["total_time"], "waksman-based_100_latency"),
-    	    (all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["total_time"], "waksman-based_150_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-0_B-inf"]["total_time"], "waksman-based_0_latency", "dot"),
+    	    (all_experiments["waksman_based_fake_network_local_L-50_B-inf"]["total_time"], "waksman-based_50_latency", "dot"),
+    	    (all_experiments["waksman_based_fake_network_local_L-100_B-inf"]["total_time"], "waksman-based_100_latency", "dot"),
+    	    (all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["total_time"], "waksman-based_150_latency", "dot"),
         ],
         "Time for simualted network with different latency, all preprocessing data (triples) is faked",
         "Exponent of vector size",
