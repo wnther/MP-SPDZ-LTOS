@@ -372,6 +372,39 @@ def plot_parties():
         "Total data sent in MB",
         log_y=True,
     )
+    plot_experiment(
+        "plots/parties_fake_log_rounds_direct.pdf",
+        all_experiments["ltos_fake_parties"]["n"],
+        [
+            (all_experiments["ltos_fake_parties_direct"]["rounds"], "ltos","dot"),
+            ([i[0]/i[1] for i in zip(all_experiments["ltos_fake_parties_direct"]["rounds"], all_experiments["ltos_fake_parties"]["n"])], "ltos divided by n","dot"),
+            ([i[0]/i[1]**2 for i in zip(all_experiments["ltos_fake_parties_direct"]["rounds"], all_experiments["ltos_fake_parties"]["n"])], "ltos divided by n^2","dot"),
+            (all_experiments["waksman_based_fake_parties_direct"]["rounds"], "waksman based"),
+            ([i[0]/i[1] for i in zip(all_experiments["waksman_based_fake_parties_direct"]["rounds"], all_experiments["ltos_fake_parties"]["n"])], "waksman based divided by n"),
+            ([i[0]/i[1]**2 for i in zip(all_experiments["waksman_based_fake_parties_direct"]["rounds"], all_experiments["ltos_fake_parties"]["n"])], "waksman based divided by n^2"),
+        ],
+        "Rounds comparison with different number of parties for m=2^12, all preprocessing data (triples) is faked",
+        "Number of parties",
+        "Number of rounds",
+        log_y=True,
+    )
+    plot_experiment(
+        "plots/parties_fake_log_data_direct.pdf",
+        all_experiments["ltos_fake_parties"]["n"],
+        [
+            (all_experiments["ltos_fake_parties_direct"]["global_data_sent"], "ltos","dot"),
+            ([i[0]/i[1]**2 for i in zip(all_experiments["ltos_fake_parties_direct"]["global_data_sent"], all_experiments["ltos_fake_parties"]["n"])], "ltos divided by n^2","dot"),
+            ([i[0]/i[1]**3 for i in zip(all_experiments["ltos_fake_parties_direct"]["global_data_sent"], all_experiments["ltos_fake_parties"]["n"])], "ltos divided by n^3","dot"),
+            (all_experiments["waksman_based_fake_parties_direct"]["global_data_sent"], "waksman based"),
+            ([i[0]/i[1]**2 for i in zip(all_experiments["waksman_based_fake_parties_direct"]["global_data_sent"], all_experiments["ltos_fake_parties"]["n"])], "waksman based divided by n^2"),
+            ([i[0]/i[1]**3 for i in zip(all_experiments["waksman_based_fake_parties_direct"]["global_data_sent"], all_experiments["ltos_fake_parties"]["n"])], "waksman based divided by n^3"),
+        ],
+        "Global Data sent comparison with different number of parties for m=2^12, all preprocessing data (triples) is faked",
+        "Number of parties",
+        "Total data sent in MB",
+        log_y=True,
+    )
+
 
     plot_experiment(
         "plots/parties_real.pdf",

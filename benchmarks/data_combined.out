@@ -5488,7 +5488,8 @@ The following benchmarks are including preprocessing (offline phase).
 Time = 609.362 seconds 
 Data sent = 99891.6 MB in ~15241 rounds (party 0 only; use '-v' for more details)
 Global data sent = 797673 MB (all parties)
-ran script with batch size 7000NEW_EXPERIMENT: ltos_fake_parties
+ran script with batch size 7000
+NEW_EXPERIMENT: ltos_fake_parties_direct
 Using statistical security parameter 40
 LTOS_size_dependent_prep: n=2 m=2^12: 1211
 LTOS_without_verification: n=2 m=2^12: 583
@@ -5573,7 +5574,7 @@ Time = 0.0351646 seconds
 Data sent = 5.04759 MB in ~90 rounds (party 0 only; use '-v' for more details)
 Global data sent = 37.1694 MB (all parties)
 ran script with batch size 5000
-NEW_EXPERIMENT: ltos_real_parties
+NEW_EXPERIMENT: ltos_real_parties_direct
 Using statistical security parameter 40
 LTOS_size_dependent_prep: n=2 m=2^12: 817
 LTOS_without_verification: n=2 m=2^12: 677
@@ -5665,7 +5666,7 @@ Time = 15.6769 seconds
 Data sent = 2085.13 MB in ~534 rounds (party 0 only; use '-v' for more details)
 Global data sent = 16671.1 MB (all parties)
 ran script with batch size 5000
-NEW_EXPERIMENT: waksman_based_fake_parties
+NEW_EXPERIMENT: waksman_based_fake_parties_direct
 Using statistical security parameter 40
 Waksman size dependent prep: n=2 m=2^12: 13
 Waksman based: n=2 m=2^12: 129869
@@ -5749,7 +5750,7 @@ Time = 3.58457 seconds
 Data sent = 166.997 MB in ~65693 rounds (party 0 only; use '-v' for more details)
 Global data sent = 1332.77 MB (all parties)
 ran script with batch size 7000
-NEW_EXPERIMENT: waksman_based_real_parties
+NEW_EXPERIMENT: waksman_based_real_parties_direct
 Using statistical security parameter 40
 Waksman size dependent prep: n=2 m=2^12: 13
 Waksman based: n=2 m=2^12: 10096721
