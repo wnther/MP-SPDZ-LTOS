@@ -38,9 +38,9 @@ run_script() {
   # $6 = output file
   for ((run_script_i=0;run_script_i<$1;run_script_i++)); do
     if [ "$4" = "F" ]; then
-      Scripts/"$3".sh permutation2 -N $2 -F --direct --batch-size $5 >> $6
+      Scripts/"$3".sh permutation2 -N $2 -F --batch-size $5 >> $6
     else 
-      Scripts/"$3".sh permutation2 -N $2 --direct --batch-size $5 >> $6
+      Scripts/"$3".sh permutation2 -N $2 --batch-size $5 >> $6
     fi
     echo "ran script with batch size $5" >> $6
   done
