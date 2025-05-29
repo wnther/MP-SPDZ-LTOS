@@ -29,13 +29,33 @@ def plot_experiment(
 
     fig = go.Figure()
 
+    ltos_colors = ["#0035d4", "#7064e0", "#a695ec", "#d4c9f6"]
+    waks_colors = ["#c72020", "#df6453", "#f09989", "#fcccc2"]
+    ltos_color_index = 0
+    waks_color_index = 0
+
+    def get_line_props(line_type: str) -> str:
+        dash = "solid"
+        nonlocal ltos_color_index, waks_color_index
+        if line_type == "ltos":
+            if ltos_color_index != 0:
+                dash = "dot"
+            color = ltos_colors[ltos_color_index]
+            ltos_color_index = (ltos_color_index + 1) % len(ltos_colors)
+        else:
+            if waks_color_index != 0:
+                dash = "dot"
+            color = waks_colors[waks_color_index]
+            waks_color_index = (waks_color_index + 1) % len(waks_colors)
+        return dict(dash=dash, color=color)
+
     for y_val in y_vals:
         if len(y_val) == 2:
             y_val, name = y_val
             line_type = "solid"
         elif len(y_val) == 3:
             y_val, name, line_type = y_val
-        fig.add_trace(go.Scatter(x=x_vals, y=y_val, mode="lines+markers", name=name, line=dict(dash=line_type)))
+        fig.add_trace(go.Scatter(x=x_vals, y=y_val, mode="lines+markers", name=name, line=get_line_props(line_type)))
 
     
     fig.update_layout(
@@ -63,10 +83,10 @@ def plot_network():
             (all_experiments["ltos_fake_network_local_L-50_B-inf"]["total_time"], "ltos_50_latency"),
             (all_experiments["ltos_fake_network_local_L-100_B-inf"]["total_time"], "ltos_100_latency"),
             (all_experiments["ltos_fake_network_local_L-150_B-inf"]["total_time"], "ltos_150_latency"),
-    	    (all_experiments["waksman_based_fake_network_local_L-0_B-inf"]["total_time"], "waksman-based_0_latency", "dot"),
-    	    (all_experiments["waksman_based_fake_network_local_L-50_B-inf"]["total_time"], "waksman-based_50_latency", "dot"),
-    	    (all_experiments["waksman_based_fake_network_local_L-100_B-inf"]["total_time"], "waksman-based_100_latency", "dot"),
-    	    (all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["total_time"], "waksman-based_150_latency", "dot"),
+    	    (all_experiments["waksman_based_fake_network_local_L-0_B-inf"]["total_time"], "waksman-based_0_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-50_B-inf"]["total_time"], "waksman-based_50_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-100_B-inf"]["total_time"], "waksman-based_100_latency"),
+    	    (all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["total_time"], "waksman-based_150_latency"),
         ],
         "Time for simualted network with different latency, all preprocessing data (triples) is faked",
         "Exponent of vector size",
@@ -173,89 +193,64 @@ def plot_real_batch():
 
 def plot_fake_compare():
     plot_experiment(
-        "plots/compare_m_fake_time_log.pdf",
+        "plots/compare_fake_m.pdf",
         all_experiments["ltos_fake"]["m"],
         [
-            (all_experiments["ltos_fake"]["total_time"], "ltos"),
-            (all_experiments["waksman_based_fake"]["total_time"], "waksman based"),
+            (all_experiments["ltos_fake"]["total_time"], "ltos", "ltos"),
+            (all_experiments["waksman_based_fake"]["total_time"], "waks"),
         ],
-        "Time comparison where all preprocessing data (triples) is faked",
-        "exponent of vector_size",
+        "Total Time for the online phase (preprocessing from files)",
+        "Exponent of the vector size 2^i",
         "Total time in seconds",
         log_y=True,
     )
 
     plot_experiment(
-        "plots/compare_m_time_fake.pdf",
-        all_experiments["ltos_fake"]["m"],
+        "plots/compare_fake_m_rounds.pdf",
+        all_experiments["ltos_real"]["m"],
         [
-            (all_experiments["ltos_fake"]["total_time"], "ltos"),
-            (all_experiments["waksman_based_fake"]["total_time"], "waksman based"),
+            (all_experiments["ltos_fake"]["rounds"], "ltos", "ltos"),
+            ([i[0]/((i[1])) for i in zip(all_experiments["ltos_fake"]["rounds"], all_experiments["ltos_fake"]["m"])], "ltos / log m", "ltos"),
+            ([i[0]/(2**(i[1])) for i in zip(all_experiments["ltos_fake"]["rounds"], all_experiments["ltos_fake"]["m"])], "ltos / m", "ltos"),
+            (all_experiments["waksman_based_fake"]["rounds"], "waks"),
+            ([i[0]/((i[1])) for i in zip(all_experiments["waksman_based_fake"]["rounds"], all_experiments["waksman_based_fake"]["m"])], "waks / log m"),
+            ([i[0]/(2**(i[1])) for i in zip(all_experiments["waksman_based_fake"]["rounds"], all_experiments["waksman_based_fake"]["m"])], "waks / m"),
         ],
-        "Time comparison where all preprocessing data (triples) is faked",
-        "exponent of vector_size",
-        "Total time in seconds",
-        log_y=False,
-    )
-    plot_experiment(
-        "plots/compare_m_fake_rounds_log.pdf",
-        all_experiments["ltos_fake"]["m"],
-        [
-            (all_experiments["ltos_fake"]["rounds"], "ltos"),
-            (all_experiments["waksman_based_fake"]["rounds"], "waksman based"),
-        ],
-        "Rounds comparison where triples are read from files",
-        "Exponent of vector_size",
+        "Total number of rounds for the online phase (preprocessing from files)",
+        "Exponent of the vector size 2^i",
         "Number of rounds",
         log_y=True,
     )
+
     plot_experiment(
-        "plots/compare_m_rounds_fake.pdf",
+        "plots/compare_fake_m_data.pdf",
         all_experiments["ltos_fake"]["m"],
         [
-            (all_experiments["ltos_fake"]["rounds"], "ltos"),
-            (all_experiments["waksman_based_fake"]["rounds"], "waksman based"),
+            (all_experiments["ltos_fake"]["global_data_sent"], "ltos", "ltos"),
+            ([i[0]/((i[1])) for i in zip(all_experiments["ltos_fake"]["global_data_sent"], all_experiments["ltos_fake"]["m"])], "ltos / log m", "ltos"),
+            ([i[0]/((2**i[1])) for i in zip(all_experiments["ltos_fake"]["global_data_sent"], all_experiments["ltos_fake"]["m"])], "ltos / m", "ltos"),
+            (all_experiments["waksman_based_fake"]["global_data_sent"], "waks"),
+            ([i[0]/((i[1])) for i in zip(all_experiments["waksman_based_fake"]["global_data_sent"], all_experiments["waksman_based_fake"]["m"])], "waks / log m"),
+            ([i[0]/((2**i[1])) for i in zip(all_experiments["waksman_based_fake"]["global_data_sent"], all_experiments["waksman_based_fake"]["m"])], "waks / m"),
+            ([i[0]/((i[1]*(2**i[1]))) for i in zip(all_experiments["waksman_based_fake"]["global_data_sent"], all_experiments["waksman_based_fake"]["m"])], "waks / (m log m)"),
         ],
-        "Rounds comparison where triples are read from files",
-        "Exponent of vector_size",
-        "Number of rounds",
-        log_y=False,
-    )
-    plot_experiment(
-        "plots/compare_m_rounds_fake_DIVIDED_by_m.pdf",
-        all_experiments["ltos_fake"]["m"],
-        [
-            ([i[0]/(2**i[1]) for i in zip(all_experiments["ltos_fake"]["rounds"], all_experiments["ltos_fake"]["m"])], "ltos"),
-            ([i[0]/(2**i[1]) for i in zip(all_experiments["waksman_based_fake"]["rounds"], all_experiments["waksman_based_fake"]["m"])], "waksman based"),
-        ],
-        "Rounds comparison where triples are read from files",
-        "Exponent of vector_size",
-        "Number of rounds divided by m",
-        log_y=False,
-    )
-    plot_experiment(
-        "plots/compare_m_fake_global_data_sent_log.pdf",
-        all_experiments["ltos_fake"]["m"],
-        [
-            (all_experiments["ltos_fake"]["global_data_sent"], "ltos"),
-            (all_experiments["waksman_based_fake"]["global_data_sent"], "waksman based"),
-        ],
-        "Global data sent comparison where triples are read from files",
-        "Exponent of vector_size",
-        "Global data sent in MB",
+        "Total data sent by all parties for the online phase (preprocessing from files)",
+        "Exponent of the vector size 2^i",
+        "Data sent in MB",
         log_y=True,
     )
+    
     plot_experiment(
-        "plots/compare_m_global_data_sent_fake.pdf",
+        "plots/compare_fake_m_data_div.pdf",
         all_experiments["ltos_fake"]["m"],
         [
-            (all_experiments["ltos_fake"]["global_data_sent"], "ltos"),
-            (all_experiments["waksman_based_fake"]["global_data_sent"], "waksman based"),
+            ([1000000*i[0]/((2**i[1])) for i in zip(all_experiments["ltos_fake"]["global_data_sent"], all_experiments["ltos_fake"]["m"])], "ltos / m", "ltos"),
+            ([1000000*i[0]/((i[1]*(2**i[1]))) for i in zip(all_experiments["waksman_based_fake"]["global_data_sent"], all_experiments["waksman_based_fake"]["m"])], "waks / (m log m)"),
         ],
-        "Global data sent comparison where triples are read from files",
-        "Exponent of vector_size",
-        "Global data sent in MB",
-        log_y=False,
+        "Total data sent by all parties for the online phase (preprocessing from files)",
+        "Exponent of the vector size 2^i",
+        "Data sent in bytes",
+        log_y=True,
     )
 
 def plot_real_compare():
@@ -263,11 +258,11 @@ def plot_real_compare():
         "plots/compare_m_real_log.pdf",
         all_experiments["ltos_real"]["m"],
         [
-            (all_experiments["ltos_real"]["total_time"], "ltos"),
-            (all_experiments["waksman_based_real"]["total_time"], "waksman based"),
+            (all_experiments["ltos_real"]["total_time"], "ltos", "ltos"),
+            (all_experiments["waksman_based_real"]["total_time"], "waks"),
         ],
-        "Time comparison with all preprocessing triples as in MASCOT",
-        "exponent of vector_size",
+        "Total Time for all phases (offline and online)",
+        "Exponent of the vector size 2^i",
         "Total time in seconds",
         log_y=True,
     )
@@ -276,14 +271,49 @@ def plot_real_compare():
         "plots/compare_real_m.pdf",
         all_experiments["ltos_real"]["m"],
         [
-            (all_experiments["ltos_real"]["total_time"], "ltos"),
-            (all_experiments["waksman_based_real"]["total_time"], "waksman based"),
+            (all_experiments["ltos_real"]["total_time"], "ltos", "ltos"),
+            (all_experiments["waksman_based_real"]["total_time"], "waks"),
         ],
-        "Time comparison with all preprocessing triples as in MASCOT",
-        "exponent of vector_size",
+        "Total Time for all phases (offline and online)",
+        "Exponent of the vector size 2^i",
         "Total time in seconds",
         log_y=False,
     )
+
+    plot_experiment(
+        "plots/compare_real_m_rounds.pdf",
+        all_experiments["ltos_real"]["m"],
+        [
+            (all_experiments["ltos_real"]["rounds"], "ltos", "ltos"),
+            ([i[0]/((i[1])) for i in zip(all_experiments["ltos_real"]["rounds"], all_experiments["ltos_real"]["m"])], "ltos / log m", "ltos"),
+            ([i[0]/(2**(i[1])) for i in zip(all_experiments["ltos_real"]["rounds"], all_experiments["ltos_real"]["m"])], "ltos / m", "ltos"),
+            (all_experiments["waksman_based_real"]["rounds"], "waks"),
+            ([i[0]/((i[1])) for i in zip(all_experiments["waksman_based_real"]["rounds"], all_experiments["waksman_based_real"]["m"])], "waks / log m"),
+            ([i[0]/(2**(i[1])) for i in zip(all_experiments["waksman_based_real"]["rounds"], all_experiments["waksman_based_real"]["m"])], "waks / m"),
+        ],
+        "Total number of rounds for all phases (offline and online)",
+        "Exponent of the vector size 2^i",
+        "Number of rounds",
+        log_y=True,
+    )
+
+    plot_experiment(
+        "plots/compare_real_m_data.pdf",
+        all_experiments["ltos_real"]["m"],
+        [
+            (all_experiments["ltos_real"]["global_data_sent"], "ltos", "ltos"),
+            ([i[0]/((i[1])) for i in zip(all_experiments["ltos_real"]["global_data_sent"], all_experiments["ltos_real"]["m"])], "ltos / log m", "ltos"),
+            ([i[0]/((2**i[1])) for i in zip(all_experiments["ltos_real"]["global_data_sent"], all_experiments["ltos_real"]["m"])], "ltos / m", "ltos"),
+            (all_experiments["waksman_based_real"]["global_data_sent"], "waks"),
+            ([i[0]/((i[1])) for i in zip(all_experiments["waksman_based_real"]["global_data_sent"], all_experiments["waksman_based_real"]["m"])], "waks / log m"),
+            ([i[0]/((2**i[1])) for i in zip(all_experiments["waksman_based_real"]["global_data_sent"], all_experiments["waksman_based_real"]["m"])], "waks / m"),
+        ],
+        "Total data sent by all parties for all phases (offline and online)",
+        "Exponent of the vector size 2^i",
+        "Data sent in MB",
+        log_y=True,
+    )
+
 
 def compare_verification():
     plot_experiment(
@@ -431,10 +461,10 @@ def plot_parties():
         log_y=True,
     )
 
-plot_fake_batch()
-plot_real_batch()
-plot_fake_compare()
 plot_real_compare()
-plot_network()
-compare_verification()
-plot_parties()
+plot_fake_compare()
+# plot_fake_batch()
+# plot_real_batch()
+# plot_network()
+# compare_verification()
+# plot_parties()

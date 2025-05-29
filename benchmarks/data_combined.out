@@ -2056,15 +2056,15 @@ Waksman based: n=2 m=2^19: 2208960802
 The following benchmarks are including preprocessing (offline phase).
 Time = 4565.47 seconds 
 Data sent = 757213 MB in ~771881 rounds (party 0 only; use '-v' for more details)
-Global data sent = 1.51333e+06 MB (all parties)
+Global data sent = 1513330 MB (all parties)
 ran script with batch size 1000
 Using statistical security parameter 40
 Waksman size dependent prep: n=2 m=2^20: 28454
 Waksman based: n=2 m=2^20: 4661709905
 The following benchmarks are including preprocessing (offline phase).
 Time = 9608.7 seconds 
-Data sent = 1.59841e+06 MB in ~1629153 rounds (party 0 only; use '-v' for more details)
-Global data sent = 3.19466e+06 MB (all parties)
+Data sent = 1598410 MB in ~1629153 rounds (party 0 only; use '-v' for more details)
+Global data sent = 3194660 MB (all parties)
 ran script with batch size 1000
 NEW_EXPERIMENT: ltos_batch_fake_5
 Using statistical security parameter 40
