@@ -438,6 +438,23 @@ def plot_parties():
         log_y=True,
     )
 
+    plot_experiment(
+        "plots/parties_star_cast.pdf",
+        all_experiments["ltos_fake_parties"]["n"],
+        [
+            (all_experiments["waksman_based_fake_parties"]["global_data_sent"], "global"),
+            ([i[0]/i[1] for i in zip(all_experiments["waksman_based_fake_parties"]["global_data_sent"], all_experiments["waksman_based_fake_parties_direct"]["n"])], "global / n"),
+            (all_experiments["waksman_based_fake_parties_direct"]["global_data_sent"], "global -direct"),
+            (all_experiments["waksman_based_fake_parties_direct"]["local_data_sent"], "p1 local with -direct", "ltos"),
+            (all_experiments["waksman_based_fake_parties"]["local_data_sent"], "p1 local without -direct", "ltos"),
+            ([i[0]/i[1] for i in zip(all_experiments["waksman_based_fake_parties_direct"]["global_data_sent"], all_experiments["waksman_based_fake_parties_direct"]["n"])], "(global with -direct) / n", "ltos"),
+        ],
+        "Data sent during execution of waks with preprocessing from files",
+        "Exponent of the vector size 2^i",
+        "Data sent in MB",
+        log_y=False,
+    )
+
 def plot_network():
     plot_experiment(
         "plots/net_latency.pdf",
@@ -545,6 +562,38 @@ def plot_real_batch():
     	    (all_experiments["mascot_batch_real_12"]["rounds"], "waks 12"),
     	    (all_experiments["mascot_batch_real_9"]["rounds"], "waks 9"),
     	    (all_experiments["mascot_batch_real_6"]["rounds"], "waks 6"),
+        ],
+        "Number of rounds when changing batch size with MASCOT preprocessing",
+        "Batch size",
+        "Number of rounds",
+        log_y=True,
+    )
+
+    plot_experiment(
+        "plots/batch_mult.pdf",
+        all_experiments["ltos_batch_real_3"]["batch_size"][:10],
+        [
+            (all_experiments["ltos_batch_real_15"]["rounds"][:10], "ltos 15", "ltos"),
+            ([(i[0]*(i[1])) for i in zip(all_experiments["ltos_batch_real_15"]["rounds"], all_experiments["ltos_batch_real_15"]["batch_size"])][:10], "ltos 15 * batch size", "ltos"),
+    	    (all_experiments["mascot_batch_real_15"]["rounds"][:10], "waks 15"),
+            ([(i[0]*(i[1])) for i in zip(all_experiments["mascot_batch_real_15"]["rounds"], all_experiments["mascot_batch_real_15"]["batch_size"])][:10], "waks 15 * batch size"),
+    	    (all_experiments["mascot_batch_real_12"]["rounds"][:10], "waks 12"),
+            ([(i[0]*(i[1])) for i in zip(all_experiments["mascot_batch_real_12"]["rounds"], all_experiments["mascot_batch_real_12"]["batch_size"])][:10], "waks 12 * batch size"),
+        ],
+        "Number of rounds when changing batch size with MASCOT preprocessing",
+        "Batch size",
+        "Number of rounds",
+        log_y=True,
+    )
+
+    plot_experiment(
+        "plots/batch_compare_files.pdf",
+        all_experiments["ltos_batch_real_3"]["batch_size"][:10],
+        [
+            (all_experiments["ltos_batch_real_15"]["rounds"][:10], "ltos 15 mascot", "ltos"),
+            (all_experiments["ltos_batch_fake_15"]["rounds"][:10], "ltos 15 files", "ltos"),
+    	    (all_experiments["mascot_batch_real_15"]["rounds"][:10], "waks 15 mascot"),
+    	    (all_experiments["mascot_batch_fake_15"]["rounds"][:10], "waks 15 files"),
         ],
         "Number of rounds when changing batch size with MASCOT preprocessing",
         "Batch size",
