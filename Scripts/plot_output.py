@@ -331,7 +331,7 @@ def plot_parties():
             ([i[0]/i[1]**3 for i in zip(all_experiments["waksman_based_fake_parties"]["global_data_sent"], all_experiments["ltos_fake_parties"]["n"])], "waks / n^3"),
         ],
         "Total data sent by parties for m=2^12, preprocessing from files",
-        "Exponent of the vector size 2^i",
+        "Number of parties",
         "Data sent in MB",
         log_y=True,
     )
@@ -382,7 +382,7 @@ def plot_parties():
             ([i[0]/i[1]**3 for i in zip(all_experiments["waksman_based_real_parties"]["global_data_sent"], all_experiments["waksman_based_real_parties"]["n"])], "waks / n^3"),
         ],
         "Total data sent by parties for m=2^12, using MASCOT",
-        "Exponent of the vector size 2^i",
+        "Number of parties",
         "Data sent in MB",
         log_y=True,
     )
@@ -433,7 +433,7 @@ def plot_parties():
             ([i[0]/i[1]**3 for i in zip(all_experiments["waksman_based_fake_parties_direct"]["global_data_sent"], all_experiments["waksman_based_fake_parties_direct"]["n"])], "waks / n^3"),
         ],
         "Total data sent by parties with --direct, preprocessing from files",
-        "Exponent of the vector size 2^i",
+        "Number of parties",
         "Data sent in MB",
         log_y=True,
     )
@@ -450,7 +450,7 @@ def plot_parties():
             ([i[0]/i[1] for i in zip(all_experiments["waksman_based_fake_parties_direct"]["global_data_sent"], all_experiments["waksman_based_fake_parties_direct"]["n"])], "(global with -direct) / n", "ltos"),
         ],
         "Data sent during execution of waks with preprocessing from files",
-        "Exponent of the vector size 2^i",
+        "Number of parties",
         "Data sent in MB",
         log_y=False,
     )
@@ -469,9 +469,9 @@ def plot_network():
     	    (all_experiments["waksman_based_fake_network_local_L-100_B-inf"]["total_time"], "waks 100 latency"),
     	    (all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["total_time"], "waks 150 latency"),
         ],
-        "Time for simualted network with different bandwidth, preprocessing from files",
-        "Exponent of vector size",
-        "Time",
+        "Time for simualted network with different latency, preprocessing from files",
+        "Exponent of the vector size 2^i",
+        "Total time in seconds",
         log_y=True,
     )
     plot_experiment(
@@ -485,9 +485,9 @@ def plot_network():
             ([i[0]/((i[1])) for i in zip(all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["total_time"], all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["m"])], "waks 150 latency / log m"),
             ([i[0]/((2**i[1])) for i in zip(all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["total_time"], all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["m"])], "waks 150 latency / m"),
         ],
-        "Time for simualted network with different latency, preprocessing from files",
-        "Exponent of vector size",
-        "Time",
+        "Time for simualted network with latency, preprocessing from files",
+        "Exponent of the vector size 2^i",
+        "Total time in seconds",
         log_y=True,
     )
     plot_experiment(
@@ -503,9 +503,9 @@ def plot_network():
     	    (all_experiments["waksman_based_fake_network_local_L-0_B-10Mbps"]["total_time"], "waks 10Mbps"),
     	    (all_experiments["waksman_based_fake_network_local_L-0_B-1.544Mbps"]["total_time"], "waks 1.544Mbps"),
         ],
-        "Time for simualted network with different bandwidth preprocessing from files",
-        "Exponent of vector size",
-        "Time",
+        "Time for simualted network with different bandwidth limits preprocessing from files",
+        "Exponent of the vector size 2^i",
+        "Total time in seconds",
         log_y=True,
     )
     plot_experiment(
@@ -521,9 +521,9 @@ def plot_network():
             ([i[0]/((2**i[1])) for i in zip(all_experiments["waksman_based_fake_network_local_L-0_B-1.544Mbps"]["total_time"], all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["m"])], "waks 1.544Mbps / m"),
             ([i[0]/((i[1]*(2**i[1]))) for i in zip(all_experiments["waksman_based_fake_network_local_L-0_B-1.544Mbps"]["total_time"], all_experiments["waksman_based_fake_network_local_L-150_B-inf"]["m"])], "waks 1.544Mbps / (m log m)"),
         ],
-        "Time for simualted network with different latency, preprocessing from files",
-        "Exponent of vector size",
-        "Time",
+        "Time for simualted network with bandwidth limit, preprocessing from files",
+        "Exponent of the vector size 2^i",
+        "Total time in seconds",
         log_y=True,
     )
 
