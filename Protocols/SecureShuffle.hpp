@@ -2,7 +2,7 @@
  * SecureShuffle.hpp
  *
  */
-
+#ifndef USING_EXPERIMENTAL_LTOS_SHUFFLING
 #ifndef PROTOCOLS_SECURESHUFFLE_HPP_
 #define PROTOCOLS_SECURESHUFFLE_HPP_
 
@@ -11,6 +11,40 @@
 
 #include <math.h>
 #include <algorithm>
+
+
+/*
+    For Experimentation
+*/
+
+static inline unsigned int mylog2 (unsigned int val) {
+    if (val == 0) return UINT_MAX;
+    if (val == 1) return 0;
+    unsigned int ret = 0;
+    while (val > 1) {
+        val >>= 1;
+        ret++;
+    }
+    return ret;
+}
+
+/*
+    Printing to party specific file
+*/
+
+template <typename T>
+ofstream get_party_stream(SubProcessor<T>& proc) {
+    string party_num = to_string(proc.P.my_num());
+    ofstream filestream("party" + party_num + ".out", std::ios::app);
+    return filestream;
+}
+
+template <typename T>
+void println_for_party(SubProcessor<T>& proc, const std::string& message) {
+    ofstream filestream = get_party_stream(proc);
+    filestream << message << std::endl;
+}
+
 
 template<class T>
 void ShuffleStore<T>::lock()
@@ -87,6 +121,8 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T>& a, vector<size_t>& sizes
 template<class T>
 void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes, vector<size_t> &destinations,
     vector<size_t> &sources, vector<size_t> &unit_sizes, vector<shuffle_type> &shuffles, vector<bool> &reverse) {
+    auto start = chrono::high_resolution_clock::now();
+    
     const auto n_shuffles = sizes.size();
     assert(sources.size() == n_shuffles);
     assert(destinations.size() == n_shuffles);
@@ -104,6 +140,7 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
     vector<vector<T>> to_shuffle;
     int max_depth = prep_multiple(a, sizes, sources, unit_sizes, to_shuffle, is_exact);
 
+    auto mid = chrono::high_resolution_clock::now();
     // Apply the shuffles.
     for (size_t pass = 0; pass < n_passes; pass++)
     {
@@ -112,6 +149,12 @@ void SecureShuffle<T>::apply_multiple(StackedVector<T> &a, vector<size_t> &sizes
         for (int depth = max_depth - 1; depth >= 0; depth--)
             parallel_waksman_round(pass, depth, false, to_shuffle, unit_sizes, reverse, shuffles);
     }
+
+    auto end = chrono::high_resolution_clock::now();
+    auto duration_prep = chrono::duration_cast<chrono::microseconds>(mid - start);
+    auto duration = chrono::duration_cast<chrono::microseconds>(end - mid);
+    println_for_party(proc, "Waksman size dependent prep: n=" + to_string(proc.P.num_players()) + " m=2^" + to_string(mylog2(sizes[0])) + ": " + to_string(duration_prep.count()));
+    println_for_party(proc, "Waksman based: n=" + to_string(proc.P.num_players()) + " m=2^" + to_string(mylog2(sizes[0])) + ": " + to_string(duration.count()));
 
     // Write the shuffled results into memory.
     finalize_multiple(a, sizes, unit_sizes, destinations, is_exact, to_shuffle);
@@ -514,3 +557,4 @@ void SecureShuffle<T>::waksman_round_finish(vector<T> &toShuffle, size_t unit_si
 
 
 #endif /* PROTOCOLS_SECURESHUFFLE_HPP_ */
+#endif

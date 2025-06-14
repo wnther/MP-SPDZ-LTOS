@@ -27,7 +27,6 @@ COMMON = $(SHAREDLIB)
 TINIER =  Machines/Tinier.o $(OT)
 SPDZ = Machines/SPDZ.o $(TINIER)
 
-
 LIB = libSPDZ.a
 SHAREDLIB = libSPDZ.so
 FHEOFFLINE = libFHE.so
@@ -113,6 +112,12 @@ replicated: rep-field rep-ring rep-bin
 spdz2k: spdz2k-party.x ot-offline.x Check-Offline-Z2k.x galois-degree.x Fake-Offline.x
 mascot: mascot-party.x spdz2k mama-party.x
 
+ltos: ltos_flag ltos-mascot-party.x spdz2k mama-party.x
+ltos_flag:
+	$(eval CFLAGS += -D USING_EXPERIMENTAL_LTOS_SHUFFLING)
+ltos-mascot-party.x: $(SPDZ)
+
+
 ifeq ($(OS), Darwin)
 setup: mac-setup
 else
@@ -138,6 +143,7 @@ $(LIBRELEASE): Protocols/MalRepRingOptions.o $(PROCESSOR) $(COMMONOBJS) $(TINIER
 	$(AR) -csr $@ $^
 
 CFLAGS += -fPIC
+
 LDLIBS += -Wl,-rpath -Wl,$(CURDIR)
 
 $(SHAREDLIB): $(PROCESSOR) $(COMMONOBJS) GC/square64.o GC/Instruction.o

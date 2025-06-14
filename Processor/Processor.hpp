@@ -10,6 +10,7 @@
 #include "Processor/ProcessorBase.hpp"
 #include "GC/Processor.hpp"
 #include "GC/ShareThread.hpp"
+#include "Protocols/LTOS.hpp"
 #include "Protocols/SecureShuffle.hpp"
 
 #include <sodium.h>

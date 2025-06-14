@@ -1,11 +1,17 @@
 # Offline data, runtime logs #
 ##############################
+build/
 Player-Data
 Player-Data/*
 Prep-Data/*
 logs/*
 Language-Definition/main.pdf
 keys/*
+plots/
+party0.out:Zone.Identifier
+mascot-has-been-made
+ltos-has-been-made
+
 
 # Personal CONFIG file #
 ##############################
@@ -35,6 +41,10 @@ tags
 # VS Code IDE #
 ###############
 .vscode/**
+
+# IDEA #
+########
+.idea/
 
 # Temporary files #
 ###################
@@ -124,3 +134,7 @@ _build/
 # temp doc files
 doc/readme.md
 doc/xml
+
+#Benchmarks
+!benchmarks/
+!benchmarks/**

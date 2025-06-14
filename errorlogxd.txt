@@ -1,0 +1,16 @@
+clang++ -o Machines/SPDZ.o Machines/SPDZ.cpp -I./local/include -march=native  -g -Wextra -Wall -O3 -I. -I./deps -pthread    -DUSE_GF2N_LONG '-DPREP_DIR="Player-Data/"' '-DSSL_DIR="Player-Data/"'  -std=c++17 -Werror  -std=c++17 -fPIC -D USING_EXPERIMENTAL_LTOS_SHUFFLING -MMD -MP -c
+clang++ -o Machines/Tinier.o Machines/Tinier.cpp -I./local/include -march=native  -g -Wextra -Wall -O3 -I. -I./deps -pthread    -DUSE_GF2N_LONG '-DPREP_DIR="Player-Data/"' '-DSSL_DIR="Player-Data/"'  -std=c++17 -Werror  -std=c++17 -fPIC -D USING_EXPERIMENTAL_LTOS_SHUFFLING -MMD -MP -c
+clang++ -o Machines/SPDZ2^64+48.o Machines/SPDZ2^64+48.cpp -I./local/include -march=native  -g -Wextra -Wall -O3 -I. -I./deps -pthread    -DUSE_GF2N_LONG '-DPREP_DIR="Player-Data/"' '-DSSL_DIR="Player-Data/"'  -std=c++17 -Werror  -std=c++17 -fPIC -D USING_EXPERIMENTAL_LTOS_SHUFFLING -MMD -MP -c
+clang++ -o Machines/SPDZ2^64+64.o Machines/SPDZ2^64+64.cpp -I./local/include -march=native  -g -Wextra -Wall -O3 -I. -I./deps -pthread    -DUSE_GF2N_LONG '-DPREP_DIR="Player-Data/"' '-DSSL_DIR="Player-Data/"'  -std=c++17 -Werror  -std=c++17 -fPIC -D USING_EXPERIMENTAL_LTOS_SHUFFLING -MMD -MP -c
+clang++ -o Machines/SPDZ2^72+48.o Machines/SPDZ2^72+48.cpp -I./local/include -march=native  -g -Wextra -Wall -O3 -I. -I./deps -pthread    -DUSE_GF2N_LONG '-DPREP_DIR="Player-Data/"' '-DSSL_DIR="Player-Data/"'  -std=c++17 -Werror  -std=c++17 -fPIC -D USING_EXPERIMENTAL_LTOS_SHUFFLING -MMD -MP -c
+clang++ -o Machines/SPDZ2^72+64.o Machines/SPDZ2^72+64.cpp -I./local/include -march=native  -g -Wextra -Wall -O3 -I. -I./deps -pthread    -DUSE_GF2N_LONG '-DPREP_DIR="Player-Data/"' '-DSSL_DIR="Player-Data/"'  -std=c++17 -Werror  -std=c++17 -fPIC -D USING_EXPERIMENTAL_LTOS_SHUFFLING -MMD -MP -c
+clang++ -o Machines/SPDZ2k.o Machines/SPDZ2k.cpp -I./local/include -march=native  -g -Wextra -Wall -O3 -I. -I./deps -pthread    -DUSE_GF2N_LONG '-DPREP_DIR="Player-Data/"' '-DSSL_DIR="Player-Data/"'  -std=c++17 -Werror  -std=c++17 -fPIC -D USING_EXPERIMENTAL_LTOS_SHUFFLING -MMD -MP -c
+clang++ -o Utils/Fake-Offline.o Utils/Fake-Offline.cpp -I./local/include -march=native  -g -Wextra -Wall -O3 -I. -I./deps -pthread    -DUSE_GF2N_LONG '-DPREP_DIR="Player-Data/"' '-DSSL_DIR="Player-Data/"'  -std=c++17 -Werror  -std=c++17 -fPIC -D USING_EXPERIMENTAL_LTOS_SHUFFLING -MMD -MP -c
+clang++ -o Machines/mama-party.o Machines/mama-party.cpp -I./local/include -march=native  -g -Wextra -Wall -O3 -I. -I./deps -pthread    -DUSE_GF2N_LONG '-DPREP_DIR="Player-Data/"' '-DSSL_DIR="Player-Data/"'  -std=c++17 -Werror  -std=c++17 -fPIC -D USING_EXPERIMENTAL_LTOS_SHUFFLING -MMD -MP -c
+make: *** [Makefile:82: Utils/Fake-Offline.o] Interrupt
+make: *** [Makefile:82: Machines/SPDZ2^64+48.o] Interrupt
+make: *** [Makefile:82: Machines/SPDZ2^72+48.o] Interrupt
+make: *** [Makefile:82: Machines/SPDZ2^72+64.o] Interrupt
+make: *** [Makefile:82: Machines/SPDZ2^64+64.o] Interrupt
+make: *** [Makefile:82: Machines/SPDZ.o] Interrupt
+make: *** [Makefile:82: Machines/mama-party.o] Interrupt
